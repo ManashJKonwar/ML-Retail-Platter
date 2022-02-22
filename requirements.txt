@@ -1,0 +1,4 @@
+# Dash
+# ------------------------------------------------------------------------------
+dash==2.2.0  # https://pypi.org/project/dash/2.2.0/  # Python framework for building reactive web-apps. Developed by Plotly.
+dash-bootstrap-components==1.0.3  # https://pypi.org/project/dash-bootstrap-components/1.0.3/  # Bootstrap themed components for use in Plotly Dash
