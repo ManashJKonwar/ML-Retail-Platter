@@ -10,13 +10,14 @@ __status__ = "Development"
 import os
 from app import app
 from layouts import layout_sidepanel
-import callbacks
+# import callbacks
 
 app.title = "Retail Pricing Simulator"
 app.layout = layout_sidepanel.layout
 
 if __name__ == '__main__':
-    if os.environ["ENV"] == "deployment":
-        app.run_server(host="0.0.0.0", port=8050)
-    else:
-        app.run_server(debug=True, port=8052)
+    app.run_server()
+    # if os.environ["ENV"] == "deployment":
+    #     app.run_server(host="0.0.0.0", port=8050)
+    # else:
+    #     app.run_server(debug=True, port=8052)
