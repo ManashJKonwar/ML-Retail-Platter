@@ -9,10 +9,11 @@ __status__ = "Development"
 
 import os
 import sys
-import logging, logging.config
 import dash
+import logging, logging.config
 import dash_bootstrap_components as dbc
 from flask import Flask
+from callbacks.callbacks_sidepanel import callback_manager as sidepanel_callback_manager
 # from config.applogger import LOGGING
 # from callbacks.callbacks_pricing_input import callback_manager as pricing_input_cm
 
@@ -22,6 +23,9 @@ external_stylesheets = [dbc.themes.BOOTSTRAP]
 server = Flask(__name__) 
 app = dash.Dash(external_stylesheets=external_stylesheets, server=server)
 app.config.suppress_callback_exceptions = True
+
+# Attaching tab based callbacks to app
+sidepanel_callback_manager.attach_to_app(app)
 
 '''
 # Adding log folder if it not exists
