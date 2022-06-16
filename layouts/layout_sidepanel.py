@@ -12,7 +12,7 @@ from dash import html
 import dash_bootstrap_components as dbc 
 
 # from backend import channel_type, analysis_type, granularity, maker_type, device_family, spinner
-# from layouts import layout_pricing_input
+# from layouts import layout_retail_summary
 
 tab_height = '7vh'
 layout = html.Div([
@@ -224,13 +224,14 @@ layout = html.Div([
                 dbc.Col(html.Div([
                     dcc.Tabs(id="tabs", value='tab-1', style={'height': tab_height},
                         children=[
-                            dcc.Tab(label='Pricing Input', value='tab-1', style={'padding': '0', 'line-height': tab_height}),
-                            dcc.Tab(label='Product Sales', value='tab-2', style={'padding': '0', 'line-height': tab_height}),
-                            dcc.Tab(label='Product KPIs', value='tab-3', style={'padding': '0', 'line-height': tab_height}),
-                            dcc.Tab(label='Product KPIs Pivot', value='tab-4', style={'padding': '0', 'line-height': tab_height}),
-                            dcc.Tab(label='Simulator Info', value='tab-5', style={'padding': '0', 'line-height': tab_height})
+                            dcc.Tab(label='Retail Summary', value='tab-1', style={'padding': '0', 'line-height': tab_height}),
+                            dcc.Tab(label='Pricing Input', value='tab-2', style={'padding': '0', 'line-height': tab_height}),
+                            dcc.Tab(label='Product Sales', value='tab-3', style={'padding': '0', 'line-height': tab_height}),
+                            dcc.Tab(label='Product KPIs', value='tab-4', style={'padding': '0', 'line-height': tab_height}),
+                            dcc.Tab(label='Product KPIs Pivot', value='tab-5', style={'padding': '0', 'line-height': tab_height}),
+                            dcc.Tab(label='Simulator Info', value='tab-6', style={'padding': '0', 'line-height': tab_height})
                         ])
-                    # , html.Div(id='tabs-content', children=[layout_pricing_input.layout]) #Setting default pricing input
+                    , html.Div(id='tabs-content') #Setting default pricing input
                 ]), width=9)
             ], className="h-85"),
 
