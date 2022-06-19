@@ -11,6 +11,7 @@ from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc 
 
+from datasets.backend import product_categories, shop_names, product_names
 # from backend import channel_type, analysis_type, granularity, maker_type, device_family, spinner
 # from layouts import layout_retail_summary
 
@@ -95,35 +96,50 @@ layout = html.Div([
                         html.Details([
                             html.Summary('Product Filter', style={'font-weight': 'bold', 'color': '#000000'}),
                             # Category Filter
-                            html.Label('Category:', style={'font-weight': 'bold', 'color': '#000000'}),
+                            html.Label('Product Category:', style={'font-weight': 'bold', 'color': '#000000'}),
                             html.Div([
                                 dcc.Dropdown(
-                                    id='dd-category',
-                                    options=[{'label': i, 'value': i} for i in []],
-                                    # options=[{'label': i, 'value': i} for i in category_type],
-                                    value=[],
+                                    id='dd-product-category',
+                                    options=[{'label': i, 'value': i} for i in product_categories],
+                                    value=[product_categories[0]],
                                     multi=True,
                                     clearable=True,
                                     searchable=False,
-                                    placeholder='Select Category',
+                                    placeholder='Select Product Category',
                                     style={
                                         'fontSize': '2vh',
                                         'color': 'black'
                                     }
                                 )
                             ]),
-                            # Manufacturer Filter
-                            html.Label('Manufacturer:', style={'font-weight': 'bold', 'color': '#000000'}),
+                            # Shop Filter
+                            html.Label('Shop:', style={'font-weight': 'bold', 'color': '#000000'}),
                             html.Div([
                                 dcc.Dropdown(
-                                    id='dd-manufacturer',
-                                    options=[{'label': i, 'value': i} for i in []],
-                                    # options=[{'label': i, 'value': i} for i in manufacturer_type],
-                                    value=[],
+                                    id='dd-shop-name',
+                                    options=[{'label': i, 'value': i} for i in shop_names],
+                                    value=[shop_names[0]],
                                     multi=True,
                                     clearable=True,
                                     searchable=False,
-                                    placeholder='Select Maker',
+                                    placeholder='Select Shop Name',
+                                    style={
+                                        'fontSize': '2vh',
+                                        'color': 'black'
+                                    }
+                                )
+                            ]),
+                            # Product Name Filter
+                            html.Label('Product Name:', style={'font-weight': 'bold', 'color': '#000000'}),
+                            html.Div([
+                                dcc.Dropdown(
+                                    id='dd-product-name',
+                                    options=[{'label': i, 'value': i} for i in product_names],
+                                    value=[product_names[0]],
+                                    multi=True,
+                                    clearable=True,
+                                    searchable=False,
+                                    placeholder='Select Product Name',
                                     style={
                                         'fontSize': '2vh',
                                         'color': 'black'
@@ -136,8 +152,8 @@ layout = html.Div([
                                 dcc.Dropdown(
                                     id='dd-brand',
                                     options=[{'label': i, 'value': i} for i in []],
-                                    # options=[{'label': i, 'value': i} for i in brand_type],
                                     value=[],
+                                    disabled=True,
                                     multi=True,
                                     clearable=True,
                                     searchable=False,
@@ -148,36 +164,18 @@ layout = html.Div([
                                     }
                                 )
                             ]),
-                            # Pack Size Filter
-                            html.Label('Pack Size:', style={'font-weight': 'bold', 'color': '#000000'}),
+                            # Lot Size Filter
+                            html.Label('Lot Size:', style={'font-weight': 'bold', 'color': '#000000'}),
                             html.Div([
                                 dcc.Dropdown(
-                                    id='dd-packsize',
+                                    id='dd-lotsize',
                                     options=[{'label': i, 'value': i} for i in []],
-                                    # options=[{'label': i, 'value': i} for i in packsize_type],
                                     value=[],
+                                    disabled=True,
                                     multi=True,
                                     clearable=True,
                                     searchable=False,
-                                    placeholder='Select Pack Size',
-                                    style={
-                                        'fontSize': '2vh',
-                                        'color': 'black'
-                                    }
-                                )
-                            ]),
-                            # Product Name Filter
-                            html.Label('Product Name:', style={'font-weight': 'bold', 'color': '#000000'}),
-                            html.Div([
-                                dcc.Dropdown(
-                                    id='dd-productname',
-                                    options=[{'label': i, 'value': i} for i in []],
-                                    # options=[{'label': i, 'value': i} for i in productname_type],
-                                    value=[],
-                                    multi=True,
-                                    clearable=True,
-                                    searchable=True,
-                                    placeholder='Select Product Name',
+                                    placeholder='Select Lot Size',
                                     style={
                                         'fontSize': '2vh',
                                         'color': 'black'
