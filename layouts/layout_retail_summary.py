@@ -15,7 +15,7 @@ sales_card = dbc.Card([
                     html.H5("Sales Card", className="card-title"),
                     html.P(
                         "Total Sales: %s Mn" %(str(500)),
-                        id='p_salestext',
+                        id='p-salestext',
                         className="card-text",
                     ),
                 ]
@@ -28,7 +28,7 @@ category_card = dbc.Card([
                         "Best Category: Accessories",
                         html.Br(),
                         "Total No of Products Sold: %s" %(str(50))],
-                        id='p_categorytext',
+                        id='p-categorytext',
                         className="card-text",
                     ),
                 ]
@@ -41,7 +41,7 @@ shop_card = dbc.Card([
                         "Best Store: Fancy Store",
                         html.Br(),
                         "Total Sales Count: %s" %(str(200))],
-                        id='p_shoptext',
+                        id='p-shoptext',
                         className="card-text",
                     ),
                 ]
