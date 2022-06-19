@@ -10,30 +10,48 @@ __status__ = "Development"
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
-card_content = [
-    dbc.CardHeader("Card header"),
-    dbc.CardBody(
-        [
-            html.H5("Card title", className="card-title"),
-            html.P(
-                "This is some card content that we'll reuse",
-                className="card-text",
-            ),
-        ]
-    ),
-]
+sales_card = dbc.Card([
+                dbc.CardBody([
+                    html.H5("Sales Card", className="card-title"),
+                    html.P(
+                        "Total Sales: %s Mn" %(str(500)),
+                        id='p_salestext',
+                        className="card-text",
+                    ),
+                ]
+            )], color="secondary", inverse=True)
+
+category_card = dbc.Card([
+                dbc.CardBody([
+                    html.H5("Category Card", className="card-title"),
+                    html.P([
+                        "Best Category: Accessories",
+                        html.Br(),
+                        "Total No of Products Sold: %s" %(str(50))],
+                        id='p_categorytext',
+                        className="card-text",
+                    ),
+                ]
+            )], color="secondary", inverse=True)
+
+shop_card = dbc.Card([
+                dbc.CardBody([
+                    html.H5("Shopping Card", className="card-title"),
+                    html.P([
+                        "Best Store: Fancy Store",
+                        html.Br(),
+                        "Total Sales Count: %s" %(str(200))],
+                        id='p_shoptext',
+                        className="card-text",
+                    ),
+                ]
+            )], color="secondary", inverse=True)
 
 layout = html.Div([
             dbc.Row([
-                dbc.Col(
-                    dbc.Card(card_content, color="primary", inverse=True)
-                ),
-                dbc.Col(
-                    dbc.Card(card_content, color="secondary", inverse=True)
-                ),
-                dbc.Col(
-                    dbc.Card(card_content, color="info", inverse=True)
-                ),
+                dbc.Col(sales_card),
+                dbc.Col(category_card),
+                dbc.Col(shop_card)
             ],
             style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),
         ])
