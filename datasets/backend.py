@@ -23,5 +23,4 @@ shop_names = sorted(list(df_shops.translated_shop_name.unique()))
 #endregion
 
 #region Data Preprocessing
-print('here')
 #endregion  

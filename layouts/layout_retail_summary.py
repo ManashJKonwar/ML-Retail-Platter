@@ -7,8 +7,8 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
-import dash_html_components as html
 import dash_bootstrap_components as dbc
+from dash import html
 
 sales_card = dbc.Card([
                 dbc.CardBody([
