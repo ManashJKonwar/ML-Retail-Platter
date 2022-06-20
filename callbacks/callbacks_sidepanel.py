@@ -59,22 +59,4 @@ def set_product_options(sel_product_names):
 
         return final_options, [final_options[0]]
     else:
-        return no_update 
-
-# @callback_manager.callback([Output(component_id='dd-product-name', component_property='options'),
-#                         Output(component_id='dd-product-name', component_property='value')],
-#                         Input(component_id='dd-shop-name', component_property='value'))
-# def set_product_options(sel_shop_names):
-#     if isinstance(sel_shop_names, list):
-#         sel_df_shop_names = df_shops.loc[df_shops.translated_shop_name.isin(sel_shop_names)].reset_index(drop=True)
-
-#         # Extracting transactions for selected shop names
-#         option_mask = (df_transactions.shop_id.isin(list(sel_df_shop_names.shop_id.unique())))
-#         sel_df_transactions = df_transactions.loc[option_mask].reset_index(drop=True)
-
-#         # Extracting final product options and setting default as first product
-#         final_options = sorted(list(df_products.loc[df_products.item_id.isin(list(sel_df_transactions.item_id.unique()))].translated_item_name.unique()))
-
-#         return final_options, [final_options[0]]
-#     else:
-#         return no_update     
+        return no_update
