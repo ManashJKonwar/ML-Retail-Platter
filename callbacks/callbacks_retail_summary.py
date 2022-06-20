@@ -7,9 +7,11 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import pandas as pd
+from dash import html
 from dash.dependencies import Input, Output
 from callback_manager import CallbackManager
-from datasets.backend import df_transactions, df_products, df_shops
+from datasets.backend import df_transactions, df_products, df_shops, df_product_categories
 
 callback_manager = CallbackManager()
 
@@ -33,5 +35,33 @@ def set_sales_card(sel_product_categories, sel_shop_names, sel_product_names):
     else:
         return no_update   
 
-# @callback_manager.callback(Output(component_id='p-categorytext', component_property='children'),
-#                         Input(component_id='', component_property=''))
+@callback_manager.callback(Output(component_id='p-categorytext', component_property='children'),
+                        Input(component_id='dd-product-category', component_property='value'))
+def set_category_card(sel_product_categories):
+    if isinstance(sel_product_categories, list):
+        sel_df_product_categories = df_product_categories.loc[df_product_categories.translated_item_category_name.isin(sel_product_categories)].reset_index(drop=True)
+
+        # Extracting item category id and extracting the respective item ids
+        item_mask = df_products.item_category_id.isin(list(sel_df_product_categories.item_category_id.unique()))
+        sel_df_product = df_products.loc[item_mask].reset_index(drop=True)
+
+        # Extracting transactions for selected products
+        transaction_mask = (df_transactions.item_id.isin(list(sel_df_product.item_id.unique())))
+        sel_transactions = df_transactions.loc[transaction_mask].reset_index(drop=True) 
+       
+        # Merged transactions data
+        final_sel_transactions = pd.merge(pd.merge(sel_transactions, sel_df_product, how='left', on='item_id'), df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id')
+        final_sel_transactions = final_sel_transactions[['date', 'item_price', 'item_cnt_day', 'translated_item_category_name']]
+
+        # Grouping by highest sales for each product category
+        final_grp_transactions = final_sel_transactions.groupby('translated_item_category_name').agg({'item_cnt_day':'sum'}).reset_index()
+        final_grp_transactions = final_grp_transactions.rename(columns={'item_cnt_day':'total_no_products_sold'})
+        final_grp_transactions = final_grp_transactions.sort_values('total_no_products_sold', ascending=False).reset_index(drop=True)
+
+        return [
+                "Best Category: %s" %(final_grp_transactions.head(1).translated_item_category_name[0]),
+                html.Br(),
+                "Total No of Products Sold: %s" %(str(final_grp_transactions.head(1).total_no_products_sold[0]))
+            ]
+    else:
+        return no_update
