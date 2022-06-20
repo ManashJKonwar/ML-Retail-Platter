@@ -29,6 +29,9 @@ def set_sales_card(sel_product_categories, sel_shop_names, sel_product_names):
         sel_transactions = df_transactions.loc[transaction_mask].reset_index(drop=True)
 
         #Extracting total sales and return appropriate card body
-        return "Total Sales: %s Mn" %(str(sum(sel_transactions.item_price * sel_transactions.item_cnt_day)))
+        return "Total Sales: %s ₽" %(str(sum(sel_transactions.item_price * sel_transactions.item_cnt_day)))
     else:
         return no_update   
+
+# @callback_manager.callback(Output(component_id='p-categorytext', component_property='children'),
+#                         Input(component_id='', component_property=''))

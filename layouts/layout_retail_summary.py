@@ -14,7 +14,7 @@ sales_card = dbc.Card([
                 dbc.CardBody([
                     html.H5("Sales Card", className="card-title"),
                     html.P(
-                        "Total Sales: %s Mn" %(str(500)),
+                        "Total Sales: %s ₽" %(str(500)),
                         id='p-salestext',
                         className="card-text",
                     ),

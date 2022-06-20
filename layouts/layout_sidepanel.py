@@ -112,23 +112,6 @@ layout = html.Div([
                                     }
                                 )
                             ]),
-                            # Shop Filter
-                            html.Label('Shop:', style={'font-weight': 'bold', 'color': '#000000'}),
-                            html.Div([
-                                dcc.Dropdown(
-                                    id='dd-shop-name',
-                                    options=[{'label': i, 'value': i} for i in shop_names],
-                                    value=[shop_names[0]],
-                                    multi=True,
-                                    clearable=True,
-                                    searchable=False,
-                                    placeholder='Select Shop Name',
-                                    style={
-                                        'fontSize': '2vh',
-                                        'color': 'black'
-                                    }
-                                )
-                            ]),
                             # Product Name Filter
                             html.Label('Product Name:', style={'font-weight': 'bold', 'color': '#000000'}),
                             html.Div([
@@ -140,6 +123,23 @@ layout = html.Div([
                                     clearable=True,
                                     searchable=False,
                                     placeholder='Select Product Name',
+                                    style={
+                                        'fontSize': '2vh',
+                                        'color': 'black'
+                                    }
+                                )
+                            ]),
+                            # Shop Filter
+                            html.Label('Shop:', style={'font-weight': 'bold', 'color': '#000000'}),
+                            html.Div([
+                                dcc.Dropdown(
+                                    id='dd-shop-name',
+                                    options=[{'label': i, 'value': i} for i in shop_names],
+                                    value=[shop_names[0]],
+                                    multi=True,
+                                    clearable=True,
+                                    searchable=False,
+                                    placeholder='Select Shop Name',
                                     style={
                                         'fontSize': '2vh',
                                         'color': 'black'
