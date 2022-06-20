@@ -14,8 +14,8 @@ import logging, logging.config
 import dash_bootstrap_components as dbc
 from flask import Flask
 from callbacks.callbacks_sidepanel import callback_manager as sidepanel_callback_manager
+from callbacks.callbacks_retail_summary import callback_manager as retail_summary_callback_manager
 # from config.applogger import LOGGING
-# from callbacks.callbacks_pricing_input import callback_manager as pricing_input_cm
 
 # Normally Dash creates its own Flask server internally however
 # by creating the server we can easily create routes for downloading files etc.
@@ -26,6 +26,7 @@ app.config.suppress_callback_exceptions = True
 
 # Attaching tab based callbacks to app
 sidepanel_callback_manager.attach_to_app(app)
+retail_summary_callback_manager.attach_to_app(app)
 
 '''
 # Adding log folder if it not exists
