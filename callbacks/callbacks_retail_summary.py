@@ -74,6 +74,10 @@ def set_category_card(sel_product_categories):
                         Input(component_id='dd-product-name', component_property='value'))
 def set_category_card(sel_product):
     if isinstance(sel_product, list):
+        # Condition for setting all products if none is selected
+        if len(sel_product) == 0:
+            sel_product = sorted(list(df_products.translated_item_name.unique()))
+
         sel_df_product = df_products.loc[df_products.translated_item_name.isin(sel_product)].reset_index(drop=True)
 
         # Extracting respective item ids from transaction data
