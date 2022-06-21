@@ -19,9 +19,17 @@ callback_manager = CallbackManager()
 @callback_manager.callback(Output(component_id='p-salestext', component_property='children'),
                         [Input(component_id='dd-product-category', component_property='value'),
                         Input(component_id='dd-shop-name', component_property='value'),
-                        Input(component_id='dd-product-name', component_property='value')])
-def set_sales_card(sel_product_categories, sel_shop_names, sel_product_names):
+                        Input(component_id='dd-product-name', component_property='value')], 
+                        [State(component_id='dd-shop-name', component_property='options'),
+                        State(component_id='dd-product-name', component_property='options')])
+def set_sales_card(sel_product_categories, sel_shop_names, sel_product_names, avail_shops, avail_products):
     if isinstance(sel_product_categories, list) and isinstance(sel_shop_names, list) and isinstance(sel_product_names, list):
+        # Conditions to check for empty shop names and product names
+        if len(sel_shop_names) == 0:
+            sel_shop_names = copy.deepcopy(avail_shops)
+        if len(sel_product_names) == 0:
+            sel_product_names = copy.deepcopy(avail_products)
+
         sel_df_shop_names = df_shops.loc[df_shops.translated_shop_name.isin(sel_shop_names)].reset_index(drop=True)
         sel_df_product_names = df_products.loc[df_products.translated_item_name.isin(sel_product_names)].reset_index(drop=True)
 
