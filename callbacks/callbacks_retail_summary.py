@@ -7,9 +7,10 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import copy
 import pandas as pd
 from dash import html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from datasets.backend import df_transactions, df_products, df_shops, df_product_categories
 
@@ -71,12 +72,13 @@ def set_category_card(sel_product_categories):
         return no_update
 
 @callback_manager.callback(Output(component_id='p-producttext', component_property='children'),
-                        Input(component_id='dd-product-name', component_property='value'))
-def set_category_card(sel_product):
+                        Input(component_id='dd-product-name', component_property='value'),
+                        State(component_id='dd-product-name', component_property='options'))
+def set_category_card(sel_product, avail_product):
     if isinstance(sel_product, list):
         # Condition for setting all products if none is selected
         if len(sel_product) == 0:
-            sel_product = sorted(list(df_products.translated_item_name.unique()))
+            sel_product = copy.deepcopy(avail_product)
 
         sel_df_product = df_products.loc[df_products.translated_item_name.isin(sel_product)].reset_index(drop=True)
 
@@ -104,9 +106,14 @@ def set_category_card(sel_product):
         return no_update
 
 @callback_manager.callback(Output(component_id='p-shoptext', component_property='children'),
-                        Input(component_id='dd-shop-name', component_property='value'))
-def set_category_card(sel_shops):
+                        Input(component_id='dd-shop-name', component_property='value'),
+                        State(component_id='dd-shop-name', component_property='options'))
+def set_category_card(sel_shops, avail_shops):
     if isinstance(sel_shops, list):
+        # Condition for setting all products if none is selected
+        if len(sel_shops) == 0:
+            sel_shops = copy.deepcopy(avail_shops)
+
         sel_df_shop = df_shops.loc[df_shops.translated_shop_name.isin(sel_shops)].reset_index(drop=True)
 
         # Extracting respective shops ids and getting relevant transaction data
