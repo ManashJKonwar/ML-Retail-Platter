@@ -39,6 +39,10 @@ def set_sales_card(sel_product_categories, sel_shop_names, sel_product_names):
                         Input(component_id='dd-product-category', component_property='value'))
 def set_category_card(sel_product_categories):
     if isinstance(sel_product_categories, list):
+        # Condition for setting all product categories if none is selected
+        if len(sel_product_categories) == 0:
+            sel_product_categories = sorted(list(df_product_categories.translated_item_category_name.unique()))
+
         sel_df_product_categories = df_product_categories.loc[df_product_categories.translated_item_category_name.isin(sel_product_categories)].reset_index(drop=True)
 
         # Extracting item category id and extracting the respective item ids
