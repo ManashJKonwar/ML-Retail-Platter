@@ -102,3 +102,32 @@ def set_category_card(sel_product):
             ]
     else:
         return no_update
+
+@callback_manager.callback(Output(component_id='p-shoptext', component_property='children'),
+                        Input(component_id='dd-shop-name', component_property='value'))
+def set_category_card(sel_shops):
+    if isinstance(sel_shops, list):
+        sel_df_shop = df_shops.loc[df_shops.translated_shop_name.isin(sel_shops)].reset_index(drop=True)
+
+        # Extracting respective shops ids and getting relevant transaction data
+        shop_mask = df_transactions.shop_id.isin(list(sel_df_shop.shop_id.unique()))
+        sel_df_transactions = df_transactions.loc[shop_mask].reset_index(drop=True)
+
+        # Summing up total revenue accumulated by selling from these shops
+        sel_df_transactions['item_sales'] = sel_df_transactions['item_price'] * sel_df_transactions['item_cnt_day']
+        sel_df_transactions['item_sales'] = sel_df_transactions['item_sales'].apply(lambda x : x if x > 0 else 0)
+
+        # Grouping by highest sales for each product id
+        final_grp_transactions = sel_df_transactions.groupby('shop_id').agg({'item_sales':'sum'}).reset_index()
+
+        # Merging transactions data
+        final_sel_transactions = pd.merge(final_grp_transactions, df_shops[['shop_id','translated_shop_name']], how='left', on='shop_id')
+        final_sel_transactions = final_sel_transactions.sort_values('item_sales', ascending=False).reset_index(drop=True)
+
+        return [
+                "Best Store: %s" %(final_sel_transactions.head(1).translated_shop_name[0]),
+                html.Br(),
+                "Total sales from this shop: %s ₽" %(str(final_sel_transactions.head(1).item_sales[0]))
+            ]
+    else:
+        return no_update

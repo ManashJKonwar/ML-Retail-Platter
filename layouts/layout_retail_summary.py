@@ -51,9 +51,9 @@ shop_card = dbc.Card([
                 dbc.CardBody([
                     html.H5("Shopping Card", className="card-title"),
                     html.P([
-                        "Best Store: Fancy Store",
+                        "Best Store: %s" %('Fancy Store'),
                         html.Br(),
-                        "Total Sales Count: %s" %(str(200))],
+                        "Total sales from this shop: %s ₽" %(str(200))],
                         id='p-shoptext',
                         className="card-text",
                     ),
