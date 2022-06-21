@@ -7,6 +7,7 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import copy
 from dash import no_update
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
@@ -26,6 +27,10 @@ def render_content(tab):
                         Input(component_id='dd-product-category', component_property='value'))
 def set_product_options(sel_product_categories):
     if isinstance(sel_product_categories, list):
+        # Condition for setting all product categories if none is selected
+        if len(sel_product_categories) == 0:
+            sel_product_categories = sorted(list(df_product_categories.translated_item_category_name.unique()))
+
         sel_df_product_categories = df_product_categories.loc[df_product_categories.translated_item_category_name.isin(sel_product_categories)].reset_index(drop=True)
 
         # Extracting product names based on product categories
@@ -41,9 +46,14 @@ def set_product_options(sel_product_categories):
 
 @callback_manager.callback([Output(component_id='dd-shop-name', component_property='options'),
                         Output(component_id='dd-shop-name', component_property='value')],
-                        Input(component_id='dd-product-name', component_property='value'))
-def set_product_options(sel_product_names):
+                        Input(component_id='dd-product-name', component_property='value'),
+                        State(component_id='dd-product-name', component_property='options'))
+def set_product_options(sel_product_names, avail_products):
     if isinstance(sel_product_names, list):
+        # Condition for setting all products if none is selected
+        if len(sel_product_names) == 0:
+            sel_product_names = copy.deepcopy(avail_products)
+
         sel_df_product = df_products.loc[df_products.translated_item_name.isin(sel_product_names)].reset_index(drop=True)
 
         # Extracting shop ids based on product names
