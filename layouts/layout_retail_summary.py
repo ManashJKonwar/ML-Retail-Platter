@@ -25,10 +25,23 @@ category_card = dbc.Card([
                 dbc.CardBody([
                     html.H5("Category Card", className="card-title"),
                     html.P([
-                        "Best Category: Accessories",
+                        "Best Category: %s" %('Accessories'),
                         html.Br(),
-                        "Total No of Products Sold: %s" %(str(50))],
+                        "Total no of products sold within this category: %s" %(str(50))],
                         id='p-categorytext',
+                        className="card-text",
+                    ),
+                ]
+            )], color="secondary", inverse=True)
+
+product_card = dbc.Card([
+                dbc.CardBody([
+                    html.H5("Product Card", className="card-title"),
+                    html.P([
+                        "Best Product: %s" %('Ps4'),
+                        html.Br(),
+                        "Total sales for this product: %s ₽" %(str(50))],
+                        id='p-producttext',
                         className="card-text",
                     ),
                 ]
@@ -51,6 +64,7 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col(sales_card),
                 dbc.Col(category_card),
+                dbc.Col(product_card),
                 dbc.Col(shop_card)
             ],
             style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),
