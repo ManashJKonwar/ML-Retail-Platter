@@ -9,6 +9,7 @@ __status__ = "Development"
 
 import copy
 import pandas as pd
+import plotly.express as px
 from dash import html
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
@@ -144,5 +145,48 @@ def set_category_card(sel_shops, avail_shops):
                 html.Br(),
                 "Total sales from this shop: %s ₽" %(str(final_sel_transactions.head(1).item_sales[0]))
             ]
+    else:
+        return no_update
+
+@callback_manager.callback(Output(component_id='g-category', component_property='figure'),
+                        Input(component_id='dd-product-category', component_property='value'))
+def set_category_graph(sel_product_categories):
+    if isinstance(sel_product_categories, list):
+        # Condition for setting all product categories if none is selected
+        if len(sel_product_categories) == 0:
+            sel_product_categories = sorted(list(df_product_categories.translated_item_category_name.unique()))
+
+        sel_df_product_categories = df_product_categories.loc[df_product_categories.translated_item_category_name.isin(sel_product_categories)].reset_index(drop=True)
+
+        # Extracting item category id and extracting the respective item ids
+        item_mask = df_products.item_category_id.isin(list(sel_df_product_categories.item_category_id.unique()))
+        sel_df_product = df_products.loc[item_mask].reset_index(drop=True)
+
+        # Extracting transactions for selected products
+        transaction_mask = (df_transactions.item_id.isin(list(sel_df_product.item_id.unique())))
+        sel_transactions = df_transactions.loc[transaction_mask].reset_index(drop=True) 
+
+        # Merged transactions data
+        final_sel_transactions = pd.merge(pd.merge(sel_transactions, sel_df_product, how='left', on='item_id'), df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id')
+        final_sel_transactions = final_sel_transactions[['date', 'item_price', 'item_cnt_day', 'translated_item_category_name']]
+        final_sel_transactions['item_cnt_day'] = final_sel_transactions['item_cnt_day'].apply(lambda x: x if x>0 else 0.0)
+
+        if isinstance(final_sel_transactions, pd.DataFrame) and final_sel_transactions.shape[0]>0:
+            final_transactions = pd.pivot_table(final_sel_transactions, values='item_cnt_day', index='date', columns='translated_item_category_name', aggfunc='sum')
+            final_transactions = final_transactions.fillna(0)
+            final_transactions = final_transactions.reset_index()
+            final_transactions['date'] = pd.to_datetime(final_transactions['date'], infer_datetime_format=True, format='%d.%m.%Y')
+            final_transactions = final_transactions.sort_values(by='date')
+            final_transactions['date'] = final_transactions['date'].apply(lambda x: x.strftime('%Y-%m-%d'))
+
+            fig = px.line(final_transactions, x="date", y=final_transactions.columns,
+                        hover_data={"date": "|%B %d, %Y"},
+                        title='Category Level Transactions Made')
+            fig.update_xaxes(dtick="M1",
+                            tickformat="%b\n%Y",
+                            ticklabelmode="period")
+            return fig
+        else:
+            return no_update
     else:
         return no_update
