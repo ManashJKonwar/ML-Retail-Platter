@@ -8,6 +8,7 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import dash_bootstrap_components as dbc
+from dash import dcc
 from dash import html
 
 sales_card = dbc.Card([
@@ -88,6 +89,8 @@ shop_card = dbc.Card([
                 )
             ], color="secondary", inverse=True)
 
+category_graph = dcc.Graph(id='g-category')
+
 layout = html.Div([
             dbc.Row([
                 dbc.Col(sales_card),
@@ -96,4 +99,9 @@ layout = html.Div([
                 dbc.Col(shop_card)
             ],
             style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),
+
+            dbc.Row([
+                dbc.Col(category_graph)
+            ],    
+            style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10})
         ])
