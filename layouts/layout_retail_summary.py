@@ -89,7 +89,7 @@ shop_card = dbc.Card([
                 )
             ], color="secondary", inverse=True)
 
-category_graph = dcc.Graph(id='g-category')
+category_graph = dcc.Graph(id='g-category', style={'width': '100%', 'height': '70vh'})
 
 layout = html.Div([
             dbc.Row([
