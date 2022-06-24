@@ -182,9 +182,21 @@ def set_category_graph(sel_product_categories):
             fig = px.line(final_transactions, x="date", y=final_transactions.columns,
                         hover_data={"date": "|%B %d, %Y"},
                         title='Category Level Transactions Made')
-            fig.update_xaxes(dtick="M1",
-                            tickformat="%b\n%Y",
-                            ticklabelmode="period")
+            fig.update_xaxes(
+                dtick="M1",
+                tickformat="%b\n%Y",
+                ticklabelmode="period",
+                rangeslider_visible=True,
+                rangeselector=dict(
+                    buttons=list([
+                        dict(count=1, label="1m", step="month", stepmode="backward"),
+                        dict(count=6, label="6m", step="month", stepmode="backward"),
+                        dict(count=1, label="YTD", step="year", stepmode="todate"),
+                        dict(count=1, label="1y", step="year", stepmode="backward"),
+                        dict(step="all")
+                    ])
+                )
+            )
             return fig
         else:
             return no_update
