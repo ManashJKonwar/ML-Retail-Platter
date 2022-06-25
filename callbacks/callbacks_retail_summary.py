@@ -12,6 +12,7 @@ import pandas as pd
 import plotly.express as px
 from dash import html
 from dash.dependencies import Input, Output, State
+from dash_bootstrap_templates import ThemeChangerAIO, template_from_url
 from callback_manager import CallbackManager
 from datasets.backend import df_transactions, df_products, df_shops, df_product_categories
 
@@ -149,8 +150,9 @@ def set_category_card(sel_shops, avail_shops):
         return no_update
 
 @callback_manager.callback(Output(component_id='g-category', component_property='figure'),
-                        Input(component_id='dd-product-category', component_property='value'))
-def set_category_graph(sel_product_categories):
+                        [Input(component_id='dd-product-category', component_property='value'),
+                        Input(component_id=ThemeChangerAIO.ids.radio('theme'), component_property='value')])
+def set_category_graph(sel_product_categories, sel_theme):
     if isinstance(sel_product_categories, list):
         # Condition for setting all product categories if none is selected
         if len(sel_product_categories) == 0:
@@ -181,7 +183,8 @@ def set_category_graph(sel_product_categories):
 
             fig = px.line(final_transactions, x="date", y=final_transactions.columns,
                         hover_data={"date": "|%B %d, %Y"},
-                        title='Category Level Transactions Made')
+                        title='Category Level Transactions Made',
+                        template=template_from_url(sel_theme))
             fig.update_xaxes(
                 dtick="M1",
                 tickformat="%b\n%Y",
