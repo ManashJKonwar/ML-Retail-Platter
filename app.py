@@ -19,7 +19,8 @@ from callbacks.callbacks_retail_summary import callback_manager as retail_summar
 
 # Normally Dash creates its own Flask server internally however
 # by creating the server we can easily create routes for downloading files etc.
-external_stylesheets = [dbc.themes.BOOTSTRAP]
+dbc_css = ("https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.2/dbc.min.css")
+external_stylesheets = [dbc.themes.BOOTSTRAP, dbc_css]
 server = Flask(__name__) 
 app = dash.Dash(external_stylesheets=external_stylesheets, server=server)
 app.config.suppress_callback_exceptions = True
