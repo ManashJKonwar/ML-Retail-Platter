@@ -38,10 +38,9 @@ layout = dbc.Container([
                     width=8),
                 dbc.Col(
                     html.Div(
-                        html.A(
                             ThemeChangerAIO(
                                 aio_id="theme", 
-                                radio_props={"value":dbc.themes.BOOTSTRAP})
+                                radio_props={"value":dbc.themes.BOOTSTRAP}
                             ),
                         style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}), 
                     width=1)
