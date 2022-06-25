@@ -7,16 +7,17 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
-import dash_bootstrap_components as dbc 
+from dash_bootstrap_templates import ThemeChangerAIO
 
 from datasets.backend import product_categories, shop_names, product_names
 # from backend import channel_type, analysis_type, granularity, maker_type, device_family, spinner
 # from layouts import layout_retail_summary
 
 tab_height = '7vh'
-layout = html.Div([
+layout = dbc.Container([
             dbc.Row([
                 dbc.Col(
                     html.Div(
@@ -34,7 +35,16 @@ layout = html.Div([
                             html.H1('RETAIL PRICING SIMULATOR', style={'text-align': 'center', 'font-weight': 'bold', 'color': '#000000'})
                             ),
                         style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),
-                    width=9)
+                    width=8),
+                dbc.Col(
+                    html.Div(
+                        html.A(
+                            ThemeChangerAIO(
+                                aio_id="theme", 
+                                radio_props={"value":dbc.themes.BOOTSTRAP})
+                            ),
+                        style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}), 
+                    width=1)
             ], style={'backgroundColor':'#D3D3D3'},  className="h-15",),
 
             dbc.Row([
@@ -258,4 +268,6 @@ layout = html.Div([
                     n_intervals=0
                 ),
             ])
-        ])
+        ],
+        fluid=True,
+        className="dbc")
