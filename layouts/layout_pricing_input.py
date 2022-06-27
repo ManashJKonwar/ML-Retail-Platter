@@ -8,10 +8,10 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import pandas as pd
-import dash_table as dt
-import dash_core_components as dcc
 import dash_bootstrap_components as dbc
+from dash import dcc
 from dash import html
+from dash import dash_table as dt
 
 layout = html.Div([
             dbc.Row([
