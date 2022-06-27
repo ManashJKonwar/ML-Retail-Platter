@@ -23,4 +23,21 @@ shop_names = sorted(list(df_shops.translated_shop_name.unique()))
 #endregion
 
 #region Data Preprocessing
+# Generating date month map
+df_date_week_map = df_transactions[['date', 'date_block_num']].copy().drop_duplicates().reset_index(drop=True)
+df_date_week_map['date'] = pd.to_datetime(df_date_week_map['date'], infer_datetime_format=True, format='%d.%m.%Y')
+df_date_week_map['year'] = df_date_week_map.date.apply(lambda x: x.year)
+df_date_week_map['month'] = df_date_week_map.date.apply(lambda x: x.month)
+df_date_week_map = df_date_week_map[['year', 'month','date_block_num']].drop_duplicates().reset_index(drop=True)
+df_date_week_map['date'] =  pd.to_datetime(dict(year=df_date_week_map.year, month=df_date_week_map.month, day='01'))
+
+# Generating consolidated data
+df_consolidated = df_transactions.copy()
+df_consolidated['date'] = pd.to_datetime(df_consolidated['date'], infer_datetime_format=True, format='%d.%m.%Y')
+df_consolidated = df_consolidated.groupby(['shop_id','item_id'], as_index=False)[['date_block_num','item_price','item_cnt_day']].max('date').reset_index(drop=True)
+df_consolidated = pd.merge(df_consolidated, df_date_week_map, how='left', on='date_block_num')[['date', 'shop_id', 'item_id', 'date_block_num', 'item_price', 'item_cnt_day']].reset_index(drop=True)
+
+# Merging item names and shop names with consolidated data
+df_consolidated = pd.merge(df_consolidated, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
+df_consolidated = pd.merge(df_consolidated, df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
 #endregion  
