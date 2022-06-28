@@ -8,6 +8,7 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import pandas as pd
+from utility.utility_data_transformation import long_term_structure, short_term_structure, get_custom_dates
 
 #region Reading Main Dataframes
 df_product_categories = pd.read_csv(r'datasets\translated_item_categories.csv')
@@ -41,3 +42,9 @@ df_consolidated = pd.merge(df_consolidated, df_date_week_map, how='left', on='da
 df_consolidated = pd.merge(df_consolidated, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
 df_consolidated = pd.merge(df_consolidated, df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
 #endregion  
+
+#region Generic functions
+lt_month_range, lt_month2week_list = long_term_structure()
+st_month_range, st_month2week_list = short_term_structure()
+custom_start_date, custom_end_date = get_custom_dates()
+#endregion
