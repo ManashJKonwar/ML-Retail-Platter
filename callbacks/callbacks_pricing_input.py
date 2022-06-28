@@ -40,6 +40,14 @@ def set_simulation_input_data(period_type, custom_start_date, custom_end_date, s
         RSP_structure = pd.concat([df_consolidated[['PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PER_ITEM']],pd.DataFrame(columns=cdr_month_range)])
         TMP_structure = pd.concat([df_consolidated[['PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PER_ITEM']],pd.DataFrame(columns=cdr_week_range)])
 
+    # Check for None type province, ka, manufacturer, brand instance
+    if sel_product_category is None or len(sel_product_category) == 0:
+        sel_product_category = [product_cat for product_cat in df_consolidated.PRODUCT_CATEGORY]
+    if sel_product is None or len(sel_product) == 0:
+        sel_product = [product for product in df_consolidated.PRODUCT]
+    if sel_shop is None or len(sel_shop) == 0:
+        sel_shop = [shop for shop in df_consolidated.SHOP]
+
     # Table structure for RSP and TMP with default price across period rounded off to 3 decimals
     RSP_structure['PRICE_PER_ITEM'] = RSP_structure['PRICE_PER_ITEM'].map("{:.2f}".format)
     TMP_structure['PRICE_PER_ITEM'] = TMP_structure['PRICE_PER_ITEM'].map("{:.2f}".format)
