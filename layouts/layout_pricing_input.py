@@ -57,35 +57,24 @@ layout = html.Div([
                             id='datatable-input',
                             style_header={
                                     'whiteSpace': 'normal',
-                                    'backgroundColor': '#172962',
-                                    'color': 'white'
                                 },
                             style_table={
-                                'height': 350,
+                                'height': 450,
                                 'overflowX': 'scroll',
                                 'overflowY': 'scroll'
                             },
                             style_cell={
                                 'fontSize': '1.5vh',
-                                # 'font-family': 'Arial',
                                 'textAlign': 'center',
-                                "color": "black"
-                                },
+                            },
                             style_cell_conditional=[
-                                {
-                                    'if': {'column_id': c},
-                                    'textAlign': 'left'
-                                } for c in ['MAKER_DESCRIPTION','SUB_FAMILY_DESCRIPTION']],
-                            style_data_conditional=[
-                                {
-                                    'if': {
-                                        'filter_query': '{MODEL_FLAG} = "No"'
-                                    },
-                                    'backgroundColor': '#C2DFFF',
-                                    'color': 'black'
-                                }
-                            ]
-                            ), align="center")
-            ], 
+                            {
+                                'if': {'column_id': c},
+                                'textAlign': 'left'
+                            } for c in ['PRODUCT_CATEGORY','PRODUCT','SHOP']],
+                        ), 
+                        align="center"
+                    )
+                ], 
             style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),
         ])
