@@ -12,9 +12,8 @@ from dash import dcc
 from dash import html
 from dash_bootstrap_templates import ThemeChangerAIO
 
-from datasets.backend import product_categories, shop_names, product_names
+from datasets.backend import product_categories, shop_names, product_names, custom_start_date, custom_end_date
 # from backend import channel_type, analysis_type, granularity, maker_type, device_family, spinner
-# from layouts import layout_retail_summary
 
 tab_height = '7vh'
 layout = dbc.Container([
@@ -56,8 +55,8 @@ layout = dbc.Container([
                             html.Div([
                                 dcc.DatePickerRange(
                                 id='dpr-period',
-                                # start_date=custom_start_date,
-                                # end_date=custom_end_date,
+                                start_date=custom_start_date,
+                                end_date=custom_end_date,
                                 style={
                                     'fontSize': '2vh',
                                     'color': 'black',
