@@ -41,6 +41,12 @@ df_consolidated = pd.merge(df_consolidated, df_date_week_map, how='left', on='da
 # Merging item names and shop names with consolidated data
 df_consolidated = pd.merge(df_consolidated, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
 df_consolidated = pd.merge(df_consolidated, df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
+df_consolidated = pd.merge(df_consolidated, df_shops[['shop_id','translated_shop_name']], how='left', on='shop_id').reset_index(drop=True)
+
+# Renaming columns properly
+df_consolidated.rename(columns={'translated_item_name':'PRODUCT', 'translated_shop_name':'SHOP', 'translated_item_category_name':'PRODUCT_CATEGORY', \
+                    'item_price':'PRICE_PER_ITEM'}, inplace=True)
+df_consolidated = df_consolidated[['PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PER_ITEM']]
 #endregion  
 
 #region Generic functions
