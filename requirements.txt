@@ -4,6 +4,12 @@ dash==2.5.1  # https://pypi.org/project/dash/2.5.1/  # Python framework for buil
 dash-bootstrap-components==1.1.0  # https://pypi.org/project/dash-bootstrap-components/1.1.0/  # Bootstrap themed components for use in Plotly Dash
 dash-bootstrap-templates==1.0.5  # https://pypi.org/project/dash-bootstrap-templates/1.0.5/  # Collection of Plotly figure templates with a Bootstrap theme
 
+# Flask User Authentication
+# ------------------------------------------------------------------------------
+SQLAlchemy==1.4.39  # https://pypi.org/project/SQLAlchemy/  # Database Abstraction Library
+Flask-SQLAlchemy==2.5.1  # https://pypi.org/project/Flask-SQLAlchemy/2.5.1/  # Adds SQLAlchemy support to your Flask application.
+Flask-Login==0.6.1  # https://pypi.org/project/Flask-Login/0.6.1/  # User authentication and session management for Flask.
+
 # Data Generation and Manipulation
 # ------------------------------------------------------------------------------
 pandas==1.4.2  # https://pypi.org/project/pandas/1.4.2/  # Dataframe Related Operations
