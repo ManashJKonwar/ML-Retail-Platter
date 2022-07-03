@@ -13,20 +13,52 @@ import dash
 import logging, logging.config
 import dash_bootstrap_components as dbc
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from callbacks.callbacks_authentication import callback_manager as authentication_callback_manager
 from callbacks.callbacks_sidepanel import callback_manager as sidepanel_callback_manager
 from callbacks.callbacks_retail_summary import callback_manager as retail_summary_callback_manager
 from callbacks.callbacks_pricing_input import callback_manager as pricing_input_callback_manager
 # from config.applogger import LOGGING
 
+# SQL Alchemy DB instance to use it under models
+db = SQLAlchemy()
+
 # Normally Dash creates its own Flask server internally however
 # by creating the server we can easily create routes for downloading files etc.
-dbc_css = ("https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.2/dbc.min.css")
-external_stylesheets = [dbc.themes.BOOTSTRAP, dbc_css]
-server = Flask(__name__) 
-app = dash.Dash(external_stylesheets=external_stylesheets, server=server)
-app.config.suppress_callback_exceptions = True
+def create_app():
+    dbc_css = ("https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates@V1.0.2/dbc.min.css")
+    external_stylesheets = [dbc.themes.BOOTSTRAP, dbc_css]
+    server = Flask(__name__) 
+    app = dash.Dash(external_stylesheets=external_stylesheets, server=server)
+    app.config.suppress_callback_exceptions = True
+
+    # DB configuration
+    app.server.config.update(
+        SECRET_KEY=os.urandom(12),
+        SQLALCHEMY_DATABASE_URI='sqlite:///data.sqlite',
+        SQLALCHEMY_TRACK_MODIFICATIONS=False
+    )
+
+    # Instantiate db 
+    db.init_app(app.server)
+
+    # Instantiate Login Manager
+    login_manager = LoginManager()
+    login_manager.login_view = '/login'
+    login_manager.init_app(app.server)
+
+    # callback to reload the user object
+    @login_manager.user_loader
+    def load_user(user_id):
+        return Users.query.get(int(user_id))
+
+    return app
+
+app = create_app()
 
 # Attaching tab based callbacks to app
+authentication_callback_manager.attach_to_app(app)
 sidepanel_callback_manager.attach_to_app(app)
 retail_summary_callback_manager.attach_to_app(app)
 pricing_input_callback_manager.attach_to_app(app)

@@ -9,11 +9,10 @@ __status__ = "Development"
 
 import os
 from app import app
-from layouts import layout_sidepanel
-# import callbacks
+from layouts import layout_authentication
 
 app.title = "Retail Pricing Simulator"
-app.layout = layout_sidepanel.layout
+app.layout = layout_authentication.layout
 
 if __name__ == '__main__':
     app.run_server()
