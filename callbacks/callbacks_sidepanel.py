@@ -77,6 +77,7 @@ def set_product_options(sel_product_names, avail_products):
             Output(component_id='prediction-detail', component_property='style')],
             Input(component_id='tabs', component_property='value'))
 def render_side_filter(tab):
+    # Condition for hiding and displaying simualtion as well as prediction filters from sidepanel
     if tab == 'tab-2':
         simulation_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'block'}
         prediction_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'None'}
