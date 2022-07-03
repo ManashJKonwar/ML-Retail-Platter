@@ -72,3 +72,20 @@ def set_product_options(sel_product_names, avail_products):
         return final_options, [final_options[0]]
     else:
         return no_update
+
+@callback_manager.callback([Output(component_id='simulation-detail', component_property='style'),
+            Output(component_id='prediction-detail', component_property='style')],
+            Input(component_id='tabs', component_property='value'))
+def render_side_filter(tab):
+    if tab == 'tab-2':
+        simulation_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'block'}
+        prediction_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'None'}
+        return simulation_detail_style, prediction_detail_style
+    elif tab == 'tab-3':
+        simulation_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'None'}
+        prediction_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'block'}
+        return simulation_detail_style, prediction_detail_style
+    else:
+        simulation_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'None'}
+        prediction_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'None'}
+        return simulation_detail_style, prediction_detail_style
