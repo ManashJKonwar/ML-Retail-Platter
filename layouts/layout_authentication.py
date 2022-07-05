@@ -60,7 +60,7 @@ success = html.Div([
             ]),
             html.Div([
                 html.Br(),
-                html.Button(id='back-button', children='Go back', n_clicks=0)
+                html.Button(id='btn-back', children='Go back', n_clicks=0)
             ]) 
         ])
 
