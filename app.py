@@ -10,6 +10,7 @@ __status__ = "Development"
 import os
 import sys
 import dash
+import sqlite3
 import logging, logging.config
 import dash_bootstrap_components as dbc
 from flask import Flask
@@ -19,10 +20,17 @@ from callbacks.callbacks_authentication import callback_manager as authenticatio
 from callbacks.callbacks_sidepanel import callback_manager as sidepanel_callback_manager
 from callbacks.callbacks_retail_summary import callback_manager as retail_summary_callback_manager
 from callbacks.callbacks_pricing_input import callback_manager as pricing_input_callback_manager
+from sqlalchemy import Table, create_engine
+from utility.utility_authentication import Users
 # from config.applogger import LOGGING
 
 # SQL Alchemy DB instance to use it under models
 db = SQLAlchemy()
+
+# Create Db if it does not exists
+conn = sqlite3.connect('data.sqlite')
+engine = create_engine('sqlite:///data.sqlite')
+users_tbl = Table('users', Users.metadata)
 
 # Normally Dash creates its own Flask server internally however
 # by creating the server we can easily create routes for downloading files etc.

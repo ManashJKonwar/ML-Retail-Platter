@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -8,4 +9,8 @@ class Users(db.Model):
     username = db.Column(db.String(15), unique=True, nullable = False)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
+
+# Create User class with UserMixin
+class Users(UserMixin, Users):
+    pass
 #endregion
