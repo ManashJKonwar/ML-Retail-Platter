@@ -21,7 +21,7 @@ from callbacks.callbacks_sidepanel import callback_manager as sidepanel_callback
 from callbacks.callbacks_retail_summary import callback_manager as retail_summary_callback_manager
 from callbacks.callbacks_pricing_input import callback_manager as pricing_input_callback_manager
 from sqlalchemy import Table, create_engine
-from utility.utility_authentication import Users
+from utility.utility_authentication import User, create_users_table
 # from config.applogger import LOGGING
 
 # SQL Alchemy DB instance to use it under models
@@ -30,7 +30,7 @@ db = SQLAlchemy()
 # Create Db if it does not exists
 conn = sqlite3.connect('data.sqlite')
 engine = create_engine('sqlite:///data.sqlite')
-users_tbl = Table('users', Users.metadata)
+users_tbl = Table('users', User.metadata)
 
 # Normally Dash creates its own Flask server internally however
 # by creating the server we can easily create routes for downloading files etc.
@@ -59,7 +59,10 @@ def create_app():
     # callback to reload the user object
     @login_manager.user_loader
     def load_user(user_id):
-        return Users.query.get(int(user_id))
+        return User.query.get(int(user_id))
+
+    # create the user table in db
+    create_users_table(engine)
 
     return app
 
