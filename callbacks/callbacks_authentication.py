@@ -13,9 +13,8 @@ from dash import no_update
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from layouts.layout_authentication import create, login, success, failed, data, logout
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import exc as sqlalchemy_exc
-# from utility.utility_authentication import Users
 
 callback_manager = CallbackManager()
 
@@ -47,6 +46,7 @@ def display_page(pathname):
     else:
         return '404'
 
+# Callback related to "Create User" Section
 @callback_manager.callback(Output(component_id='container-button-basic', component_property="children"),
                         Input(component_id='btn-submit-user', component_property='n_clicks'),
                         [State(component_id='text-username', component_property='value'), 
@@ -82,3 +82,20 @@ def insert_users(n_clicks, un, pw, em):
         return no_update
     else:
         return [html.Div([html.H2('Already have a user account?'), dcc.Link('Click here to Log In', href='/login')])]
+
+# Callback related to "Login User" Section
+@callback_manager.callback(Output(component_id='url_login', component_property='pathname'),
+                        Input(component_id='btn-login', component_property='n_clicks'),
+                        [State(component_id='text-uname-box', component_property='value'), 
+                        State(component_id='text-pwd-box', component_property='value')])
+def successful(n_clicks, ip_uname, ip_pass):
+    from app import User
+    user = User.query.filter_by(username=ip_uname).first()
+    if user:
+        if check_password_hash(user.password, ip_pass):
+            login_user(user)
+            return '/success'
+        else:
+            pass
+    else:
+        pass
