@@ -39,7 +39,6 @@ def display_page(pathname):
     elif pathname =='/simulator':
         if current_user.is_authenticated:
             return layout_sidepanel.layout
-            # return data
     elif pathname == '/logout':
         if current_user.is_authenticated:
             logout_user()
@@ -122,3 +121,24 @@ def update_output(n_clicks, ip_uname, ip_pass):
             return 'Incorrect username or password'
     else:
         return ''
+
+# Callback related to "Go Back" Section 
+@callback_manager.callback(Output(component_id='url_login_success', component_property='pathname'),
+                        Input(component_id='btn-back', component_property='n_clicks'))
+def logout_simulator(n_clicks):
+    if n_clicks > 0:
+        return '/'
+
+# Callback related to "Go Back" Section 
+@callback_manager.callback(Output(component_id='url_login_df', component_property='pathname'),
+                        Input(component_id='btn-back', component_property='n_clicks'))
+def logout_simulator(n_clicks):
+    if n_clicks > 0:
+        return '/'
+
+# Callback related to "Go Back" Section 
+@callback_manager.callback(Output(component_id='url_logout', component_property='pathname'),
+                        Input(component_id='btn-back', component_property='n_clicks'))
+def logout_simulator(n_clicks):
+    if n_clicks > 0:
+        return '/'
