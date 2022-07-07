@@ -11,10 +11,11 @@ from dash import dcc
 from dash import html
 from dash import no_update
 from dash.dependencies import Input, Output, State
+from flask_login import login_user
+from sqlalchemy import exc as sqlalchemy_exc
+from werkzeug.security import generate_password_hash, check_password_hash
 from callback_manager import CallbackManager
 from layouts.layout_authentication import create, login, success, failed, data, logout
-from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import exc as sqlalchemy_exc
 
 callback_manager = CallbackManager()
 
@@ -89,13 +90,33 @@ def insert_users(n_clicks, un, pw, em):
                         [State(component_id='text-uname-box', component_property='value'), 
                         State(component_id='text-pwd-box', component_property='value')])
 def successful(n_clicks, ip_uname, ip_pass):
-    from app import User
-    user = User.query.filter_by(username=ip_uname).first()
-    if user:
-        if check_password_hash(user.password, ip_pass):
-            login_user(user)
-            return '/success'
-        else:
+    if n_clicks > 0:
+        from app import User
+        user = User.query.filter_by(username=ip_uname).first()
+        if user:
+            if check_password_hash(user.password, ip_pass):
+                login_user(user)
+                return '/success'
+            else:
+                pass
+        else:   
             pass
+
+# Callback related to "Login User" Section
+@callback_manager.callback(Output(component_id='output-state', component_property='children'),
+                        Input(component_id='btn-login', component_property='n_clicks'),
+                        [State(component_id='text-uname-box', component_property='value'), 
+                        State(component_id='text-pwd-box', component_property='value')])
+def update_output(n_clicks, ip_uname, ip_pass):
+    if n_clicks > 0:
+        from app import User
+        user = User.query.filter_by(username=ip_uname).first()
+        if user:
+            if check_password_hash(user.password, ip_pass):
+                return ''
+            else:
+                return 'Incorrect username or password'
+        else:
+            return 'Incorrect username or password'
     else:
-        pass
+        return ''
