@@ -11,10 +11,11 @@ from dash import dcc
 from dash import html
 from dash import no_update
 from dash.dependencies import Input, Output, State
-from flask_login import login_user
+from flask_login import login_user, current_user
 from sqlalchemy import exc as sqlalchemy_exc
 from werkzeug.security import generate_password_hash, check_password_hash
 from callback_manager import CallbackManager
+from layouts import layout_sidepanel
 from layouts.layout_authentication import create, login, success, failed, data, logout
 
 callback_manager = CallbackManager()
@@ -35,9 +36,10 @@ def display_page(pathname):
             return success
         else:
             return failed
-    elif pathname =='/data':
+    elif pathname =='/simulator':
         if current_user.is_authenticated:
-            return data
+            return layout_sidepanel.layout
+            # return data
     elif pathname == '/logout':
         if current_user.is_authenticated:
             logout_user()

@@ -55,8 +55,8 @@ success = html.Div([
             html.Div([
                 html.H2('Login successful.'),
                 html.Br(),
-                html.P('Select a Dataset'),
-                dcc.Link('Data', href = '/data')
+                html.P('Select "Open Simulator" link below'),
+                dcc.Link('Open Simulator', href = '/simulator')
             ]),
             html.Div([
                 html.Br(),
