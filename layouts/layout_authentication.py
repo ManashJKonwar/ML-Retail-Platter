@@ -7,6 +7,7 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 
@@ -31,24 +32,76 @@ create = html.Div([
             html.Div(id='container-button-basic')
         ])
 
-login =  html.Div([
-            dcc.Location(id='url_login', refresh=True),
-            html.H2('''Please log in to continue:''', id='h1'),
-            dcc.Input(
-                placeholder='Enter your username',
-                type='text',
-                id='text-uname-box'),
-            dcc.Input(
-                placeholder='Enter your password',
-                type='password',
-                id='text-pwd-box'),
-            html.Button(
-                children='Login',
-                n_clicks=0,
-                type='submit',
-                id='btn-login'),
-            html.Div(children='', id='output-state')
-        ]) 
+left_login_jumbotron = dbc.Col(
+                            html.Div(
+                                [
+                                    html.H2("Change the background", className="display-3"),
+                                    html.Hr(className="my-2"),
+                                    html.P(
+                                        "Swap the background-color utility and add a `.text-*` color "
+                                        "utility to mix up the look."
+                                    ),
+                                    dbc.Button("Example Button", color="light", outline=True),
+                                ],
+                                className="h-100 p-5 text-white bg-dark rounded-3",
+                            ),
+                            md=8,
+                        )
+
+right_login_jumbotron = dbc.Col(
+                            html.Div([
+                                    html.H2("Add borders", className="display-3"),
+                                    html.Hr(className="my-2"),
+                                    html.P(
+                                        "Or, keep it light and add a border for some added definition "
+                                        "to the boundaries of your content."
+                                    ),
+                                    dbc.Button("Example Button", color="secondary", outline=True),
+                                    dcc.Location(id='url_login', refresh=True),
+                                    html.H2('''Please log in to continue:''', id='h1'),
+                                    dcc.Input(
+                                        placeholder='Enter your username',
+                                        type='text',
+                                        id='text-uname-box'),
+                                    dcc.Input(
+                                        placeholder='Enter your password',
+                                        type='password',
+                                        id='text-pwd-box'),
+                                    html.Button(
+                                        children='Login',
+                                        n_clicks=0,
+                                        type='submit',
+                                        id='btn-login'),
+                                    html.Div(children='', id='output-state')
+                                ],
+                                className="h-100 p-5 bg-light border rounded-3",
+                            ),
+                            md=4
+                        ) 
+
+login = dbc.Row(
+            [left_login_jumbotron, right_login_jumbotron],
+            className="align-items-md-stretch",
+        )
+
+# login =  html.Div([
+#             dcc.Location(id='url_login', refresh=True),
+#             html.H2('''Please log in to continue:''', id='h1'),
+#             dcc.Input(
+#                 placeholder='Enter your username',
+#                 type='text',
+#                 id='text-uname-box'),
+#             dcc.Input(
+#                 placeholder='Enter your password',
+#                 type='password',
+#                 id='text-pwd-box'),
+#             html.Button(
+#                 children='Login',
+#                 n_clicks=0,
+#                 type='submit',
+#                 id='btn-login'),
+#             html.Div(children='', id='output-state')
+#         ]) 
 
 success = html.Div([
             dcc.Location(id='url_login_success', refresh=True),
