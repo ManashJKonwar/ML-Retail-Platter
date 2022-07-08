@@ -41,7 +41,6 @@ left_login_jumbotron = dbc.Col(
                                         "Swap the background-color utility and add a `.text-*` color "
                                         "utility to mix up the look."
                                     ),
-                                    dbc.Button("Example Button", color="light", outline=True),
                                 ],
                                 className="h-100 p-5 text-white bg-dark rounded-3",
                             ),
@@ -83,25 +82,6 @@ login = dbc.Row(
             [left_login_jumbotron, right_login_jumbotron],
             className="align-items-md-stretch",
         )
-
-# login =  html.Div([
-#             dcc.Location(id='url_login', refresh=True),
-#             html.H2('''Please log in to continue:''', id='h1'),
-#             dcc.Input(
-#                 placeholder='Enter your username',
-#                 type='text',
-#                 id='text-uname-box'),
-#             dcc.Input(
-#                 placeholder='Enter your password',
-#                 type='password',
-#                 id='text-pwd-box'),
-#             html.Button(
-#                 children='Login',
-#                 n_clicks=0,
-#                 type='submit',
-#                 id='btn-login'),
-#             html.Div(children='', id='output-state')
-#         ]) 
 
 success = html.Div([
             dcc.Location(id='url_login_success', refresh=True),
