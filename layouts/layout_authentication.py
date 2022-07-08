@@ -56,22 +56,22 @@ right_login_jumbotron = dbc.Col(
                                         "Or, keep it light and add a border for some added definition "
                                         "to the boundaries of your content."
                                     ),
-                                    dbc.Button("Example Button", color="secondary", outline=True),
                                     dcc.Location(id='url_login', refresh=True),
                                     html.H2('''Please log in to continue:''', id='h1'),
-                                    dcc.Input(
-                                        placeholder='Enter your username',
+                                    dbc.Input(
+                                        placeholder='Enter your username', 
                                         type='text',
                                         id='text-uname-box'),
-                                    dcc.Input(
-                                        placeholder='Enter your password',
+                                    dbc.Input(
+                                        placeholder='Enter your password', 
                                         type='password',
                                         id='text-pwd-box'),
-                                    html.Button(
+                                    dbc.Button(
                                         children='Login',
                                         n_clicks=0,
                                         type='submit',
-                                        id='btn-login'),
+                                        id='btn-login',
+                                        color='primary'),
                                     html.Div(children='', id='output-state')
                                 ],
                                 className="h-100 p-5 bg-light border rounded-3",
