@@ -54,7 +54,6 @@ right_login_jumbotron = dbc.Col(
                                     html.P(
                                         "Use your credentials to access the fun."
                                     ),
-                                    dcc.Location(id='url_login', refresh=True),
                                     dbc.Input(
                                         placeholder='Enter your username', 
                                         type='text',
@@ -71,6 +70,15 @@ right_login_jumbotron = dbc.Col(
                                         id='btn-login',
                                         color='primary',
                                         style={"margin-top": "5px"}),
+                                    dbc.Button(
+                                        children='Sign Up',
+                                        n_clicks=0,
+                                        type='submit',
+                                        id='btn-signup',
+                                        color='primary',
+                                        style={"margin-top": "5px", "margin-left": "5px"}),
+                                    dcc.Location(id='url_login', refresh=True),
+                                    dcc.Location(id='url_create', refresh=True),
                                     html.Div(children='', id='output-state')
                                 ],
                                 className="h-100 p-5 bg-light border rounded-3",

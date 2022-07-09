@@ -27,10 +27,14 @@ callback_manager = CallbackManager()
 @callback_manager.callback(Output(component_id='auth-page-content', component_property='children'),
                         Input(component_id='auth-url', component_property='pathname'))
 def display_page(pathname):
+    # if pathname == '/':
+        # return create
     if pathname == '/':
-        return create
+        return login
     elif pathname == '/login':
         return login
+    elif pathname == '/create':
+        return create
     elif pathname == '/success':
         if current_user.is_authenticated:
             return success
@@ -84,6 +88,15 @@ def insert_users(n_clicks, un, pw, em):
         return no_update
     else:
         return [html.Div([html.H2('Already have a user account?'), dcc.Link('Click here to Log In', href='/login')])]
+
+# Callback related to "Login User" Section
+@callback_manager.callback(Output(component_id='url_create', component_property='pathname'),
+                        Input(component_id='btn-signup', component_property='n_clicks'))
+def successful(n_clicks):
+    if n_clicks > 0:
+        return '/create'
+    else:   
+        return no_update
 
 # Callback related to "Login User" Section
 @callback_manager.callback(Output(component_id='url_login', component_property='pathname'),
