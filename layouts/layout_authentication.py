@@ -35,28 +35,26 @@ create = html.Div([
 left_login_jumbotron = dbc.Col(
                             html.Div(
                                 [
-                                    html.H2("Change the background", className="display-3"),
+                                    html.H2("Pricing Simulator", className="display-3"),
                                     html.Hr(className="my-2"),
                                     html.P(
-                                        "Swap the background-color utility and add a `.text-*` color "
-                                        "utility to mix up the look."
+                                        "Visualize, Simulate and Project Pricing Scenarios."
                                     ),
                                 ],
                                 className="h-100 p-5 text-white bg-dark rounded-3",
                             ),
+                            style={'height': '100vh', 'padding': '25px'},
                             md=8,
                         )
 
 right_login_jumbotron = dbc.Col(
                             html.Div([
-                                    html.H2("Add borders", className="display-3"),
+                                    html.H2("Login", className="display-3"),
                                     html.Hr(className="my-2"),
                                     html.P(
-                                        "Or, keep it light and add a border for some added definition "
-                                        "to the boundaries of your content."
+                                        "Use your credentials to access the fun."
                                     ),
                                     dcc.Location(id='url_login', refresh=True),
-                                    html.H2('''Please log in to continue:''', id='h1'),
                                     dbc.Input(
                                         placeholder='Enter your username', 
                                         type='text',
@@ -64,17 +62,20 @@ right_login_jumbotron = dbc.Col(
                                     dbc.Input(
                                         placeholder='Enter your password', 
                                         type='password',
-                                        id='text-pwd-box'),
+                                        id='text-pwd-box',
+                                        style={"margin-top": "5px"}),
                                     dbc.Button(
                                         children='Login',
                                         n_clicks=0,
                                         type='submit',
                                         id='btn-login',
-                                        color='primary'),
+                                        color='primary',
+                                        style={"margin-top": "5px"}),
                                     html.Div(children='', id='output-state')
                                 ],
                                 className="h-100 p-5 bg-light border rounded-3",
                             ),
+                            style={'height': '100vh', 'padding': '25px'},
                             md=4
                         ) 
 
