@@ -7,6 +7,7 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import pickle
 import pandas as pd
 from utility.utility_data_transformation import long_term_structure, short_term_structure, get_custom_dates
 
@@ -53,4 +54,33 @@ df_consolidated = df_consolidated[['PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PE
 lt_month_range, lt_month2week_list = long_term_structure()
 st_month_range, st_month2week_list = short_term_structure()
 custom_start_date, custom_end_date = get_custom_dates()
+#endregion
+
+#region Inferencing pipeline related
+df_product_categories_model_map = pd.read_csv('datasets\item_categories_map.csv')
+features_list = []
+with open(r'datasets\new_features.pkl', 'rb') as feature_file:
+    features_list = pickle.load(feature_file)
+df_features = pd.DataFrame(columns=['feature_name','feature_type','price_dependency']) 
+
+# Form a dataframe which maps each feature to type of it and whether it is 
+# dependent on price change or not
+for feature in features_list:
+    feature_type, price_dependency = '', False
+    # Segregating features
+    feature_split = feature.split('_')
+    if 'sales' in feature_split or 'cnt' in feature_split:
+        feature_type = 'sales'
+    elif 'price' in feature_split:
+        feature_type = 'price'
+        price_dependency = True
+    elif 'tfidf' in feature_split:
+        feature_type = 'text'
+
+    intermediate_features = pd.DataFrame.from_records([{'feature_name': feature, 'feature_type': feature_type, 'price_dependency': price_dependency}])
+    df_features = pd.concat([df_features, intermediate_features], ignore_index=True)
+    # df_features = df_features.append({'feature_name':feature,'feature_type':feature_type,'price_dependency':price_dependency}, ignore_index=True)
+
+df_features = df_features.reset_index(drop=True)
+print(df_features.shape)
 #endregion
