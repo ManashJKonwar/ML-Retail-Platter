@@ -16,7 +16,7 @@ sales_card = dbc.Spinner(
                     dbc.CardImg(
                         src="/assets/retail_tab_images/revenue_card.jpg", 
                         top=True,
-                        style={'opacity':0.3, 'width':'100%', 'height':'10vw'}
+                        style={'opacity':0.3, 'width':'100%', 'height':'15vw'}
                     ),
                     dbc.CardImgOverlay(
                         dbc.CardBody([
@@ -36,7 +36,7 @@ category_card = dbc.Spinner(
                         dbc.CardImg(
                             src="/assets/retail_tab_images/category_card.jpg", 
                             top=True,
-                            style={'opacity':0.3, 'width':'100%', 'height':'10vw'}
+                            style={'opacity':0.3, 'width':'100%', 'height':'15vw'}
                         ),
                         dbc.CardImgOverlay(
                             dbc.CardBody([
@@ -58,7 +58,7 @@ product_card = dbc.Spinner(
                         dbc.CardImg(
                             src="/assets/retail_tab_images/product_card.jpg", 
                             top=True,
-                            style={'opacity':0.3, 'width':'100%', 'height':'10vw'}
+                            style={'opacity':0.3, 'width':'100%', 'height':'15vw'}
                         ),
                         dbc.CardImgOverlay(
                             dbc.CardBody([
@@ -80,7 +80,7 @@ shop_card = dbc.Spinner(
                     dbc.CardImg(
                             src="/assets/retail_tab_images/shop_card.jpg", 
                             top=True,
-                            style={'opacity':0.3, 'width':'100%', 'height':'10vw'}
+                            style={'opacity':0.3, 'width':'100%', 'height':'15vw'}
                     ),
                     dbc.CardImgOverlay(
                         dbc.CardBody([
