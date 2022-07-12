@@ -24,6 +24,15 @@ def render_content(tab):
     elif tab == 'tab-2':
         return layout_pricing_input.layout
 
+@callback_manager.callback([Output(component_id='btn-run-simulation', component_property='style'),
+                        Output(component_id='btn-reset-simulator', component_property='style')],
+                        Input(component_id='tabs', component_property='value'))
+def render_button(tab):
+    if tab == 'tab-2':
+        return {'display': 'block'}, {'display': 'block'}
+    else:
+        return {'display': 'none'}, {'display': 'none'} 
+
 @callback_manager.callback([Output(component_id='dd-product-name', component_property='options'),
                         Output(component_id='dd-product-name', component_property='value')],
                         Input(component_id='dd-product-category', component_property='value'))
