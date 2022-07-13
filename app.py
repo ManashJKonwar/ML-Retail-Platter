@@ -97,6 +97,7 @@ if len(sys.argv)>1:
         print('Setting app config as Deployment')
         app.server.config["ENV"] = "deployment"
     logger.info("Setting app config with %s Instance" %(sys.argv[1]))
+'''
 
 # Configuring Flask Server based on ENV type
 if app.server.config["ENV"] == "production":
@@ -115,4 +116,3 @@ else:
     print('Setting Deployment Configurations')
     app.server.config.from_object("config.appconfig.DeploymentConfig")
     os.environ["ENV"] = "deployment"
-'''
