@@ -24,6 +24,7 @@ def long_running_simulation(**kwargs):
     df_switching = kwargs.get('df_switching')
     model_endpoints_dict = kwargs.get('model_endpoints_dict')
     model_picklefile_dict = kwargs.get('model_picklefile_dict')
+    mapping_dict = kwargs.get('mapping_dict')
     period_type = kwargs.get('period_type')
     month_to_weeks = kwargs.get('month_to_weeks')
     pickle_flag = kwargs.get('pickle_flag')
@@ -51,6 +52,7 @@ def long_running_simulation(**kwargs):
                                                     model_endpoints_df=df_model_endpoints,
                                                     model_endpoints_dict=model_endpoints_dict,
                                                     model_picklefile_dict=model_picklefile_dict,
+                                                    mapping_dict=mapping_dict,
                                                     product_info_dict={'CATEGORY': row.PRODUCT_CATEGORY, 'PRODUCT': row.PRODUCT, 'SHOP':row.SHOP},
                                                     month_to_weeks=month_to_weeks,
                                                     pickle_flag=pickle_flag,
