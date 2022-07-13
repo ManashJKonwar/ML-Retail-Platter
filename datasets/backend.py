@@ -81,6 +81,11 @@ for feature in features_list:
     df_features = pd.concat([df_features, intermediate_features], ignore_index=True)
     # df_features = df_features.append({'feature_name':feature,'feature_type':feature_type,'price_dependency':price_dependency}, ignore_index=True)
 
+df_variable_type = df_features.copy().reset_index(drop=True)
+
+df_features['MODEL_ID'] = 'MODEL_01'
 df_features = df_features.reset_index(drop=True)
-print(df_features.shape)
+
+# Extract the xvars for last training month i.e. date_block_num == 33
+df_xvar = pd.read_csv('datasets\latest_dataset.csv')
 #endregion
