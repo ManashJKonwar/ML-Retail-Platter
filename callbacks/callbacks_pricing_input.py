@@ -10,7 +10,8 @@ __status__ = "Development"
 import pandas as pd
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
-from datasets.backend import df_consolidated, lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
+from tasks import long_running_simulation
+from datasets.backend import df_consolidated, df_features, lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
 from utility.utility_data_transformation import custom_datepicker
 
 callback_manager = CallbackManager()
@@ -73,3 +74,59 @@ def set_simulation_input_data(period_type, custom_start_date, custom_end_date, s
         else:
             column_list.append({"name": column_name, "id": column_name})
     return df_templatedata.to_dict('records'), column_list
+
+#region Running Simulations
+@callback_manager.callback([Output(component_id='storage-pricing-output', component_property='data'),
+                        Output(component_id='storage-pricing-input', component_property='data')],
+                        Input(component_id='btn-run-simulation', component_property='n_clicks'),
+                        [State(component_id='dd-period', component_property='value'),
+                        State(component_id='datatable-input', component_property='data'),
+                        State(component_id='storage-pricing-output', component_property='data'),
+                        State(component_id='storage-pricing-input', component_property='data')], prevent_initial_call=True)
+def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_state, pricing_input_state):
+
+    # Identification of Triggering Point
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        trigger_component_id = 'No clicks yet'  
+    else:
+        trigger_component_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+    # Conditional Output wrt Input Source Type
+    if trigger_component_id == 'btn-run-simulation' and n_run_simulation:
+        print('Run Simulation Clicked')
+        
+        # Extracting input pricing table data
+        df_pricing_input = pd.DataFrame(data=pricing_input)
+        
+        # Benchmarking finalize - COMMENTED FOR NOW and replaced with empty dataframe
+        # df_benchmarking_preds = baseline_predictions_weekly if period_type.__eq__('Quarterly') or period_type.__eq__('Custom') else baseline_predicitons_monthly
+        df_benchmarking_preds = pd.DataFrame()
+
+        # Scheduling long running simulation tasks via celery and rabbitmQ
+        df_predicted = long_running_simulation(df_historic=df_historic,
+                                            df_consolidated=df_consolidated,
+                                            df_benchmarking_preds=df_benchmarking_preds,
+                                            df_pricing_input=df_pricing_input,
+                                            df_features=df_features,
+                                            df_xvar=df_xvar,
+                                            df_competitor_rank=df_competitor_rank,
+                                            overridden_xvars_dict={'seasonality_weather_df':df_seasonality_weather},
+                                            df_variable_type=df_variable_type,
+                                            df_switching=df_switching,
+                                            df_model_endpoints=df_models,
+                                            model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'],
+                                            model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'],
+                                            brand_mapper_dict=app.server.config['BRAND_MAPPER_DICT'],
+                                            ka_mapper_dict= app.server.config['KA_MAPPER_DICT'],
+                                            period_type=period_type,
+                                            month_to_weeks=lt_month2week_list,
+                                            pickle_flag=False,
+                                            logger=logger)
+        return df_predicted.to_dict('records'), df_pricing_input.to_dict('records')
+
+    elif trigger_component_id == 'datatable-input':
+        if pricing_input_state is None and pricing_output_state is None:
+            return pd.DataFrame().to_dict('records'), pd.DataFrame().to_dict('records')
+        elif pricing_input_state is not None and pricing_output_state is not None:
+            return pricing_output_state, pricing_input_state
