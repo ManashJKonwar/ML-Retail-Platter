@@ -88,4 +88,9 @@ df_features = df_features.reset_index(drop=True)
 
 # Extract the xvars for last training month i.e. date_block_num == 33
 df_xvar = pd.read_csv('datasets\latest_dataset.csv')
+
+# Extracting the maps
+dict_product_category_id_map = {row.item_category_name: row.item_category_id for row in pd.read_csv('datasets\item_categories_map.csv').itertuples()}
+dict_product_id_map = {row.translated_item_name: row.item_id for row in df_products[['item_id','translated_item_name']].drop_duplicates().itertuples()}
+dict_shop_id_map = {row.translated_shop_name: row.shop_id for row in df_shops[['shop_id','translated_shop_name']].drop_duplicates().itertuples()}
 #endregion
