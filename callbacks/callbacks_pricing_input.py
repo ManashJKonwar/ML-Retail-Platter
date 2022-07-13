@@ -7,11 +7,13 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import dash
 import pandas as pd
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from tasks import long_running_simulation
-from datasets.backend import df_consolidated, df_features, lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
+from datasets.backend import df_consolidated, df_features, df_variable_type, df_xvar, \
+                            lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
 from utility.utility_data_transformation import custom_datepicker
 
 callback_manager = CallbackManager()
@@ -99,9 +101,15 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
         # Extracting input pricing table data
         df_pricing_input = pd.DataFrame(data=pricing_input)
         
-        # Benchmarking finalize - COMMENTED FOR NOW and replaced with empty dataframe
+        # COMMENTED FOR NOW and replaced with empty dataframe
+        df_historic = pd.DataFrame()
         # df_benchmarking_preds = baseline_predictions_weekly if period_type.__eq__('Quarterly') or period_type.__eq__('Custom') else baseline_predicitons_monthly
         df_benchmarking_preds = pd.DataFrame()
+        df_competitor_rank = pd.DataFrame()
+        df_seasonality_weather = pd.DataFrame()
+        df_switching = pd.DataFrame()
+        df_models = pd.DataFrame()
+        logger = None
 
         # Scheduling long running simulation tasks via celery and rabbitmQ
         df_predicted = long_running_simulation(df_historic=df_historic,
@@ -121,7 +129,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
                                             ka_mapper_dict= app.server.config['KA_MAPPER_DICT'],
                                             period_type=period_type,
                                             month_to_weeks=lt_month2week_list,
-                                            pickle_flag=False,
+                                            pickle_flag=True,
                                             logger=logger)
         return df_predicted.to_dict('records'), df_pricing_input.to_dict('records')
 
