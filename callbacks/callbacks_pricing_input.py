@@ -96,6 +96,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
 
     # Conditional Output wrt Input Source Type
     if trigger_component_id == 'btn-run-simulation' and n_run_simulation:
+        from app import app
         print('Run Simulation Clicked')
         
         # Extracting input pricing table data
@@ -125,8 +126,6 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
                                             df_model_endpoints=df_models,
                                             model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'],
                                             model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'],
-                                            brand_mapper_dict=app.server.config['BRAND_MAPPER_DICT'],
-                                            ka_mapper_dict= app.server.config['KA_MAPPER_DICT'],
                                             period_type=period_type,
                                             month_to_weeks=lt_month2week_list,
                                             pickle_flag=True,
