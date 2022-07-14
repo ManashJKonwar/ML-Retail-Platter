@@ -110,9 +110,13 @@ right_login_jumbotron = dbc.Col(
                             md=4
                         ) 
 
-login = dbc.Row(
-            [left_login_jumbotron, right_login_jumbotron],
-            className="align-items-md-stretch",
+login = dbc.Container([
+            dbc.Row(
+                [left_login_jumbotron, right_login_jumbotron],
+                className="align-items-md-stretch",
+            )
+        ],
+        fluid=True
         )
 
 success = html.Div([
