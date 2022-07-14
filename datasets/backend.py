@@ -57,32 +57,42 @@ custom_start_date, custom_end_date = get_custom_dates()
 #endregion
 
 #region Inferencing pipeline related
-df_product_categories_model_map = pd.read_csv('datasets\item_categories_map.csv')
-features_list = []
+derived_features_list = []
 with open(r'datasets\new_features.pkl', 'rb') as feature_file:
-    features_list = pickle.load(feature_file)
-df_features = pd.DataFrame(columns=['feature_name','feature_type','price_dependency']) 
+    derived_features_list = pickle.load(feature_file)
 
-# Form a dataframe which maps each feature to type of it and whether it is 
-# dependent on price change or not
-for feature in features_list:
-    feature_type, price_dependency = '', False
-    # Segregating features
-    feature_split = feature.split('_')
-    if 'sales' in feature_split or 'cnt' in feature_split:
-        feature_type = 'sales'
-    elif 'price' in feature_split:
-        feature_type = 'price'
-        price_dependency = True
-    elif 'tfidf' in feature_split:
-        feature_type = 'text'
+def generate_features_df(features_list=[]):
+    df_features = pd.DataFrame(columns=['feature_name','feature_type','price_dependency']) 
+    try:
+        # Form a dataframe which maps each feature to type of it and whether it is 
+        # dependent on price change or not
+        for feature in features_list:
+            feature_type, price_dependency = '', False
+            # Segregating features
+            feature_splitted_list = feature.split('_')
+            if 'sales' in feature_splitted_list or 'cnt' in feature_splitted_list:
+                feature_type = 'sales'
+            elif 'price' in feature_splitted_list:
+                feature_type = 'price'
+                price_dependency = True
+            elif 'tfidf' in feature_splitted_list:
+                feature_type = 'text'
+            else:
+                if 'date' in feature_splitted_list:
+                    feature_type = 'month'
+                else:
+                    feature_type = 'id'
 
-    intermediate_features = pd.DataFrame.from_records([{'feature_name': feature, 'feature_type': feature_type, 'price_dependency': price_dependency}])
-    df_features = pd.concat([df_features, intermediate_features], ignore_index=True)
-    # df_features = df_features.append({'feature_name':feature,'feature_type':feature_type,'price_dependency':price_dependency}, ignore_index=True)
+            intermediate_features = pd.DataFrame.from_records([{'feature_name': feature, 'feature_type': feature_type, 'price_dependency': price_dependency}])
+            df_features = pd.concat([df_features, intermediate_features], ignore_index=True)
+        
+        return df_features
+    except Exception as ex:
+        print('Caught Exception while generating features dataframe as: %s' %(str(ex)))
+        pass
 
+df_features = generate_features_df(features_list=['shop_id', 'item_id', 'item_category_id', 'date_block_num', 'item_price'] + derived_features_list)
 df_variable_type = df_features.copy().reset_index(drop=True)
-
 df_features['MODEL_ID'] = 'MODEL_01'
 df_features = df_features.reset_index(drop=True)
 
