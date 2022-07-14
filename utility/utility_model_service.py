@@ -7,6 +7,10 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import copy
+import math
+import datetime
+
 class PredictSalesModel():
     def __init__(self, *args, **kwargs):
         #args -- tuple of anonymous arguments
@@ -54,6 +58,9 @@ class PredictSalesModel():
 
         try:
             '''
+            COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since it has only one model however this would be really convenient if there
+            are multiple models based on data granularity
+
             # Masking features related to only specific Province and Brand from features dataframe
             feature_extraction_mask = (self._features_df.PROVINCE==self._province_brand_dict['PROVINCE']) &\
                                     (self._features_df.BRAND_AGG==self._brand_mapper_dict[self._province_brand_dict['BRAND']])&\
@@ -83,7 +90,10 @@ class PredictSalesModel():
             
             for row in self._features_df.itertuples():
                 if row.feature_name not in feature_dict.keys():
-                    feature_dict[row.feature_name] = {'value':float(consolidated_data[row.feature_name])}
+                    if math.isnan(consolidated_data[row.feature_name][0]):
+                        feature_dict[row.feature_name] = {'value':0.0}
+                    else:
+                        feature_dict[row.feature_name] = {'value':consolidated_data[row.feature_name][0]}
             #self._logger.info('Feature Extraction Done Successfully')
             return feature_dict
         except Exception as ex:
@@ -134,14 +144,20 @@ class PredictSalesModel():
         # Populating final data
         for key in data_dict.keys():
             row_dict = copy.deepcopy(self._features_dict)
-            # Overridding Price Per Stick Value
-            if 'AVE_PRICE_STICK' in row_dict.keys():
-                row_dict['AVE_PRICE_STICK']['value'] = float(data_dict[key])
-            # Overridding Trend Variable by Dynamically Calculated Value
-            if 'LINEARTREND' in row_dict.keys():
+            # Overridding Price Per Item Value based on user Input
+            if 'item_price' in row_dict.keys():
+                row_dict['item_price']['value'] = float(data_dict[key])
+            
+            # Overridding Trend Variable/Date Block No by Dynamically Calculated Value
+            if 'date_block_num' in row_dict.keys():
                 key_date = datetime.datetime.strptime(key, '%Y-%b-%d').date()
-                start_date = datetime.datetime.strptime('1970-01-01', '%Y-%m-%d').date()
-                row_dict['LINEARTREND']['value'] = abs(key_date-start_date).days + 1
+                start_date = datetime.datetime.strptime('2013-01-01', '%Y-%m-%d').date()
+                row_dict['date_block_num']['value'] = (key_date.year - start_date.year) * 12 + key_date.month - start_date.month
+            
+            '''
+            COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since seasonality, weather, pricing ratios, lag and log features are not
+            utilized currently
+
             # Modifying Seasonality and Weather Data
             row_dict = self.modify_backend_xvars(row_dict=row_dict, week_date=key)
             # Modifying Pricing Ratios
@@ -151,6 +167,8 @@ class PredictSalesModel():
             # Modifying Log Features # This needs to be the ending step of modifying it since we were playing with absolute values
             # till now
             row_dict = self.modify_log_features(row_dict=row_dict)
+            '''
+
             # Adding to final data dictionary
             self._final_data_dict['data'] += [[x['value'] for x in list(row_dict.values())]]
         
