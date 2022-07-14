@@ -132,3 +132,4 @@ dmypy.json
 data.sqlite
 .vscode/*
 logs/*
+datasets/latest_dataset.csv
