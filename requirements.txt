@@ -13,3 +13,8 @@ Flask-Login==0.6.1  # https://pypi.org/project/Flask-Login/0.6.1/  # User authen
 # Data Generation and Manipulation
 # ------------------------------------------------------------------------------
 pandas==1.4.2  # https://pypi.org/project/pandas/1.4.2/  # Dataframe Related Operations
+
+# Modelling
+# ------------------------------------------------------------------------------
+xgboost==1.5.2  # https://pypi.org/project/xgboost/1.5.2/  # XGBoost Python Package
+scikit-learn==1.0.2  # https://pypi.org/project/scikit-learn/1.0.2/  # A set of python modules for machine learning and data mining

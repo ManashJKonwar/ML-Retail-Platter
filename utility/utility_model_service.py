@@ -7,8 +7,10 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import os
 import copy
 import math
+import pickle
 import datetime
 
 class PredictSalesModel():
@@ -35,13 +37,31 @@ class PredictSalesModel():
         
         '''
         self._model_uri, self._bearer_key, self._reg_model_name = self.map_model_endpoint() # Extracts Model URL for respective Province + Brand Combination
-        self._model_pkl = self.map_model_picklefile() # Extracts Name of Pickle file for respective Province + Brand Combination
         self._model_comp = self.map_model_comp() # Extracts competitor rank data based on Province + Brand i.e. irrespective of KA it is constant 
         self._combined_own_df, self._combined_comp_df = self.split_historic_df() # Extracts Own and Competitor Consolidate Price Per Stick
         '''
-        self._features_dict = self._map_features() # Extracts Significant features for the respective Province + Brand Combination in a dictionary with latest values
+        self._model_pkl = self._map_model_picklefile() # Extracts Name of Pickle file for respective data granularity (category+product+shop)
+        self._features_dict = self._map_features() # Extracts Significant features for the respective data granularity (category+product+shop) in a dictionary with latest values
 
         self._final_data_dict = {'data':[]} 
+
+    def _map_model_picklefile(self):
+        """
+        This method maps model pickle file and extracts name of pickle file to refer
+        Parameters: 
+            None
+        Returns: 
+            pickle_file_name (str): name of the pickle file based on combination of Province and Brand
+        """
+        try:
+            '''
+            COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since it has only one model however this would be really convenient if there
+            are multiple models based on data granularity
+            return self._model_picklefile_dict[self._province_brand_dict['PROVINCE']][self._province_brand_dict['BRAND']][self._province_brand_dict['KA']]
+            '''
+            return "model_trained_w_price_xgb.pkl"
+        except Exception:
+            return None
 
     def _map_features(self):
         """
@@ -173,3 +193,83 @@ class PredictSalesModel():
             self._final_data_dict['data'] += [[x['value'] for x in list(row_dict.values())]]
         
         # self._logger.info('Generating Input Data Done Successfully with data length: %s' %(str(len(self._final_data_dict['data']))))
+
+    def predict(self):
+        """
+        This method helps in predicting input data based on two methods. These are:
+        1. Reading Pickle files and getting model predictions
+        2. Requesting Model APIs and getting model predictions
+        Parameters: 
+            None
+        Returns: 
+            request status code (int): 200 fr success, 800 for failure and so
+            predicted json (json): textual response from the API or pickle file under consideration
+        """
+        self._bearer_key = 'bearer key'
+        if self._pickle_flag:
+            return predict_fn(pkl=os.path.join('datasets','trained_models',self._model_pkl), 
+                            data=self._final_data_dict)
+        else:
+            return predict_service(uri=self._model_uri, 
+                                bearer_key=self._bearer_key,
+                                json_dict={
+                                    'data':self._final_data_dict['data'],
+                                    'model':self._reg_model_name}
+                                )
+
+def predict_service(uri=None, bearer_key=None, json_dict=None):
+    """
+        This method helps in requesting Model APIs and getting model predictions
+        Parameters: 
+            uri (str): Model URI to request
+            bearer_key (str): Access token for making the request to respective URI
+            json_dict (dict, (list, float)): Generated Input Data for respective model 
+        Returns: 
+            request status code (int): 200 fr success, 800 for failure and so
+            predicted json (json): textual response from the API or pickle file under consideration
+    """
+    if uri is None or bearer_key is None or json_dict is None:
+        print('Not a Standard request')
+        return
+
+    # URL for the web service
+    scoring_uri = uri
+    # If the service is authenticated, set the key or token
+    api_key = bearer_key
+    # Convert to JSON string
+    input_data = json.dumps(json_dict)
+
+    # Set the content type
+    headers = {'Content-Type': 'application/json'}
+    # If authentication is enabled, set the authorization header
+    headers['Authorization'] = f'Bearer {api_key}'
+
+    # Make the request and display the response
+    response = requests.post(scoring_uri, input_data, headers=headers)
+    return response.status_code, response.text
+
+def predict_fn(pkl=None, data=None):
+    """
+        This method helps in loading respective pickle file and making the prediction
+        Parameters: 
+            pkl (str): Model Pickle Name
+            data (dict, (list, float)): Generated Input Data for respective model 
+        Returns: 
+            request status code (int): 200 fr success, 800 for failure and so
+            predicted json (json): textual response from the API or pickle file under consideration
+    """
+    if pkl is None or data is None:
+        print('Not a Standard operation')
+        return
+    
+    # Load respective model from pkl file
+    model = None
+    with open(pkl,'rb') as pkl_file:
+        model = pickle.load(pkl_file)
+
+    # Hit the predict function and return the response
+    try:
+        predictions = model.predict(data['data'])
+        return 200, ','.join(str(x) for x in predictions)
+    except Exception as ex:
+        return 400, str(ex)
