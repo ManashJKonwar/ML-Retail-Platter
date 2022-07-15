@@ -114,7 +114,7 @@ class PredictSalesModel():
                         feature_dict[row.feature_name] = {'value':0.0}
                     else:
                         feature_dict[row.feature_name] = {'value':consolidated_data[row.feature_name][0]}
-            #self._logger.info('Feature Extraction Done Successfully')
+            self._logger.info('Feature Extraction Done Successfully')
             return feature_dict
         except Exception as ex:
             raise ex
@@ -192,7 +192,7 @@ class PredictSalesModel():
             # Adding to final data dictionary
             self._final_data_dict['data'] += [[x['value'] for x in list(row_dict.values())]]
         
-        # self._logger.info('Generating Input Data Done Successfully with data length: %s' %(str(len(self._final_data_dict['data']))))
+        self._logger.info('Generating Input Data Done Successfully with data length: %s' %(str(len(self._final_data_dict['data']))))
 
     def predict(self):
         """

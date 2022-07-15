@@ -286,9 +286,9 @@ def custom_formatter(**kwargs):
                 formatted_col_dict = format_predictions(row_data=row_Data)
                 for colname in prediction_output_df.columns[start_col_index:]:
                     modified_prediction_df.iloc[row_Index, prediction_output_df.columns.get_loc(colname)] = formatted_col_dict[colname]
-                # logger.info('Custom Formatting Done Successfully for Product Category: %s, Product: %s and Shop: %s' %(str(row_Data.PRODUCT_CATEGORY), str(row_Data.PRODUCT), str(row_Data.SHOP)))
+                logger.info('Custom Formatting Done Successfully for Product Category: %s, Product: %s and Shop: %s' %(str(row_Data.PRODUCT_CATEGORY), str(row_Data.PRODUCT), str(row_Data.SHOP)))
             except Exception as ex:
-                # logger.error('Custom Formatting Caught exception for Product Category: %s, Product: %s and Shop: %s with exception as %s' %(str(row_Data.PRODUCT_CATEGORY), str(row_Data.PRODUCT), str(row_Data.SHOP), str(ex)))
+                logger.error('Custom Formatting Caught exception for Product Category: %s, Product: %s and Shop: %s with exception as %s' %(str(row_Data.PRODUCT_CATEGORY), str(row_Data.PRODUCT), str(row_Data.SHOP), str(ex)))
                 continue
         return modified_prediction_df  
     else:

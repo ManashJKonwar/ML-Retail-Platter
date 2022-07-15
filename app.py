@@ -16,13 +16,13 @@ import dash_bootstrap_components as dbc
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from config.applogger import app_loggers
+from sqlalchemy import Table, create_engine
 from callbacks.callbacks_authentication import callback_manager as authentication_callback_manager
 from callbacks.callbacks_sidepanel import callback_manager as sidepanel_callback_manager
 from callbacks.callbacks_retail_summary import callback_manager as retail_summary_callback_manager
 from callbacks.callbacks_pricing_input import callback_manager as pricing_input_callback_manager
-from sqlalchemy import Table, create_engine
 from utility.utility_authentication import User, create_users_table
-# from config.applogger import LOGGING
 
 # SQL Alchemy DB instance to use it under models
 db = SQLAlchemy()
@@ -74,16 +74,15 @@ sidepanel_callback_manager.attach_to_app(app)
 retail_summary_callback_manager.attach_to_app(app)
 pricing_input_callback_manager.attach_to_app(app)
 
-'''
 # Adding log folder if it not exists
 if not os.path.exists('logs'):
     os.makedirs('logs')
 
-# Adding Log handlers for Simulator
-logging.config.dictConfig(LOGGING)
-logger = logging.getLogger('pricing_handler')
+# Adding log handlers for simulator
+logging.config.dictConfig(app_loggers)
 
-pricing_input_cm.attach_to_app(app)
+'''
+logger = logging.getLogger('pricing_handler')
 
 # Segregating Dash Application Environment based on Configuration
 if len(sys.argv)>1:

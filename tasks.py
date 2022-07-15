@@ -34,11 +34,12 @@ def long_running_simulation(**kwargs):
     # Initiating empty dataframe with similar no of columns as input pricing
     df_predicted = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
     
+    logger.info('Raw Predictions Started')
     # Iterate via each row of Datatable 
     for row in df_pricing_input.itertuples(index=False, name='Pandas'):
         dummy_df = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
         try:
-            # logger.info('Generating Prediction Model for Province: %s and Brand: %s and KA: %s' %(row.PROVINCE, row.BRAND, row.KA))
+            logger.info('Generating Prediction Model for Product Category: %s and Product: %s and sold from Shop: %s' %(row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
             print('Generating Prediction Model for Product Category: %s and Product: %s and sold from Shop: %s' %(row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
             predict_model_instance = PredictSalesModel(row_info_data=[list(df_pricing_input.columns), row],
                                                     historic_df=df_historic,
@@ -89,6 +90,7 @@ def long_running_simulation(**kwargs):
                                         error=True)
             df_predicted = df_predicted.append(dummy_df, ignore_index = True)
             continue
+    logger.info('Raw Predictions Ended')
 
     # Rounding Off the Predictions to 4 places
     df_predicted = df_predicted.round(4)
@@ -136,7 +138,7 @@ def long_running_simulation(**kwargs):
     '''
 
     # Applying Custom Prediction Formatter
-    # logger.info('Custom Predictions Fornatter Started')
+    logger.info('Custom Predictions Fornatter Started')
     df_predicted = custom_formatter(
                         prediction_output_df=df_predicted,
                         start_col_index=3,
@@ -144,6 +146,6 @@ def long_running_simulation(**kwargs):
                         make_exponential=False,
                         logger=logger
                     )
-    # logger.info('Custom Predictions Fornatter Ended')
+    logger.info('Custom Predictions Fornatter Ended')
     
     return df_predicted

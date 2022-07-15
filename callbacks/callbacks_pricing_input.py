@@ -8,6 +8,7 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import dash
+import logging
 import pandas as pd
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
@@ -17,6 +18,7 @@ from datasets.backend import df_consolidated, df_features, df_variable_type, df_
                             lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
 from utility.utility_data_transformation import custom_datepicker
 
+logger = logging.getLogger('pricing_handler') # Retrieve Logger Handler
 callback_manager = CallbackManager()
 
 @callback_manager.callback([Output(component_id='datatable-input', component_property='data'),
@@ -111,7 +113,6 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
         df_seasonality_weather = pd.DataFrame()
         df_switching = pd.DataFrame()
         df_models = pd.DataFrame()
-        logger = None
 
         # Scheduling long running simulation tasks via celery and rabbitmQ
         df_predicted = long_running_simulation(df_historic=df_historic,
