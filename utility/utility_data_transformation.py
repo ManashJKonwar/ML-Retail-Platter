@@ -7,11 +7,16 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import ast
+import math
+import numpy as np
 import pandas as pd
 import datetime as dt
 import calendar as ca
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
+
+SYMBOL_REMOVAL=['"','[',']','{','}','predict',':']
 
 #region Date Related Data Transformations
 # Long term monthly window structure
@@ -137,4 +142,155 @@ def custom_datepicker(start_date=None, end_date=None):
         month_list_input = [i.strftime("%Y-%b-%d") for i in month_dict.keys()]
 
         return month_list_input, week_list_input
+#endregion
+
+#region Prediction Compiler
+def compile_prediction(**kwargs):
+    """
+    This method compiles prediciton output based on 3 types of granularity:
+    1. Weekly
+    2. Annually i.e. Monthly
+    3. Custom expressed as extension of Weekly
+    Parameters: 
+        kwargs : Multiple Arguments
+            period_type (str): type of granularity (options are weekly, annually and custom)
+            predicted_data (str): string response from model service
+            result_df (pandas dataframe): Dataframe Framework to fill in details
+            row_data (pandas series): provides information on some extra colums 
+            column_name_list (list, str): list of column names to iterate on
+            month2weeks (list, str): List of all available weeks within simualtion period i.e.  Monday of each week
+            take_log (bool): If log needs to be taken or not based on type of model
+            error (bool): if its an error predicted data or successful one
+    Returns: 
+        result_df (pandas dataframe): Dataframe Framework Aggregated Properly with prediction
+    """
+    period_type = kwargs.get('period_type')
+    predicted_data = kwargs.get('predicted_data')
+    result_df = kwargs.get('result_df')
+    row_data = kwargs.get('row_data')
+    column_name_list = kwargs.get('column_name_list')
+    month2weeks = kwargs.get('month2weeks')
+    take_log = kwargs.get('take_log')
+    error = kwargs.get('error')
+    if not error:
+        # Cleaning Predicted Message
+        for item in SYMBOL_REMOVAL:
+            predicted_data = predicted_data.replace(item,'')
+        result = ast.literal_eval(predicted_data.strip())
+        # Check if models used are log-linear models
+        if take_log:
+            result = tuple([np.expm1(item) for item in result])
+            if any(math.isinf(prediction) for prediction in result):
+                modified_result = []
+                for prediction in result:
+                    modified_result.append(0.0) if math.isinf(prediction) else modified_result.append(prediction)
+                result = tuple(modified_result)
+
+        if period_type.__eq__('Quarterly') or period_type.__eq__('Custom'):
+            if isinstance(result, tuple):
+                result_df.loc[0] = column_name_list+list(result)
+                return result_df
+        elif period_type.__eq__('Annually'):
+            if isinstance(result, tuple):
+                # Perform Avg Aggregation for converting weekly level predictions
+                # to month level data
+                month_map, month_agg={},{}
+                predicted_list, extraction_counter = list(result), 0
+                iterative_list = list(result_df.columns[3:]) 
+                for item in iterative_list:
+                    try:
+                        item_year_month = '-'.join(item.split('-')[0:2])
+                        month_map[item_year_month] = [x for x in month2weeks if '-'.join(x.split('-')[0:2]) == item_year_month]
+                        if len(month_map[item_year_month])>0:
+                            agg_predicted_list = predicted_list[extraction_counter:(extraction_counter+len(month_map[item_year_month]))]
+                            month_agg[item] = round(sum(agg_predicted_list),2)
+                            extraction_counter+=len(month_map[item_year_month])
+                    except Exception:
+                        month_agg[item] = 'Aggregation Error'
+                        continue
+                result_df.loc[0] = column_name_list+list(month_agg.values())
+                return result_df
+    else:
+        if isinstance(predicted_data, str):
+            result_df.loc[0] = [row_data.PROVINCE, row_data.MANUF, row_data.BRAND]+[predicted_data for i in range(len(result_df.columns)-3)]
+            return result_df
+#endregion
+
+#region Custom Formatter
+def custom_formatter(**kwargs):
+    """
+    This method is utilize to convert each prediction per brand into a customized string format
+    Parameters: 
+        kwargs : Multiple Arguments
+            prediction_output_df (pandas dataframe): predicted dataframe in same order as that of pricing input
+            start_col_index (int): Data Column Starting Index in Prediction Output
+            before_decimal_approximation (int): How many decimals to round up if predictions are to be expressed in 
+                                                exponential form
+            make_exponential (bool): True or False (by default False)
+            logger (logging object): Logger
+    Returns: 
+        modified_prediction_df (pandas dataframe): predicted dataframe in with string formatted data
+                                                e.g. by default the predictions are represented as exponential form
+                                                with a limitation of how many digits needs to be present before decimal
+    """
+    prediction_output_df = kwargs.get('prediction_output_df')
+    start_col_index = kwargs.get('start_col_index')
+    before_decimal_approximation = kwargs.get('before_decimal_approximation')
+    make_exponential = kwargs.get('make_exponential') if 'make_exponential' in kwargs.keys() else False
+    logger = kwargs.get('logger')
+    
+    def isfloat(value):
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
+        
+    def format_predictions(row_data=None,
+                           start_col_index=start_col_index,
+                           before_decimal_approximation=before_decimal_approximation):
+        formatted_col_dict = {}
+        try:
+            predictions = [row_data[predicted_date] for predicted_date in list(row_data[start_col_index:].index)]
+            n = before_decimal_approximation
+            col_counter = 0
+            for prediction in predictions:
+                modified_prediction = None 
+                current_predicition = prediction               
+                if isfloat(current_predicition):
+                    if make_exponential:
+                        e = math.ceil(math.log10(current_predicition) - n)
+                        n_digits = current_predicition * 10**-e
+                        if e:
+                            modified_prediction = '%.0fe%d' % (n_digits, e)
+                        else:
+                            modified_prediction = '%.0f' % (current_predicition)
+                    else:
+                        modified_prediction = round(current_predicition,0)
+                else:
+                    modified_prediction = prediction
+
+                if row_data[start_col_index:].index[col_counter] not in formatted_col_dict.keys():
+                    formatted_col_dict[row_data[start_col_index:].index[col_counter]] = modified_prediction
+                
+                col_counter+=1
+        except Exception: 
+            pass
+        finally:
+            return formatted_col_dict
+
+    modified_prediction_df=prediction_output_df.copy()
+    if prediction_output_df is not None:
+        for row_Index, row_Data in prediction_output_df.iterrows():
+            try:
+                formatted_col_dict = format_predictions(row_data=row_Data)
+                for colname in prediction_output_df.columns[start_col_index:]:
+                    modified_prediction_df.iloc[row_Index, prediction_output_df.columns.get_loc(colname)] = formatted_col_dict[colname]
+                # logger.info('Custom Formatting Done Successfully for Product Category: %s, Product: %s and Shop: %s' %(str(row_Data.PRODUCT_CATEGORY), str(row_Data.PRODUCT), str(row_Data.SHOP)))
+            except Exception as ex:
+                # logger.error('Custom Formatting Caught exception for Product Category: %s, Product: %s and Shop: %s with exception as %s' %(str(row_Data.PRODUCT_CATEGORY), str(row_Data.PRODUCT), str(row_Data.SHOP), str(ex)))
+                continue
+        return modified_prediction_df  
+    else:
+        return prediction_output_df.copy()
 #endregion

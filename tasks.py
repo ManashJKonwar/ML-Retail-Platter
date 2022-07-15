@@ -9,6 +9,7 @@ __status__ = "Development"
 
 import pandas as pd
 from utility.utility_model_service import PredictSalesModel
+from utility.utility_data_transformation import compile_prediction, custom_formatter
 
 def long_running_simulation(**kwargs):
     df_historic = kwargs.get('df_historic')
@@ -36,7 +37,6 @@ def long_running_simulation(**kwargs):
     # Iterate via each row of Datatable 
     for row in df_pricing_input.itertuples(index=False, name='Pandas'):
         dummy_df = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
-        #print('dummy_df : ', dummy_df)
         try:
             # logger.info('Generating Prediction Model for Province: %s and Brand: %s and KA: %s' %(row.PROVINCE, row.BRAND, row.KA))
             print('Generating Prediction Model for Product Category: %s and Product: %s and sold from Shop: %s' %(row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
@@ -64,16 +64,16 @@ def long_running_simulation(**kwargs):
                                             predicted_data=predicted_data, 
                                             result_df=dummy_df,
                                             row_data=row, 
-                                            column_name_list=[row.PROVINCE, row.MANUF, row.BRAND, row.KA],
+                                            column_name_list=[row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
                                             month2weeks=month_to_weeks,
-                                            take_log=True,
+                                            take_log=False,
                                             error=False)
             else:
                 dummy_df = compile_prediction(period_type=period_type, 
                                             predicted_data=predicted_data,
                                             result_df=dummy_df, 
                                             row_data=row, 
-                                            column_name_list=[row.PROVINCE, row.MANUF, row.BRAND, row.KA],
+                                            column_name_list=[row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
                                             month2weeks=month_to_weeks,
                                             take_log=False,
                                             error=True)
@@ -83,7 +83,7 @@ def long_running_simulation(**kwargs):
                                         predicted_data=predicted_data, 
                                         result_df=dummy_df,
                                         row_data=row, 
-                                        column_name_list=[row.PROVINCE, row.MANUF, row.BRAND, row.KA],
+                                        column_name_list=[row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
                                         month2weeks=month_to_weeks,
                                         take_log=False,
                                         error=True)
@@ -96,6 +96,9 @@ def long_running_simulation(**kwargs):
     # Replace all negative values with zero
     num = df_predicted._get_numeric_data()
     num[num < 0] = 0
+
+    '''
+    COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since there are not too many business logics which we are inetgrating with inferencing pipeline
 
     # Replace zero values by moving average of last 4 weeks
     logger.info('Replacing Zeros by moving average value Started')
@@ -118,13 +121,6 @@ def long_running_simulation(**kwargs):
                         logger=logger
                     )
     logger.info('Benchmarking Predictions Ended')
-    print('df predicted columns 329 before custom switching: ', df_predicted)
-    #own store retention logic
-    """ logger.info('own store retention implementation on predictions started')
-    df_predicted = own_store_retention(
-
-                    )
-    logger.info('own store retention implementation on predictions ended') """
 
     # Switching Logic
     logger.info('Switching Logic Implementation on Predictions Started')
@@ -137,30 +133,17 @@ def long_running_simulation(**kwargs):
                         logger=logger
                     )
     logger.info('Switching Logic Implementation on Predictions Ended')
-    print('df predicted columns : ', df_predicted)
-    logger.info('own store logic implementation on predictions started')
-    df_predicted = own_store_retention(
-                        prediction_output_df=df_predicted,
-                        pricing_input_df=df_pricing_input,
-                        latest_sales_df=df_historic,
-                        switching_df=df_switching,
-                        start_col_index=4,
-                        elastic_df = elastic_df,
-                        logger=logger,
-                        brand_mapper_dict = brand_mapper_dict,
-                        ka_mapper_dict = ka_mapper_dict
-                    )
-    logger.info('onw store logic implementation on predictions ended')
-    
+    '''
+
     # Applying Custom Prediction Formatter
-    logger.info('Custom Predictions Fornatter Started')
+    # logger.info('Custom Predictions Fornatter Started')
     df_predicted = custom_formatter(
                         prediction_output_df=df_predicted,
-                        start_col_index=4,
+                        start_col_index=3,
                         before_decimal_approximation=4,
                         make_exponential=False,
                         logger=logger
                     )
-    logger.info('Custom Predictions Fornatter Ended')
-    print('predicted dataframe 370 :', df_predicted)
+    # logger.info('Custom Predictions Fornatter Ended')
+    
     return df_predicted
