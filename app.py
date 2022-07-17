@@ -22,6 +22,7 @@ from callbacks.callbacks_authentication import callback_manager as authenticatio
 from callbacks.callbacks_sidepanel import callback_manager as sidepanel_callback_manager
 from callbacks.callbacks_retail_summary import callback_manager as retail_summary_callback_manager
 from callbacks.callbacks_pricing_input import callback_manager as pricing_input_callback_manager
+from callbacks.callbacks_pricing_sales import callback_manager as prediction_output_callback_manager
 from utility.utility_authentication import User, create_users_table
 
 # SQL Alchemy DB instance to use it under models
@@ -73,6 +74,7 @@ authentication_callback_manager.attach_to_app(app)
 sidepanel_callback_manager.attach_to_app(app)
 retail_summary_callback_manager.attach_to_app(app)
 pricing_input_callback_manager.attach_to_app(app)
+prediction_output_callback_manager.attach_to_app(app)
 
 # Adding log folder if it not exists
 if not os.path.exists('logs'):
