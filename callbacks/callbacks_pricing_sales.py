@@ -9,6 +9,7 @@ __status__ = "Development"
 
 import dash
 import pandas as pd
+import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 
@@ -111,3 +112,40 @@ def update_predicted_brand_options(stored_sales_prediction, dd_category_value):
         return options, shop_selection_list[0]
     else:
         return dash.no_update, dash.no_update
+
+# Sales Charting based on Category and Shop Selected
+@callback_manager.callback(Output(component_id='g-sales', component_property='figure'),
+                        [Input(component_id='storage-pricing-output', component_property='data'),
+                        Input(component_id='dd-category-predicted', component_property='value'),
+                        Input(component_id='dd-shop-predicted', component_property='value')])
+def sales_predicted_charting(stored_sales_prediction, dd_category_value, dd_shop_value):
+    tracer_list=[]
+    if stored_sales_prediction is not None and len(stored_sales_prediction)>0 and\
+    dd_category_value is not None and dd_shop_value is not None:
+        df_predicted = pd.DataFrame(stored_sales_prediction).copy()
+        # Filter based on Province and Brands Selected
+        selection_mask = ((df_predicted.PRODUCT_CATEGORY.isin([dd_category_value])) & (df_predicted.SHOP.isin(dd_shop_value))) if isinstance(dd_shop_value, list) else \
+                        ((df_predicted.PRODUCT_CATEGORY.isin([dd_category_value])) & (df_predicted.SHOP.isin([dd_shop_value])))
+        df_predicted = df_predicted.loc[selection_mask].reset_index(drop=True)
+
+        df_intermediate = df_predicted.copy()
+        df_intermediate = df_intermediate.T
+
+        stacked_counter=0
+        for product in df_predicted['PRODUCT']:
+            try:
+                tracer = go.Bar(x=df_intermediate[3:].index, y=df_intermediate[stacked_counter][3:], name=product)
+                tracer_list.append(tracer)
+            except Exception as ex:
+                print(ex)
+                continue
+            finally:
+                stacked_counter+=1
+
+        figure={
+            'data':tracer_list,
+            'layout':go.Layout(title='Predicted Volume Sales', barmode='stack')
+        }
+        return figure
+    else:
+        return dash.no_update
