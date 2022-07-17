@@ -87,13 +87,11 @@ layout = dbc.Container([
                                 dcc.RadioItems(
                                     id='radioitem-prediction',
                                     options=[
-                                        {'label': 'Sticks (CIG)/ Gm (RYO)/ Items (NC)', 'value': 'Sticks'},
-                                        {'label': 'Share by Volume', 'value': 'Share_Volume'},
+                                        {'label': 'Item Count', 'value': 'Count'},
+                                        {'label': 'Share by Volume', 'value': 'Share_by_Count'},
                                         {'label': 'Value/CPTO', 'value': 'Value'},
-                                        {'label': 'Share by Value/CPTO','value': 'Share_Value'},
-                                        {'label': 'All','value': 'All'}
                                     ],
-                                    value='Sticks',
+                                    value='Count',
                                     labelStyle={'display': 'block'}
                                 )  
                             ])
