@@ -7,17 +7,17 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
-import dash_table as dt
 import dash_bootstrap_components as dbc
+from dash import dash_table as dt
 from dash import dcc
 from dash import html
 
 layout = html.Div([
             dbc.Row([
                 dbc.Col([
-                    dbc.Row(html.Label('Sticks: Expressed as Per 1000 Sticks', style={'font-size':'9px','font-weight': 'bold', 'color': '#000000'})),
+                    dbc.Row(html.Label('Sticks: Expressed as No of Items Sold', style={'font-size':'9px','font-weight': 'bold', 'color': '#000000'})),
                     dbc.Row(html.Label('Shares: Expressed as %age', style={'font-size':'9px','font-weight': 'bold', 'color': '#000000'})),
-                    dbc.Row(html.Label('Value: Expressed as Canadian Dollars', style={'font-size':'9px','font-weight': 'bold', 'color': '#000000'})),
+                    dbc.Row(html.Label('Value: Expressed as Currency', style={'font-size':'9px','font-weight': 'bold', 'color': '#000000'})),
                 ]),
                 dbc.Col(dbc.Button(
                             "Download Predicted Sales", 
