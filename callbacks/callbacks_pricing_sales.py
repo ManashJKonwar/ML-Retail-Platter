@@ -8,6 +8,8 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import dash
+import pandas as pd
+from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 
 callback_manager = CallbackManager()
@@ -22,14 +24,12 @@ def sales_output(stored_sales_prediction, prediction_value_type, stored_pricing_
         df_predicted = pd.DataFrame(stored_sales_prediction)
         
         # Modifying Predicted Data to fulfil the representation type 
-        if prediction_value_type.__eq__('Sticks'):
+        if prediction_value_type.__eq__('Count'):
             df_intermediate = df_predicted.copy()
             # Converting string based predicted values to float column type
-            # Dividing each column value by 1000 so as to express predictions per 1000 sticks
             for colname in df_intermediate.columns[3:]:
                 try:
                     df_intermediate[colname] = df_intermediate[colname].astype(float)
-                    # df_intermediate[colname] = df_intermediate[colname].apply(lambda x:x/1000)
                     df_intermediate[colname] = df_intermediate[colname].apply(lambda x:x/1)
                 except Exception:
                     continue
@@ -37,11 +37,11 @@ def sales_output(stored_sales_prediction, prediction_value_type, stored_pricing_
             df_intermediate = df_intermediate.round(0)
             # Assign df_predicted 
             df_predicted = df_intermediate
-        elif prediction_value_type.__eq__('Share'):
+        elif prediction_value_type.__eq__('Share_by_Count'):
             df_intermediate = df_predicted.copy()
             # Converting string based predicted values to float column type
             # Dividing each column value by sum of the column
-            for colname in df_intermediate.columns[4:]:
+            for colname in df_intermediate.columns[3:]:
                 try:
                     df_intermediate[colname] = df_intermediate[colname].astype(float)
                     df_intermediate[colname] = (df_intermediate[colname]/df_intermediate[colname].sum()) * 100
@@ -54,13 +54,11 @@ def sales_output(stored_sales_prediction, prediction_value_type, stored_pricing_
         elif prediction_value_type.__eq__('Value'):
             df_pricing = pd.DataFrame(stored_pricing_data)
             df_intermediate = df_predicted.copy()
-            for colname in df_predicted.columns[4:]:
+            for colname in df_predicted.columns[3:]:
                 try:
                     df_intermediate[colname] = df_intermediate[colname].astype(float)
                     df_pricing[colname] = df_pricing[colname].astype(float)
-                    df_intermediate[colname] = np.where((df_intermediate['PROVINCE'] == 'BRITISHCOLUMBIA') | (df_intermediate['PROVINCE'] == 'NEWFOUNDLAND&LABR.'), \
-                                                    (df_intermediate[colname]*1000) * (df_pricing[colname]/20) / 100, 
-                                                    (df_intermediate[colname]*1000) * (df_pricing[colname]/25) / 100)
+                    df_intermediate[colname] = df_intermediate[colname] * df_pricing[colname], 
                 except Exception:
                     continue
             # Round off intermediate dataframe
