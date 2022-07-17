@@ -33,8 +33,6 @@ layout = html.Div([
                             id='datatable-output',
                             style_header={
                                     'whiteSpace': 'normal',
-                                    'backgroundColor': '#172962',
-                                    'color': 'white'
                                 },
                             style_table={
                                 'height': 350,
@@ -44,7 +42,6 @@ layout = html.Div([
                             style_cell={
                                 'fontSize': '1.5vh',
                                 'textAlign': 'center',
-                                "color": "black"
                                 },
                             ), align="center")
             ], 
