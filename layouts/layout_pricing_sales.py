@@ -51,16 +51,14 @@ layout = html.Div([
                 dbc.Col([
                     html.Div([
                         # Province Output Filter
-                        html.Label('Province:', style={'font-weight': 'bold', 'color': '#000000'}),
+                        html.Label('Product Category:', style={'font-weight': 'bold', 'color': '#000000'}),
                         html.Div([
                             dcc.Dropdown(
-                                id='dd-province-predicted',
-                                # options=[{'label': i, 'value': i} for i in channel_type],
-                                # value=channel_type[0],
+                                id='dd-category-predicted',
                                 multi=False,
                                 searchable=False,
                                 clearable=False,
-                                placeholder='Select Output Channel',
+                                placeholder='Select Sold Catgeory',
                                 style={
                                     'fontSize': '2vh',
                                     'color': 'black',
@@ -72,16 +70,14 @@ layout = html.Div([
                 dbc.Col([
                     html.Div([
                         # Province Output Filter
-                        html.Label('Brand:', style={'font-weight': 'bold', 'color': '#000000'}),
+                        html.Label('Shop:', style={'font-weight': 'bold', 'color': '#000000'}),
                         html.Div([
                             dcc.Dropdown(
-                                id='dd-brand-predicted',
-                                # options=[{'label': i, 'value': i} for i in channel_type],
-                                # value=channel_type[0],
+                                id='dd-shop-predicted',
                                 multi=True,
                                 searchable=False,
                                 clearable=False,
-                                placeholder='Select Brand',
+                                placeholder='Select Output Store',
                                 style={
                                     'fontSize': '2vh',
                                     'color': 'black',
@@ -96,7 +92,7 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col(
                     dcc.Graph(
-                        id='sbc-sales'
+                        id='g-sales'
                         ),
                 )
             ], 
