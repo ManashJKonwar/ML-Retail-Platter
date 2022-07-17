@@ -72,3 +72,42 @@ def sales_output(stored_sales_prediction, prediction_value_type, stored_pricing_
         return df_predicted.to_dict('records'), column_list
     else:
         return dash.no_update, dash.no_update
+
+# Setting up options and dropdown value for Predicted Category Dropdown
+@callback_manager.callback([Output(component_id='dd-category-predicted', component_property='options'),
+                        Output(component_id='dd-category-predicted', component_property='value')],
+                        Input(component_id='storage-pricing-output', component_property='data'))
+def update_predicted_province_options(stored_sales_prediction):
+    if stored_sales_prediction is not None:
+        # Extract Simulated category
+        category_selection_list = []
+        try:
+            sales_df = pd.DataFrame(stored_sales_prediction).copy()
+            category_selection_list = sales_df.PRODUCT_CATEGORY.unique().tolist()
+        except Exception:
+            pass
+        options = [{'label': i, 'value': i} for i in category_selection_list]
+        return options, category_selection_list[0]
+    else:
+        return dash.no_update, dash.no_update
+
+# Setting up options and dropdown value for Predicted Shop Dropdown
+@callback_manager.callback([Output(component_id='dd-shop-predicted', component_property='options'),
+                        Output(component_id='dd-shop-predicted', component_property='value')],
+                        [Input(component_id='storage-pricing-output', component_property='data'),
+                        Input(component_id='dd-category-predicted', component_property='value')])
+def update_predicted_brand_options(stored_sales_prediction, dd_category_value):
+    if stored_sales_prediction is not None and dd_category_value is not None:
+        # Extract Simulated Shop
+        shop_selection_list = []
+        try:
+            sales_df = pd.DataFrame(stored_sales_prediction).copy()
+            category_mask = sales_df.PRODUCT_CATEGORY.isin([dd_category_value])
+            sales_df = sales_df.loc[category_mask]
+            shop_selection_list = sales_df.SHOP.unique().tolist()
+        except Exception:
+            pass
+        options = [{'label': i, 'value': i} for i in shop_selection_list]
+        return options, shop_selection_list[0]
+    else:
+        return dash.no_update, dash.no_update
