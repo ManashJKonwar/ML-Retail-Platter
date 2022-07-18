@@ -11,7 +11,7 @@ import copy
 from dash import no_update
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
-from layouts import layout_retail_summary, layout_pricing_input, layout_pricing_sales, layout_pivot_kpis
+from layouts import layout_retail_summary, layout_pricing_input, layout_pricing_sales, layout_pivot_kpis, layout_kpis
 from datasets.backend import df_transactions, df_products, df_shops, df_product_categories
 
 callback_manager = CallbackManager()
@@ -27,6 +27,8 @@ def render_content(tab):
         return layout_pricing_sales.layout
     elif tab == 'tab-4':
         return layout_pivot_kpis.layout
+    elif tab == 'tab-5':
+        return layout_kpis.layout
 
 @callback_manager.callback([Output(component_id='btn-run-simulation', component_property='style'),
                         Output(component_id='btn-reset-simulator', component_property='style')],
