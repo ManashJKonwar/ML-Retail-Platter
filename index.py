@@ -11,7 +11,7 @@ import os
 from app import app
 from layouts import layout_authentication
 
-app.title = "Retail Pricing Simulator"
+app.title = "Retail Simulator"
 app.layout = layout_authentication.layout
 
 if __name__ == '__main__':
