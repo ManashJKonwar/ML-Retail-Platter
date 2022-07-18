@@ -55,6 +55,7 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col(dt.DataTable(
                             id='datatable-input',
+                            editable=True,
                             style_header={
                                     'whiteSpace': 'normal',
                                 },
