@@ -231,8 +231,8 @@ layout = dbc.Container([
                             dcc.Tab(label='Retail Summary', value='tab-1', style={'padding': '0', 'line-height': tab_height}),
                             dcc.Tab(label='Pricing Input', value='tab-2', style={'padding': '0', 'line-height': tab_height}),
                             dcc.Tab(label='Product Sales', value='tab-3', style={'padding': '0', 'line-height': tab_height}),
-                            dcc.Tab(label='Product KPIs', value='tab-4', style={'padding': '0', 'line-height': tab_height}),
-                            dcc.Tab(label='Product KPIs Pivot', value='tab-5', style={'padding': '0', 'line-height': tab_height}),
+                            dcc.Tab(label='Product KPIs Pivot', value='tab-4', style={'padding': '0', 'line-height': tab_height}),
+                            dcc.Tab(label='Product KPIs', value='tab-5', style={'padding': '0', 'line-height': tab_height}),
                             dcc.Tab(label='Simulator Info', value='tab-6', style={'padding': '0', 'line-height': tab_height})
                         ])
                     , html.Div(id='tabs-content') #Setting default pricing input

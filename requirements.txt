@@ -13,6 +13,7 @@ Flask-Login==0.6.1  # https://pypi.org/project/Flask-Login/0.6.1/  # User authen
 # Data Generation and Manipulation
 # ------------------------------------------------------------------------------
 pandas==1.4.2  # https://pypi.org/project/pandas/1.4.2/  # Dataframe Related Operations
+dash-pivottable==0.0.2  # https://pypi.org/project/dash-pivottable/0.0.2/ # Dash Pivot table and Data Aggregation
 
 # Modelling
 # ------------------------------------------------------------------------------
