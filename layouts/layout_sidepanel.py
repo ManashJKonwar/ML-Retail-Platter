@@ -31,7 +31,7 @@ layout = dbc.Container([
                 dbc.Col(
                     html.Div(
                         html.A(
-                            html.H1('RETAIL PRICING SIMULATOR', style={'text-align': 'center', 'font-weight': 'bold', 'color': '#000000'})
+                            html.H1('RETAIL SIMULATOR', style={'text-align': 'center', 'font-weight': 'bold', 'color': '#000000'})
                             ),
                         style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),
                     width=8),
