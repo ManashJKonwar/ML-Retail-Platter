@@ -51,7 +51,7 @@ def get_kpi_widget_template(n_clicks):
             ),
             dcc.Dropdown(
                 id={
-                    'type': 'dynamic-dd-channel',
+                    'type': 'dynamic-dd-shop',
                     'index': n_clicks
                 },
                 multi=True
