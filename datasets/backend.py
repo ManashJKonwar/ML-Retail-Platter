@@ -104,3 +104,23 @@ dict_product_category_id_map = {row.item_category_name: row.item_category_id for
 dict_product_id_map = {row.translated_item_name: row.item_id for row in df_products[['item_id','translated_item_name']].drop_duplicates().itertuples()}
 dict_shop_id_map = {row.translated_shop_name: row.shop_id for row in df_shops[['shop_id','translated_shop_name']].drop_duplicates().itertuples()}
 #endregion
+
+#region KPI widgetting
+# Extracting week, year and month information from transaction dates
+df_transactions_weekly = df_transactions.copy()
+df_transactions_weekly['date'] = pd.to_datetime(df_transactions_weekly['date'], infer_datetime_format=True, format='%d.%m.%Y')
+df_transactions_weekly['week'] = df_transactions_weekly.date.dt.isocalendar().week
+df_transactions_weekly['month'] = df_transactions_weekly.date.dt.month
+df_transactions_weekly['year'] = df_transactions_weekly.date.dt.year
+
+# Grouping item prices based on grouby selections
+df_transactions_weekly = df_transactions_weekly.groupby(['week','year','shop_id','item_id']).agg({'item_price':'mean'}).reset_index()
+
+# Merging item names and shop names with consolidated data
+df_transactions_weekly = pd.merge(df_transactions_weekly, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
+df_transactions_weekly = pd.merge(df_transactions_weekly, df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
+df_transactions_weekly = pd.merge(df_transactions_weekly, df_shops[['shop_id','translated_shop_name']], how='left', on='shop_id').reset_index(drop=True)
+
+# Renaming columns properly
+df_transactions_weekly = df_transactions_weekly.rename(columns={'translated_item_name':'product_name', 'translated_item_category_name':'product_category', 'translated_shop_name':'shop_name'})
+#endregion
