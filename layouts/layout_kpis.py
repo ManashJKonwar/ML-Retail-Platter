@@ -61,7 +61,7 @@ def get_kpi_widget_template(n_clicks):
                     'type': 'dynamic-dd-kpi',
                     'index': n_clicks
                 },
-                options=[{'label': s, 'value': s} for s in ['Product Volume', 'Product Profit', 'SOD']],
+                options=[{'label': s, 'value': s} for s in ['Product Volume', 'Product Profit', 'SOP']],
                 value='Product Volume'
             ),
             dbc.Row([

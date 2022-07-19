@@ -31,12 +31,12 @@ class KPICalculation():
                         }
 
     def set_kpi(self):
-        if self.calculation_parameter.__eq__('Product Volumes'):
-            return self.ProductVolume(self)
+        if self.calculation_parameter.__eq__('Product Volume'):
+            return ProductVolume(self)
         elif self.calculation_parameter.__eq__('Product Profit'):
-            return self.ProductProfit(self)
+            return ProductProfit(self)
         elif self.calculation_parameter.__eq__('SOP'):
-            return self.SOP(self)
+            return SOP(self)
 
     def set_fig(self):
         if self.fig_type.__eq__('bar'):
@@ -59,3 +59,17 @@ class KPICalculation():
                 self._change_color_label="#E0E0E0"
         except:
             pass
+
+class ProductVolume():
+    def __init__(self, kpi_calculation):
+        self._kpi_calculation = kpi_calculation
+
+    def calculate(self):
+        df_product_historic = self._kpi_calculation.__dict__.get("df_product_historic")
+        df_product_pricing = self._kpi_calculation.__dict__.get("df_product_pricing")
+        df_product_prediction = self._kpi_calculation.__dict__.get("df_product_prediction")
+
+        if self._kpi_calculation.granularity.__eq__('Custom') or self._kpi_calculation.granularity.__eq__('Quarterly'):
+            print('here')
+        else:
+            print('here')
