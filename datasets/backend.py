@@ -9,6 +9,7 @@ __status__ = "Development"
 
 import pickle
 import pandas as pd
+from datetime import datetime, timedelta
 from utility.utility_data_transformation import long_term_structure, short_term_structure, get_custom_dates
 
 #region Reading Main Dataframes
@@ -112,9 +113,10 @@ df_transactions_weekly['date'] = pd.to_datetime(df_transactions_weekly['date'], 
 df_transactions_weekly['week'] = df_transactions_weekly.date.dt.isocalendar().week
 df_transactions_weekly['month'] = df_transactions_weekly.date.dt.month
 df_transactions_weekly['year'] = df_transactions_weekly.date.dt.year
+df_transactions_weekly['week_start_date'] = df_transactions_weekly.date.apply(lambda x: x - timedelta(days=x.weekday()))
 
 # Grouping item prices based on grouby selections
-df_transactions_weekly = df_transactions_weekly.groupby(['week','year','shop_id','item_id']).agg({'item_price':'mean'}).reset_index()
+df_transactions_weekly = df_transactions_weekly.groupby(['week_start_date','year','shop_id','item_id']).agg({'item_price':'mean'}).reset_index()
 
 # Merging item names and shop names with consolidated data
 df_transactions_weekly = pd.merge(df_transactions_weekly, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
