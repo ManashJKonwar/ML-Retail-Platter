@@ -74,3 +74,11 @@ def update_graph(shop_value_list, kpi_value, chart_choice, shop_type, period_typ
                             df_product_prediction=pd.DataFrame(predicted_sales_data)
                         )
         kpi_calculator._kpi_instance.calculate()
+        kpi_calculator.set_label_color()
+        current_value, predicted_value, change, change_color = kpi_calculator.get_kpi_parameters()
+        kpi_calculator._fig_instance.title = "Volume Current Vs Predicted"
+        kpi_calculator._fig_instance.data = kpi_calculator._fig_data
+        fig = kpi_calculator._fig_instance.plot()
+
+        return fig, 'Current Volume: %s'%(str(round(current_value,2))), 'Predicted Volume: %s'%(str(round(predicted_value,2))), \
+                'Percentage Change : %s'%(str(round(change,2))+'%'), {"color": change_color}, {'display': 'block'}
