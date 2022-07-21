@@ -8,6 +8,7 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import pickle
+import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from utility.utility_data_transformation import long_term_structure, short_term_structure, get_custom_dates
@@ -115,8 +116,11 @@ df_transactions_weekly['month'] = df_transactions_weekly.date.dt.month
 df_transactions_weekly['year'] = df_transactions_weekly.date.dt.year
 df_transactions_weekly['week_start_date'] = df_transactions_weekly.date.apply(lambda x: x - timedelta(days=x.weekday()))
 
+# Reaplcing negative counts by 0 value
+df_transactions_weekly.item_cnt_day = np.where(df_transactions_weekly.item_cnt_day < 0, 0, df_transactions_weekly.item_cnt_day)
+
 # Grouping item prices based on grouby selections
-df_transactions_weekly = df_transactions_weekly.groupby(['week_start_date','year','shop_id','item_id']).agg({'item_price':'mean'}).reset_index()
+df_transactions_weekly = df_transactions_weekly.groupby(['week_start_date','year','shop_id','item_id']).agg({'item_price':'mean', 'item_cnt_day':'sum'}).reset_index()
 
 # Merging item names and shop names with consolidated data
 df_transactions_weekly = pd.merge(df_transactions_weekly, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
