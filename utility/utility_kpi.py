@@ -69,7 +69,46 @@ class ProductVolume():
         df_product_pricing = self._kpi_calculation.__dict__.get("df_product_pricing")
         df_product_prediction = self._kpi_calculation.__dict__.get("df_product_prediction")
 
+        week_counter = 12 # Counter values for number of weeks to retain
         if self._kpi_calculation.granularity.__eq__('Custom') or self._kpi_calculation.granularity.__eq__('Quarterly'):
-            print('here')
+            
+            # Dynamically number of weeks to retain based on weekly run
+            if self._kpi_calculation.granularity.__eq__('Custom'):
+                week_counter = len(df_product_prediction.columns[3:])
+
+            # Filtering only selected products
+            product_mask = (df_product_historic.product_category.isin(list(df_product_pricing.PRODUCT_CATEGORY.unique()))) & \
+                        (df_product_historic.product_name.isin(list(df_product_pricing.PRODUCT.unique()))) & \
+                        (df_product_historic.shop_name.isin(list(df_product_pricing.SHOP.unique())))
+            df_product_historic = df_product_historic.loc[product_mask].reset_index(drop=True)
+
+            # Summing all volumes
+            df_product_historic = df_product_historic.groupby('week_start_date').agg({'item_cnt_day':'sum'}).reset_index()
+
+            # Sorting dates based on week dates
+            df_product_historic = df_product_historic.sort_values(by=['week_start_date'], ascending=False).reset_index(drop=True)
+            weekly_dates = list(df_product_historic.week_start_date.unique())[:week_counter]
+
+            # Retaining only relevant weeks
+            df_product_historic = df_product_historic.loc[df_product_historic.week_start_date.isin(weekly_dates)]
+
+            # Calculating Current and Projected Changes
+            self._kpi_calculation._current_value = float(df_product_historic.item_cnt_day.sum())
+            self._kpi_calculation._predicted_value = float(df_product_prediction[df_product_prediction.columns[3:]].sum(numeric_only=True).sum())
+            self._kpi_calculation._change = ((self._kpi_calculation._predicted_value-self._kpi_calculation._current_value)/self._kpi_calculation._current_value) * 100
+        
+            #Set x and y data after sorting out the data
+            df_current_data, df_predicted_data = None, None
+            # Extract Current and Predicted dataframes
+            try:
+                df_current_data = df_product_historic.copy()
+                df_predicted_data = df_product_prediction.copy()
+            except Exception:
+                pass
         else:
             print('here')
+
+        self._kpi_calculation._fig_data['current']['x-data']=[x.strftime("%Y-%b-%d") for x in df_current_data.week_start_date.to_list()]
+        self._kpi_calculation._fig_data['current']['y-data']=df_current_data.item_cnt_day.to_list()
+        self._kpi_calculation._fig_data['predicted']['x-data']=list(df_predicted_data[df_predicted_data.columns[3:]].sum(numeric_only=True).index)
+        self._kpi_calculation._fig_data['predicted']['y-data']=df_predicted_data[df_predicted_data.columns[3:]].sum(numeric_only=True).to_list()
