@@ -134,3 +134,39 @@ class ProductVolume():
         self._kpi_calculation._fig_data['current']['y-data']=df_current_data.item_cnt_day.to_list()
         self._kpi_calculation._fig_data['predicted']['x-data']=list(df_predicted_data[df_predicted_data.columns[3:]].sum(numeric_only=True).index)
         self._kpi_calculation._fig_data['predicted']['y-data']=df_predicted_data[df_predicted_data.columns[3:]].sum(numeric_only=True).to_list()
+
+class SOP:
+    def __init__(self, kpi_calculation):
+        self._kpi_calculation = kpi_calculation
+
+    def calculate(self):
+        df_product_historic = self._kpi_calculation.__dict__.get("df_product_historic")
+        df_product_pricing = self._kpi_calculation.__dict__.get("df_product_pricing")
+        df_product_prediction = self._kpi_calculation.__dict__.get("df_product_prediction")
+
+        # Filtering only selected products
+        product_mask = (df_product_historic.product_category.isin(list(df_product_pricing.PRODUCT_CATEGORY.unique()))) & \
+                    (df_product_historic.product_name.isin(list(df_product_pricing.PRODUCT.unique()))) & \
+                    (df_product_historic.shop_name.isin(list(df_product_pricing.SHOP.unique())))
+        df_product_historic = df_product_historic.loc[product_mask].reset_index(drop=True)
+
+        # Sorting dates based on week dates
+        df_product_historic = df_product_historic.sort_values(by=['week_start_date'], ascending=False).reset_index(drop=True)
+
+        if self._kpi_calculation.granularity.__eq__('Custom') or self._kpi_calculation.granularity.__eq__('Quarterly'):
+            week_counter = 12 # Counter values for number of weeks to retain
+            
+            # Dynamically number of weeks to retain based on weekly run
+            if self._kpi_calculation.granularity.__eq__('Custom'):
+                week_counter = len(df_product_prediction.columns[3:])
+           
+            # Extracting unique week dates and getting the top 12 weeks
+            weekly_dates = list(df_product_historic.week_start_date.unique())[:week_counter]
+
+            # Retaining only relevant weeks
+            df_product_historic = df_product_historic.loc[df_product_historic.week_start_date.isin(weekly_dates)]
+
+            # Adding up no of counts per category for each week dates
+            df_product_historic = df_product_historic.groupby(['week_start_date','product_category']).agg({'item_cnt_day':'sum'}).reset_index()
+        else:
+            print('here')
