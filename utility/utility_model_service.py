@@ -207,7 +207,7 @@ class PredictSalesModel():
         """
         self._bearer_key = 'bearer key'
         if self._pickle_flag:
-            return predict_fn(pkl=os.path.join('datasets','trained_models',self._model_pkl), 
+            return predict_fn(pkl=os.path.join('datasets','trained_models_v01',self._model_pkl), 
                             data=self._final_data_dict)
         else:
             return predict_service(uri=self._model_uri, 
