@@ -21,6 +21,7 @@ df_transactions = pd.read_csv(r'datasets\sales_train.csv')
 #endregion
 
 #region Sidepanel Options
+parent_product_categories = sorted(list(df_product_categories['translated_item_category_name'].apply(lambda x: x.split('-')[0].strip().title()).unique()))
 product_categories = sorted(list(df_product_categories.translated_item_category_name.unique()))
 product_names = sorted(list(df_products.translated_item_name.unique()))
 shop_names = sorted(list(df_shops.translated_shop_name.unique()))
@@ -41,15 +42,16 @@ df_consolidated['date'] = pd.to_datetime(df_consolidated['date'], infer_datetime
 df_consolidated = df_consolidated.groupby(['shop_id','item_id'], as_index=False)[['date_block_num','item_price','item_cnt_day']].max('date').reset_index(drop=True)
 df_consolidated = pd.merge(df_consolidated, df_date_week_map, how='left', on='date_block_num')[['date', 'shop_id', 'item_id', 'date_block_num', 'item_price', 'item_cnt_day']].reset_index(drop=True)
 
-# Merging item names and shop names with consolidated data
+# Merging item names and shop names with consolidated data and extracting parent category
 df_consolidated = pd.merge(df_consolidated, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
 df_consolidated = pd.merge(df_consolidated, df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
+df_consolidated['parent_category_name'] = df_consolidated.translated_item_category_name.apply(lambda x: x.split('-')[0].strip().title())
 df_consolidated = pd.merge(df_consolidated, df_shops[['shop_id','translated_shop_name']], how='left', on='shop_id').reset_index(drop=True)
 
 # Renaming columns properly
 df_consolidated.rename(columns={'translated_item_name':'PRODUCT', 'translated_shop_name':'SHOP', 'translated_item_category_name':'PRODUCT_CATEGORY', \
-                    'item_price':'PRICE_PER_ITEM'}, inplace=True)
-df_consolidated = df_consolidated[['PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PER_ITEM']]
+                    'item_price':'PRICE_PER_ITEM', 'parent_category_name':'PARENT_CATEGORY'}, inplace=True)
+df_consolidated = df_consolidated[['PARENT_CATEGORY','PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PER_ITEM']]
 #endregion  
 
 #region Generic functions
