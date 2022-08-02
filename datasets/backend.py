@@ -13,15 +13,16 @@ import pandas as pd
 from datetime import datetime, timedelta
 from utility.utility_data_transformation import long_term_structure, short_term_structure, get_custom_dates
 
-#region Reading Main Dataframes
+#region Reading Main Dataframes and Adding Parent Categories
 df_product_categories = pd.read_csv(r'datasets\translated_item_categories.csv')
 df_products = pd.read_csv(r'datasets\translated_items.csv')
 df_shops = pd.read_csv(r'datasets\translated_shops.csv')
 df_transactions = pd.read_csv(r'datasets\sales_train.csv')
+df_product_categories['parent_category_name'] = df_product_categories['translated_item_category_name'].apply(lambda x: x.split('-')[0].strip().title())
 #endregion
 
 #region Sidepanel Options
-parent_product_categories = sorted(list(df_product_categories['translated_item_category_name'].apply(lambda x: x.split('-')[0].strip().title()).unique()))
+parent_product_categories = sorted(list(df_product_categories.parent_category_name.unique()))
 product_categories = sorted(list(df_product_categories.translated_item_category_name.unique()))
 product_names = sorted(list(df_products.translated_item_name.unique()))
 shop_names = sorted(list(df_shops.translated_shop_name.unique()))
@@ -44,8 +45,7 @@ df_consolidated = pd.merge(df_consolidated, df_date_week_map, how='left', on='da
 
 # Merging item names and shop names with consolidated data and extracting parent category
 df_consolidated = pd.merge(df_consolidated, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
-df_consolidated = pd.merge(df_consolidated, df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
-df_consolidated['parent_category_name'] = df_consolidated.translated_item_category_name.apply(lambda x: x.split('-')[0].strip().title())
+df_consolidated = pd.merge(df_consolidated, df_product_categories[['item_category_id','translated_item_category_name', 'parent_category_name']], how='left', on='item_category_id').reset_index(drop=True)
 df_consolidated = pd.merge(df_consolidated, df_shops[['shop_id','translated_shop_name']], how='left', on='shop_id').reset_index(drop=True)
 
 # Renaming columns properly

@@ -12,7 +12,7 @@ from dash import dcc
 from dash import html
 from dash_bootstrap_templates import ThemeChangerAIO
 
-from datasets.backend import product_categories, shop_names, product_names, custom_start_date, custom_end_date
+from datasets.backend import parent_product_categories, product_categories, shop_names, product_names, custom_start_date, custom_end_date
 # from backend import channel_type, analysis_type, granularity, maker_type, device_family, spinner
 
 tab_height = '7vh'
@@ -101,6 +101,23 @@ layout = dbc.Container([
                         
                         html.Details([
                             html.Summary('Product Filter', style={'font-weight': 'bold', 'color': '#000000'}),
+                            # Parent Category Filter
+                            html.Label('Parent Category:', style={'font-weight': 'bold', 'color': '#000000'}),
+                            html.Div([
+                                dcc.Dropdown(
+                                    id='dd-parent-product-category',
+                                    options=[{'label': i, 'value': i} for i in parent_product_categories],
+                                    value=[parent_product_categories[0]],
+                                    multi=True,
+                                    clearable=True,
+                                    searchable=False,
+                                    placeholder='Select Parent Product Category',
+                                    style={
+                                        'fontSize': '2vh',
+                                        'color': 'black'
+                                    }
+                                )
+                            ]),
                             # Category Filter
                             html.Label('Product Category:', style={'font-weight': 'bold', 'color': '#000000'}),
                             html.Div([

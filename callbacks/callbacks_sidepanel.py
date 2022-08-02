@@ -12,7 +12,7 @@ from dash import no_update
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from layouts import layout_retail_summary, layout_pricing_input, layout_pricing_sales, layout_pivot_kpis, layout_kpis
-from datasets.backend import df_transactions, df_products, df_shops, df_product_categories
+from datasets.backend import df_transactions, df_products, df_shops, df_product_categories, parent_product_categories
 
 callback_manager = CallbackManager()
 
@@ -38,6 +38,28 @@ def render_button(tab):
         return {'display': 'block'}, {'display': 'block'}
     else:
         return {'display': 'none'}, {'display': 'none'} 
+
+@callback_manager.callback([Output(component_id='dd-product-category', component_property='options'),
+                        Output(component_id='dd-product-category', component_property='value')],
+                        Input(component_id='dd-parent-product-category', component_property='value'))
+def set_product_category_options(sel_parent_product_categories):
+    if isinstance(sel_parent_product_categories, list):
+        # Condition for setting all product categories if none is selected
+        if len(sel_parent_product_categories) == 0:
+            sel_parent_product_categories = copy.deepcopy(parent_product_categories)
+
+        sel_df_parent_product_categories = df_product_categories.loc[df_product_categories.parent_category_name.isin(sel_parent_product_categories)].reset_index(drop=True)
+
+        # Extracting product names based on product categories
+        product_category_mask = df_product_categories.item_category_id.isin(list(sel_df_parent_product_categories.item_category_id.unique()))
+        sel_df_product_categories = df_product_categories.loc[product_category_mask].reset_index(drop=True)
+
+        # Extracting final product options and setting default as first product
+        final_options = sorted(list(sel_df_product_categories.translated_item_category_name.unique()))
+
+        return final_options, [final_options[0]]
+    else:
+        return no_update 
 
 @callback_manager.callback([Output(component_id='dd-product-name', component_property='options'),
                         Output(component_id='dd-product-name', component_property='value')],
