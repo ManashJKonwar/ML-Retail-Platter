@@ -126,9 +126,10 @@ df_transactions_weekly = df_transactions_weekly.groupby(['week_start_date','year
 
 # Merging item names and shop names with consolidated data
 df_transactions_weekly = pd.merge(df_transactions_weekly, df_products[['item_id','item_category_id','translated_item_name']], how='left', on='item_id').reset_index(drop=True)
-df_transactions_weekly = pd.merge(df_transactions_weekly, df_product_categories[['item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
+df_transactions_weekly = pd.merge(df_transactions_weekly, df_product_categories[['parent_category_name', 'item_category_id','translated_item_category_name']], how='left', on='item_category_id').reset_index(drop=True)
 df_transactions_weekly = pd.merge(df_transactions_weekly, df_shops[['shop_id','translated_shop_name']], how='left', on='shop_id').reset_index(drop=True)
 
 # Renaming columns properly
-df_transactions_weekly = df_transactions_weekly.rename(columns={'translated_item_name':'product_name', 'translated_item_category_name':'product_category', 'translated_shop_name':'shop_name'})
+df_transactions_weekly = df_transactions_weekly.rename(columns={'translated_item_name':'product_name', 'translated_item_category_name':'product_category', \
+                                                                'translated_shop_name':'shop_name', 'parent_category_name':'parent_product_category'})
 #endregion

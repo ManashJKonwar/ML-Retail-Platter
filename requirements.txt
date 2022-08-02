@@ -9,6 +9,7 @@ dash-bootstrap-templates==1.0.5  # https://pypi.org/project/dash-bootstrap-templ
 SQLAlchemy==1.4.39  # https://pypi.org/project/SQLAlchemy/  # Database Abstraction Library
 Flask-SQLAlchemy==2.5.1  # https://pypi.org/project/Flask-SQLAlchemy/2.5.1/  # Adds SQLAlchemy support to your Flask application.
 Flask-Login==0.6.1  # https://pypi.org/project/Flask-Login/0.6.1/  # User authentication and session management for Flask.
+Werkzeug==2.1.2  # https://pypi.org/project/Werkzeug/2.1.2/  # Comprehensive WSGI web application library.
 
 # Data Generation and Manipulation
 # ------------------------------------------------------------------------------
