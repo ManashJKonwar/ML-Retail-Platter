@@ -8,7 +8,7 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import copy
-from dash import no_update
+from dash import callback_context, no_update
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from layouts import layout_retail_summary, layout_pricing_input, layout_pricing_sales, layout_pivot_kpis, layout_kpis
@@ -39,13 +39,23 @@ def render_button(tab):
     else:
         return {'display': 'none'}, {'display': 'none'} 
 
+@callback_manager.callback(Output(component_id='dd-parent-product-category', component_property='value'),
+                        Input(component_id='chklist-product-selector', component_property='value'))
+def set_parent_category_options(sel_all_values):
+    if isinstance(sel_all_values, list) and 'sl_parentcategories' in sel_all_values:
+        return [parent_category for parent_category in parent_product_categories]
+    else:
+        return no_update
+
 @callback_manager.callback([Output(component_id='dd-product-category', component_property='options'),
                         Output(component_id='dd-product-category', component_property='value')],
-                        Input(component_id='dd-parent-product-category', component_property='value'))
-def set_product_category_options(sel_parent_product_categories):
+                        [Input(component_id='dd-parent-product-category', component_property='value'),
+                        Input(component_id='chklist-product-selector', component_property='value')])
+def set_product_category_options(sel_parent_product_categories, sel_all_values):
+
     if isinstance(sel_parent_product_categories, list):
         # Condition for setting all product categories if none is selected
-        if len(sel_parent_product_categories) == 0:
+        if len(sel_parent_product_categories) == 0 or (isinstance(sel_all_values, list) and 'sl_parentcategories' in sel_all_values):
             sel_parent_product_categories = copy.deepcopy(parent_product_categories)
 
         sel_df_parent_product_categories = df_product_categories.loc[df_product_categories.parent_category_name.isin(sel_parent_product_categories)].reset_index(drop=True)
@@ -60,7 +70,7 @@ def set_product_category_options(sel_parent_product_categories):
         return final_options, [final_options[0]]
     else:
         return no_update 
-
+    
 @callback_manager.callback([Output(component_id='dd-product-name', component_property='options'),
                         Output(component_id='dd-product-name', component_property='value')],
                         Input(component_id='dd-product-category', component_property='value'))
