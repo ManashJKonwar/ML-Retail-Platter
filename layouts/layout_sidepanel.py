@@ -79,6 +79,7 @@ layout = dbc.Container([
                         ],
                         id='simulation-detail',  
                         style={'color': '#000000', 'margin-top': '2vh', 'border':'1px white solid'}),
+                        
                         html.Details([
                             html.Summary('Prediction Filter', style={'font-weight': 'bold', 'color': '#000000'}),
                             # Prediction Filter
@@ -99,6 +100,24 @@ layout = dbc.Container([
                         id='prediction-detail', 
                         style={'color': '#000000', 'margin-top': '2vh', 'border':'1px white solid', 'display':'block'}),
                         
+                        html.Details([
+                            html.Summary('Product Selector (Select all options)', style={'font-weight': 'bold', 'color': '#000000'}),
+                            html.Div([
+                                dcc.Checklist(
+                                    id='chklist-product-selector',
+                                    options=[
+                                        {'label': 'Parent Categories', 'value': 'sl_parentcategories'},
+                                        {'label': 'Product Categories', 'value': 'sl_productcategories'},
+                                        {'label': 'Products', 'value': 'sl_products'},
+                                        {'label': 'Shops', 'value': 'sl_shops'},
+                                    ],
+                                    labelStyle={'display': 'block'},
+                                )
+                            ]),
+                        ],
+                        id='selector-detail',
+                        style={'color': '#000000', 'margin-top': '2vh', 'border':'1px white solid', 'display':'block'}),
+
                         html.Details([
                             html.Summary('Product Filter', style={'font-weight': 'bold', 'color': '#000000'}),
                             # Parent Category Filter
