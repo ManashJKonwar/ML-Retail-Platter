@@ -72,7 +72,7 @@ layout = html.Div([
                             {
                                 'if': {'column_id': c},
                                 'textAlign': 'left'
-                            } for c in ['PRODUCT_CATEGORY','PRODUCT','SHOP']],
+                            } for c in ['PARENT_CATEGORY','PRODUCT_CATEGORY','PRODUCT','SHOP']],
                         ), 
                         align="center"
                     )
