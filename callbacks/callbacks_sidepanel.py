@@ -55,7 +55,7 @@ def set_product_category_options(sel_parent_product_categories, sel_all_values):
 
     if isinstance(sel_parent_product_categories, list):
         # Condition for setting all product categories if none is selected
-        if len(sel_parent_product_categories) == 0 or (isinstance(sel_all_values, list) and 'sl_productcategories' in sel_all_values):
+        if len(sel_parent_product_categories) == 0:
             sel_parent_product_categories = copy.deepcopy(parent_product_categories)
 
         sel_df_parent_product_categories = df_product_categories.loc[df_product_categories.parent_category_name.isin(sel_parent_product_categories)].reset_index(drop=True)
@@ -68,8 +68,13 @@ def set_product_category_options(sel_parent_product_categories, sel_all_values):
         final_options = sorted(list(sel_df_product_categories.translated_item_category_name.unique()))
 
         if (isinstance(sel_all_values, list) and 'sl_productcategories' in sel_all_values):
+            # Condition which selects all product categories upon selection
             return final_options, [final_option for final_option in final_options]
+        # elif (isinstance(sel_all_values, list) and 'sl_productcategories' not in sel_all_values):
+        #     # Condition in which all porduct categories are not selected but some other checklist item is selected
+        #     return final_options, no_update
         else:
+            # Generic Condition irrespective of all product categories selection 
             return final_options, [final_options[0]]
     else:
         return no_update 
@@ -81,7 +86,7 @@ def set_product_category_options(sel_parent_product_categories, sel_all_values):
 def set_product_options(sel_product_categories, sel_all_values):
     if isinstance(sel_product_categories, list):
         # Condition for setting all product categories if none is selected
-        if len(sel_product_categories) == 0 or (isinstance(sel_all_values, list) and 'sl_products' in sel_all_values):
+        if len(sel_product_categories) == 0:
             sel_product_categories = sorted(list(df_product_categories.translated_item_category_name.unique()))
 
         sel_df_product_categories = df_product_categories.loc[df_product_categories.translated_item_category_name.isin(sel_product_categories)].reset_index(drop=True)
@@ -93,15 +98,24 @@ def set_product_options(sel_product_categories, sel_all_values):
         # Extracting final product options and setting default as first product
         final_options = sorted(list(sel_df_product.translated_item_name.unique()))
 
-        return final_options, [final_options[0]]
+        if (isinstance(sel_all_values, list) and 'sl_products' in sel_all_values):
+            # Condition which selects all products upon selection
+            return final_options, [final_option for final_option in final_options]
+        # elif (isinstance(sel_all_values, list) and 'sl_products' not in sel_all_values):
+        #     # Condition in which all products are not selected but some other checklist item is selected
+        #     return final_options, no_update
+        else:
+            # Generic Condition irrespective of all products selection 
+            return final_options, [final_options[0]]
     else:
         return no_update 
 
 @callback_manager.callback([Output(component_id='dd-shop-name', component_property='options'),
                         Output(component_id='dd-shop-name', component_property='value')],
-                        Input(component_id='dd-product-name', component_property='value'),
+                        [Input(component_id='dd-product-name', component_property='value'),
+                        Input(component_id='chklist-product-selector', component_property='value')],
                         State(component_id='dd-product-name', component_property='options'))
-def set_product_options(sel_product_names, avail_products):
+def set_product_options(sel_product_names, sel_all_values, avail_products):
     if isinstance(sel_product_names, list):
         # Condition for setting all products if none is selected
         if len(sel_product_names) == 0:
@@ -120,7 +134,15 @@ def set_product_options(sel_product_names, avail_products):
         # Extracting final shop optons and setting default as first shop
         final_options = sorted(list(sel_df_shop.translated_shop_name.unique()))
 
-        return final_options, [final_options[0]]
+        if (isinstance(sel_all_values, list) and 'sl_shops' in sel_all_values):
+            # Condition which selects all shops upon selection
+            return final_options, [final_option for final_option in final_options]
+        # elif (isinstance(sel_all_values, list) and 'sl_shops' not in sel_all_values):
+        #     # Condition in which all shops are not selected but some other checklist item is selected
+        #     return final_options, no_update
+        else:
+            # Generic Condition irrespective of all shops selection 
+            return final_options, [final_options[0]]
     else:
         return no_update
 
