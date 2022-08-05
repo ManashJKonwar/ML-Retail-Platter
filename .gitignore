@@ -132,4 +132,5 @@ dmypy.json
 data.sqlite
 .vscode/*
 logs/*
+datasets/models_essentials_v01/df_xvar.csv
 datasets/latest_dataset.csv

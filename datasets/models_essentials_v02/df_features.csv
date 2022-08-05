@@ -1,475 +1,475 @@
-feature_name,group_name,group_id,feature_type
-date_block_num,Accessories,0,generic
-item_id,Accessories,0,id
-shop_id,Accessories,0,id
-item_price,Accessories,0,price
-item_category_id,Accessories,0,id
-count_item_week_shop,Accessories,0,generic
-price_mean_week_category,Accessories,0,price
-price_lag_item_1,Accessories,0,lag price
-price_lag_item_4,Accessories,0,lag price
-price_lag_item_12,Accessories,0,lag price
-price_lag_item_24,Accessories,0,lag price
-price_lag_item_shop_1,Accessories,0,lag price
-price_lag_item_shop_4,Accessories,0,lag price
-price_lag_item_shop_12,Accessories,0,lag price
-price_lag_item_shop_24,Accessories,0,lag price
-week_block_num,Accessories,0,generic
-month,Accessories,0,generic
-seasonal_index,Accessories,0,seasonality
-priceratio_parent_category,Accessories,0,price ratio
-priceratio_item_category_2,Accessories,0,price ratio
-priceratio_item_category_3,Accessories,0,price ratio
-priceratio_item_category_4,Accessories,0,price ratio
-priceratio_item_category_5,Accessories,0,price ratio
-priceratio_item_category_6,Accessories,0,price ratio
-date_block_num,Gifts,10,generic
-item_id,Gifts,10,id
-shop_id,Gifts,10,id
-item_price,Gifts,10,price
-item_category_id,Gifts,10,id
-count_item_week_shop,Gifts,10,generic
-price_mean_week_category,Gifts,10,price
-price_lag_item_1,Gifts,10,lag price
-price_lag_item_4,Gifts,10,lag price
-price_lag_item_12,Gifts,10,lag price
-price_lag_item_24,Gifts,10,lag price
-price_lag_item_shop_1,Gifts,10,lag price
-price_lag_item_shop_4,Gifts,10,lag price
-price_lag_item_shop_12,Gifts,10,lag price
-price_lag_item_shop_24,Gifts,10,lag price
-week_block_num,Gifts,10,generic
-month,Gifts,10,generic
-seasonal_index,Gifts,10,seasonality
-priceratio_parent_category,Gifts,10,price ratio
-priceratio_item_category_44,Gifts,10,price ratio
-priceratio_item_category_45,Gifts,10,price ratio
-priceratio_item_category_46,Gifts,10,price ratio
-priceratio_item_category_47,Gifts,10,price ratio
-priceratio_item_category_49,Gifts,10,price ratio
-priceratio_item_category_54,Gifts,10,price ratio
-priceratio_item_category_55,Gifts,10,price ratio
-date_block_num,Mac Games,11,generic
-item_id,Mac Games,11,id
-shop_id,Mac Games,11,id
-item_price,Mac Games,11,price
-item_category_id,Mac Games,11,id
-count_item_week_shop,Mac Games,11,generic
-price_mean_week_category,Mac Games,11,price
-price_lag_item_1,Mac Games,11,lag price
-price_lag_item_4,Mac Games,11,lag price
-price_lag_item_12,Mac Games,11,lag price
-price_lag_item_24,Mac Games,11,lag price
-price_lag_item_shop_1,Mac Games,11,lag price
-price_lag_item_shop_4,Mac Games,11,lag price
-price_lag_item_shop_12,Mac Games,11,lag price
-price_lag_item_shop_24,Mac Games,11,lag price
-week_block_num,Mac Games,11,generic
-month,Mac Games,11,generic
-seasonal_index,Mac Games,11,seasonality
-priceratio_parent_category,Mac Games,11,price ratio
-priceratio_item_category_56,Mac Games,11,price ratio
-date_block_num,Music,12,generic
-item_id,Music,12,id
-shop_id,Music,12,id
-item_price,Music,12,price
-item_category_id,Music,12,id
-count_item_week_shop,Music,12,generic
-price_mean_week_category,Music,12,price
-price_lag_item_1,Music,12,lag price
-price_lag_item_4,Music,12,lag price
-price_lag_item_12,Music,12,lag price
-price_lag_item_24,Music,12,lag price
-price_lag_item_shop_1,Music,12,lag price
-price_lag_item_shop_4,Music,12,lag price
-price_lag_item_shop_12,Music,12,lag price
-price_lag_item_shop_24,Music,12,lag price
-week_block_num,Music,12,generic
-month,Music,12,generic
-seasonal_index,Music,12,seasonality
-priceratio_parent_category,Music,12,price ratio
-priceratio_item_category_57,Music,12,price ratio
-priceratio_item_category_58,Music,12,price ratio
-priceratio_item_category_59,Music,12,price ratio
-priceratio_item_category_60,Music,12,price ratio
-priceratio_item_category_61,Music,12,price ratio
-priceratio_item_category_62,Music,12,price ratio
-date_block_num,Pc,13,generic
-item_id,Pc,13,id
-shop_id,Pc,13,id
-item_price,Pc,13,price
-item_category_id,Pc,13,id
-count_item_week_shop,Pc,13,generic
-price_mean_week_category,Pc,13,price
-price_lag_item_1,Pc,13,lag price
-price_lag_item_4,Pc,13,lag price
-price_lag_item_12,Pc,13,lag price
-price_lag_item_24,Pc,13,lag price
-price_lag_item_shop_1,Pc,13,lag price
-price_lag_item_shop_4,Pc,13,lag price
-price_lag_item_shop_12,Pc,13,lag price
-price_lag_item_shop_24,Pc,13,lag price
-week_block_num,Pc,13,generic
-month,Pc,13,generic
-seasonal_index,Pc,13,seasonality
-priceratio_parent_category,Pc,13,price ratio
-priceratio_item_category_63,Pc,13,price ratio
-date_block_num,Pc Games,14,generic
-item_id,Pc Games,14,id
-shop_id,Pc Games,14,id
-item_price,Pc Games,14,price
-item_category_id,Pc Games,14,id
-count_item_week_shop,Pc Games,14,generic
-price_mean_week_category,Pc Games,14,price
-price_lag_item_1,Pc Games,14,lag price
-price_lag_item_4,Pc Games,14,lag price
-price_lag_item_12,Pc Games,14,lag price
-price_lag_item_24,Pc Games,14,lag price
-price_lag_item_shop_1,Pc Games,14,lag price
-price_lag_item_shop_4,Pc Games,14,lag price
-price_lag_item_shop_12,Pc Games,14,lag price
-price_lag_item_shop_24,Pc Games,14,lag price
-week_block_num,Pc Games,14,generic
-month,Pc Games,14,generic
-seasonal_index,Pc Games,14,seasonality
-priceratio_parent_category,Pc Games,14,price ratio
-priceratio_item_category_64,Pc Games,14,price ratio
-priceratio_item_category_65,Pc Games,14,price ratio
-priceratio_item_category_66,Pc Games,14,price ratio
-priceratio_item_category_67,Pc Games,14,price ratio
-date_block_num,"Payment Cards (Cinema, Music, Games)",15,generic
-item_id,"Payment Cards (Cinema, Music, Games)",15,id
-shop_id,"Payment Cards (Cinema, Music, Games)",15,id
-item_price,"Payment Cards (Cinema, Music, Games)",15,price
-item_category_id,"Payment Cards (Cinema, Music, Games)",15,id
-count_item_week_shop,"Payment Cards (Cinema, Music, Games)",15,generic
-price_mean_week_category,"Payment Cards (Cinema, Music, Games)",15,price
-price_lag_item_1,"Payment Cards (Cinema, Music, Games)",15,lag price
-price_lag_item_4,"Payment Cards (Cinema, Music, Games)",15,lag price
-price_lag_item_12,"Payment Cards (Cinema, Music, Games)",15,lag price
-price_lag_item_24,"Payment Cards (Cinema, Music, Games)",15,lag price
-price_lag_item_shop_1,"Payment Cards (Cinema, Music, Games)",15,lag price
-price_lag_item_shop_4,"Payment Cards (Cinema, Music, Games)",15,lag price
-price_lag_item_shop_12,"Payment Cards (Cinema, Music, Games)",15,lag price
-price_lag_item_shop_24,"Payment Cards (Cinema, Music, Games)",15,lag price
-week_block_num,"Payment Cards (Cinema, Music, Games)",15,generic
-month,"Payment Cards (Cinema, Music, Games)",15,generic
-seasonal_index,"Payment Cards (Cinema, Music, Games)",15,seasonality
-priceratio_parent_category,"Payment Cards (Cinema, Music, Games)",15,price ratio
-priceratio_item_category_68,"Payment Cards (Cinema, Music, Games)",15,price ratio
-date_block_num,Payment Cards,16,generic
-item_id,Payment Cards,16,id
-shop_id,Payment Cards,16,id
-item_price,Payment Cards,16,price
-item_category_id,Payment Cards,16,id
-count_item_week_shop,Payment Cards,16,generic
-price_mean_week_category,Payment Cards,16,price
-price_lag_item_1,Payment Cards,16,lag price
-price_lag_item_4,Payment Cards,16,lag price
-price_lag_item_12,Payment Cards,16,lag price
-price_lag_item_24,Payment Cards,16,lag price
-price_lag_item_shop_1,Payment Cards,16,lag price
-price_lag_item_shop_4,Payment Cards,16,lag price
-price_lag_item_shop_12,Payment Cards,16,lag price
-price_lag_item_shop_24,Payment Cards,16,lag price
-week_block_num,Payment Cards,16,generic
-month,Payment Cards,16,generic
-seasonal_index,Payment Cards,16,seasonality
-priceratio_parent_category,Payment Cards,16,price ratio
-priceratio_item_category_69,Payment Cards,16,price ratio
-priceratio_item_category_70,Payment Cards,16,price ratio
-priceratio_item_category_71,Payment Cards,16,price ratio
-priceratio_item_category_72,Payment Cards,16,price ratio
-date_block_num,Power Elements,17,generic
-item_id,Power Elements,17,id
-shop_id,Power Elements,17,id
-item_price,Power Elements,17,price
-item_category_id,Power Elements,17,id
-count_item_week_shop,Power Elements,17,generic
-price_mean_week_category,Power Elements,17,price
-price_lag_item_1,Power Elements,17,lag price
-price_lag_item_4,Power Elements,17,lag price
-price_lag_item_12,Power Elements,17,lag price
-price_lag_item_24,Power Elements,17,lag price
-price_lag_item_shop_1,Power Elements,17,lag price
-price_lag_item_shop_4,Power Elements,17,lag price
-price_lag_item_shop_12,Power Elements,17,lag price
-price_lag_item_shop_24,Power Elements,17,lag price
-week_block_num,Power Elements,17,generic
-month,Power Elements,17,generic
-seasonal_index,Power Elements,17,seasonality
-priceratio_parent_category,Power Elements,17,price ratio
-priceratio_item_category_73,Power Elements,17,price ratio
-date_block_num,Programs,18,generic
-item_id,Programs,18,id
-shop_id,Programs,18,id
-item_price,Programs,18,price
-item_category_id,Programs,18,id
-count_item_week_shop,Programs,18,generic
-price_mean_week_category,Programs,18,price
-price_lag_item_1,Programs,18,lag price
-price_lag_item_4,Programs,18,lag price
-price_lag_item_12,Programs,18,lag price
-price_lag_item_24,Programs,18,lag price
-price_lag_item_shop_1,Programs,18,lag price
-price_lag_item_shop_4,Programs,18,lag price
-price_lag_item_shop_12,Programs,18,lag price
-price_lag_item_shop_24,Programs,18,lag price
-week_block_num,Programs,18,generic
-month,Programs,18,generic
-seasonal_index,Programs,18,seasonality
-priceratio_parent_category,Programs,18,price ratio
-priceratio_item_category_74,Programs,18,price ratio
-priceratio_item_category_75,Programs,18,price ratio
-priceratio_item_category_76,Programs,18,price ratio
-priceratio_item_category_77,Programs,18,price ratio
-priceratio_item_category_78,Programs,18,price ratio
-priceratio_item_category_79,Programs,18,price ratio
-date_block_num,Service,19,generic
-item_id,Service,19,id
-shop_id,Service,19,id
-item_price,Service,19,price
-item_category_id,Service,19,id
-count_item_week_shop,Service,19,generic
-price_mean_week_category,Service,19,price
-price_lag_item_1,Service,19,lag price
-price_lag_item_4,Service,19,lag price
-price_lag_item_12,Service,19,lag price
-price_lag_item_24,Service,19,lag price
-price_lag_item_shop_1,Service,19,lag price
-price_lag_item_shop_4,Service,19,lag price
-price_lag_item_shop_12,Service,19,lag price
-price_lag_item_shop_24,Service,19,lag price
-week_block_num,Service,19,generic
-month,Service,19,generic
-seasonal_index,Service,19,seasonality
-priceratio_parent_category,Service,19,price ratio
-priceratio_item_category_80,Service,19,price ratio
-priceratio_item_category_81,Service,19,price ratio
-date_block_num,Android Games,1,generic
-item_id,Android Games,1,id
-shop_id,Android Games,1,id
-item_price,Android Games,1,price
-item_category_id,Android Games,1,id
-count_item_week_shop,Android Games,1,generic
-price_mean_week_category,Android Games,1,price
-price_lag_item_1,Android Games,1,lag price
-price_lag_item_4,Android Games,1,lag price
-price_lag_item_12,Android Games,1,lag price
-price_lag_item_24,Android Games,1,lag price
-price_lag_item_shop_1,Android Games,1,lag price
-price_lag_item_shop_4,Android Games,1,lag price
-price_lag_item_shop_12,Android Games,1,lag price
-price_lag_item_shop_24,Android Games,1,lag price
-week_block_num,Android Games,1,generic
-month,Android Games,1,generic
-seasonal_index,Android Games,1,seasonality
-priceratio_parent_category,Android Games,1,price ratio
-priceratio_item_category_7,Android Games,1,price ratio
-date_block_num,Tickets (Digit),20,generic
-item_id,Tickets (Digit),20,id
-shop_id,Tickets (Digit),20,id
-item_price,Tickets (Digit),20,price
-item_category_id,Tickets (Digit),20,id
-count_item_week_shop,Tickets (Digit),20,generic
-price_mean_week_category,Tickets (Digit),20,price
-price_lag_item_1,Tickets (Digit),20,lag price
-price_lag_item_4,Tickets (Digit),20,lag price
-price_lag_item_12,Tickets (Digit),20,lag price
-price_lag_item_24,Tickets (Digit),20,lag price
-price_lag_item_shop_1,Tickets (Digit),20,lag price
-price_lag_item_shop_4,Tickets (Digit),20,lag price
-price_lag_item_shop_12,Tickets (Digit),20,lag price
-price_lag_item_shop_24,Tickets (Digit),20,lag price
-week_block_num,Tickets (Digit),20,generic
-month,Tickets (Digit),20,generic
-seasonal_index,Tickets (Digit),20,seasonality
-priceratio_parent_category,Tickets (Digit),20,price ratio
-priceratio_item_category_82,Tickets (Digit),20,price ratio
-date_block_num,Игры,21,generic
-item_id,Игры,21,id
-shop_id,Игры,21,id
-item_price,Игры,21,price
-item_category_id,Игры,21,id
-count_item_week_shop,Игры,21,generic
-price_mean_week_category,Игры,21,price
-price_lag_item_1,Игры,21,lag price
-price_lag_item_4,Игры,21,lag price
-price_lag_item_12,Игры,21,lag price
-price_lag_item_24,Игры,21,lag price
-price_lag_item_shop_1,Игры,21,lag price
-price_lag_item_shop_4,Игры,21,lag price
-price_lag_item_shop_12,Игры,21,lag price
-price_lag_item_shop_24,Игры,21,lag price
-week_block_num,Игры,21,generic
-month,Игры,21,generic
-seasonal_index,Игры,21,seasonality
-priceratio_parent_category,Игры,21,price ratio
-priceratio_item_category_83,Игры,21,price ratio
-date_block_num,Books,2,generic
-item_id,Books,2,id
-shop_id,Books,2,id
-item_price,Books,2,price
-item_category_id,Books,2,id
-count_item_week_shop,Books,2,generic
-price_mean_week_category,Books,2,price
-price_lag_item_1,Books,2,lag price
-price_lag_item_4,Books,2,lag price
-price_lag_item_12,Books,2,lag price
-price_lag_item_24,Books,2,lag price
-price_lag_item_shop_1,Books,2,lag price
-price_lag_item_shop_4,Books,2,lag price
-price_lag_item_shop_12,Books,2,lag price
-price_lag_item_shop_24,Books,2,lag price
-week_block_num,Books,2,generic
-month,Books,2,generic
-seasonal_index,Books,2,seasonality
-priceratio_parent_category,Books,2,price ratio
-priceratio_item_category_8,Books,2,price ratio
-priceratio_item_category_9,Books,2,price ratio
-priceratio_item_category_11,Books,2,price ratio
-priceratio_item_category_12,Books,2,price ratio
-priceratio_item_category_13,Books,2,price ratio
-priceratio_item_category_14,Books,2,price ratio
-priceratio_item_category_15,Books,2,price ratio
-priceratio_item_category_16,Books,2,price ratio
-priceratio_item_category_17,Books,2,price ratio
-priceratio_item_category_18,Books,2,price ratio
-priceratio_item_category_19,Books,2,price ratio
-priceratio_item_category_20,Books,2,price ratio
-date_block_num,Cinema,3,generic
-item_id,Cinema,3,id
-shop_id,Cinema,3,id
-item_price,Cinema,3,price
-item_category_id,Cinema,3,id
-count_item_week_shop,Cinema,3,generic
-price_mean_week_category,Cinema,3,price
-price_lag_item_1,Cinema,3,lag price
-price_lag_item_4,Cinema,3,lag price
-price_lag_item_12,Cinema,3,lag price
-price_lag_item_24,Cinema,3,lag price
-price_lag_item_shop_1,Cinema,3,lag price
-price_lag_item_shop_4,Cinema,3,lag price
-price_lag_item_shop_12,Cinema,3,lag price
-price_lag_item_shop_24,Cinema,3,lag price
-week_block_num,Cinema,3,generic
-month,Cinema,3,generic
-seasonal_index,Cinema,3,seasonality
-priceratio_parent_category,Cinema,3,price ratio
-priceratio_item_category_21,Cinema,3,price ratio
-priceratio_item_category_22,Cinema,3,price ratio
-priceratio_item_category_23,Cinema,3,price ratio
-priceratio_item_category_24,Cinema,3,price ratio
-date_block_num,Clean Media (Piece),4,generic
-item_id,Clean Media (Piece),4,id
-shop_id,Clean Media (Piece),4,id
-item_price,Clean Media (Piece),4,price
-item_category_id,Clean Media (Piece),4,id
-count_item_week_shop,Clean Media (Piece),4,generic
-price_mean_week_category,Clean Media (Piece),4,price
-price_lag_item_1,Clean Media (Piece),4,lag price
-price_lag_item_4,Clean Media (Piece),4,lag price
-price_lag_item_12,Clean Media (Piece),4,lag price
-price_lag_item_24,Clean Media (Piece),4,lag price
-price_lag_item_shop_1,Clean Media (Piece),4,lag price
-price_lag_item_shop_4,Clean Media (Piece),4,lag price
-price_lag_item_shop_12,Clean Media (Piece),4,lag price
-price_lag_item_shop_24,Clean Media (Piece),4,lag price
-week_block_num,Clean Media (Piece),4,generic
-month,Clean Media (Piece),4,generic
-seasonal_index,Clean Media (Piece),4,seasonality
-priceratio_parent_category,Clean Media (Piece),4,price ratio
-priceratio_item_category_25,Clean Media (Piece),4,price ratio
-date_block_num,Clean Media (Spire),5,generic
-item_id,Clean Media (Spire),5,id
-shop_id,Clean Media (Spire),5,id
-item_price,Clean Media (Spire),5,price
-item_category_id,Clean Media (Spire),5,id
-count_item_week_shop,Clean Media (Spire),5,generic
-price_mean_week_category,Clean Media (Spire),5,price
-price_lag_item_1,Clean Media (Spire),5,lag price
-price_lag_item_4,Clean Media (Spire),5,lag price
-price_lag_item_12,Clean Media (Spire),5,lag price
-price_lag_item_24,Clean Media (Spire),5,lag price
-price_lag_item_shop_1,Clean Media (Spire),5,lag price
-price_lag_item_shop_4,Clean Media (Spire),5,lag price
-price_lag_item_shop_12,Clean Media (Spire),5,lag price
-price_lag_item_shop_24,Clean Media (Spire),5,lag price
-week_block_num,Clean Media (Spire),5,generic
-month,Clean Media (Spire),5,generic
-seasonal_index,Clean Media (Spire),5,seasonality
-priceratio_parent_category,Clean Media (Spire),5,price ratio
-priceratio_item_category_26,Clean Media (Spire),5,price ratio
-date_block_num,Film,7,generic
-item_id,Film,7,id
-shop_id,Film,7,id
-item_price,Film,7,price
-item_category_id,Film,7,id
-count_item_week_shop,Film,7,generic
-price_mean_week_category,Film,7,price
-price_lag_item_1,Film,7,lag price
-price_lag_item_4,Film,7,lag price
-price_lag_item_12,Film,7,lag price
-price_lag_item_24,Film,7,lag price
-price_lag_item_shop_1,Film,7,lag price
-price_lag_item_shop_4,Film,7,lag price
-price_lag_item_shop_12,Film,7,lag price
-price_lag_item_shop_24,Film,7,lag price
-week_block_num,Film,7,generic
-month,Film,7,generic
-seasonal_index,Film,7,seasonality
-priceratio_parent_category,Film,7,price ratio
-priceratio_item_category_28,Film,7,price ratio
-date_block_num,Games,8,generic
-item_id,Games,8,id
-shop_id,Games,8,id
-item_price,Games,8,price
-item_category_id,Games,8,id
-count_item_week_shop,Games,8,generic
-price_mean_week_category,Games,8,price
-price_lag_item_1,Games,8,lag price
-price_lag_item_4,Games,8,lag price
-price_lag_item_12,Games,8,lag price
-price_lag_item_24,Games,8,lag price
-price_lag_item_shop_1,Games,8,lag price
-price_lag_item_shop_4,Games,8,lag price
-price_lag_item_shop_12,Games,8,lag price
-price_lag_item_shop_24,Games,8,lag price
-week_block_num,Games,8,generic
-month,Games,8,generic
-seasonal_index,Games,8,seasonality
-priceratio_parent_category,Games,8,price ratio
-priceratio_item_category_29,Games,8,price ratio
-priceratio_item_category_30,Games,8,price ratio
-priceratio_item_category_31,Games,8,price ratio
-priceratio_item_category_32,Games,8,price ratio
-priceratio_item_category_33,Games,8,price ratio
-priceratio_item_category_34,Games,8,price ratio
-priceratio_item_category_35,Games,8,price ratio
-date_block_num,Gaming Consoles,9,generic
-item_id,Gaming Consoles,9,id
-shop_id,Gaming Consoles,9,id
-item_price,Gaming Consoles,9,price
-item_category_id,Gaming Consoles,9,id
-count_item_week_shop,Gaming Consoles,9,generic
-price_mean_week_category,Gaming Consoles,9,price
-price_lag_item_1,Gaming Consoles,9,lag price
-price_lag_item_4,Gaming Consoles,9,lag price
-price_lag_item_12,Gaming Consoles,9,lag price
-price_lag_item_24,Gaming Consoles,9,lag price
-price_lag_item_shop_1,Gaming Consoles,9,lag price
-price_lag_item_shop_4,Gaming Consoles,9,lag price
-price_lag_item_shop_12,Gaming Consoles,9,lag price
-price_lag_item_shop_24,Gaming Consoles,9,lag price
-week_block_num,Gaming Consoles,9,generic
-month,Gaming Consoles,9,generic
-seasonal_index,Gaming Consoles,9,seasonality
-priceratio_parent_category,Gaming Consoles,9,price ratio
-priceratio_item_category_36,Gaming Consoles,9,price ratio
-priceratio_item_category_37,Gaming Consoles,9,price ratio
-priceratio_item_category_38,Gaming Consoles,9,price ratio
-priceratio_item_category_39,Gaming Consoles,9,price ratio
-priceratio_item_category_40,Gaming Consoles,9,price ratio
-priceratio_item_category_41,Gaming Consoles,9,price ratio
-priceratio_item_category_42,Gaming Consoles,9,price ratio
-priceratio_item_category_43,Gaming Consoles,9,price ratio
+feature_name,group_name,group_id,feature_dtype,feature_type
+date_block_num,Accessories,0,int64,generic
+item_id,Accessories,0,int64,id
+shop_id,Accessories,0,int64,id
+item_price,Accessories,0,float64,price
+item_category_id,Accessories,0,int64,id
+count_item_week_shop,Accessories,0,float64,generic
+price_mean_week_category,Accessories,0,float64,price
+price_lag_item_1,Accessories,0,float64,lag price
+price_lag_item_4,Accessories,0,float64,lag price
+price_lag_item_12,Accessories,0,float64,lag price
+price_lag_item_24,Accessories,0,float64,lag price
+price_lag_item_shop_1,Accessories,0,float64,lag price
+price_lag_item_shop_4,Accessories,0,float64,lag price
+price_lag_item_shop_12,Accessories,0,float64,lag price
+price_lag_item_shop_24,Accessories,0,float64,lag price
+week_block_num,Accessories,0,int64,generic
+month,Accessories,0,int64,generic
+seasonal_index,Accessories,0,float64,seasonality
+priceratio_parent_category,Accessories,0,float64,price ratio
+priceratio_item_category_2,Accessories,0,float64,price ratio
+priceratio_item_category_3,Accessories,0,float64,price ratio
+priceratio_item_category_4,Accessories,0,float64,price ratio
+priceratio_item_category_5,Accessories,0,float64,price ratio
+priceratio_item_category_6,Accessories,0,float64,price ratio
+date_block_num,Gifts,10,int64,generic
+item_id,Gifts,10,int64,id
+shop_id,Gifts,10,int64,id
+item_price,Gifts,10,float64,price
+item_category_id,Gifts,10,int64,id
+count_item_week_shop,Gifts,10,float64,generic
+price_mean_week_category,Gifts,10,float64,price
+price_lag_item_1,Gifts,10,float64,lag price
+price_lag_item_4,Gifts,10,float64,lag price
+price_lag_item_12,Gifts,10,float64,lag price
+price_lag_item_24,Gifts,10,float64,lag price
+price_lag_item_shop_1,Gifts,10,float64,lag price
+price_lag_item_shop_4,Gifts,10,float64,lag price
+price_lag_item_shop_12,Gifts,10,float64,lag price
+price_lag_item_shop_24,Gifts,10,float64,lag price
+week_block_num,Gifts,10,int64,generic
+month,Gifts,10,int64,generic
+seasonal_index,Gifts,10,float64,seasonality
+priceratio_parent_category,Gifts,10,float64,price ratio
+priceratio_item_category_44,Gifts,10,float64,price ratio
+priceratio_item_category_45,Gifts,10,float64,price ratio
+priceratio_item_category_46,Gifts,10,float64,price ratio
+priceratio_item_category_47,Gifts,10,float64,price ratio
+priceratio_item_category_49,Gifts,10,float64,price ratio
+priceratio_item_category_54,Gifts,10,float64,price ratio
+priceratio_item_category_55,Gifts,10,float64,price ratio
+date_block_num,Mac Games,11,int64,generic
+item_id,Mac Games,11,int64,id
+shop_id,Mac Games,11,int64,id
+item_price,Mac Games,11,float64,price
+item_category_id,Mac Games,11,int64,id
+count_item_week_shop,Mac Games,11,float64,generic
+price_mean_week_category,Mac Games,11,float64,price
+price_lag_item_1,Mac Games,11,float64,lag price
+price_lag_item_4,Mac Games,11,float64,lag price
+price_lag_item_12,Mac Games,11,float64,lag price
+price_lag_item_24,Mac Games,11,float64,lag price
+price_lag_item_shop_1,Mac Games,11,float64,lag price
+price_lag_item_shop_4,Mac Games,11,float64,lag price
+price_lag_item_shop_12,Mac Games,11,float64,lag price
+price_lag_item_shop_24,Mac Games,11,float64,lag price
+week_block_num,Mac Games,11,int64,generic
+month,Mac Games,11,int64,generic
+seasonal_index,Mac Games,11,float64,seasonality
+priceratio_parent_category,Mac Games,11,float64,price ratio
+priceratio_item_category_56,Mac Games,11,float64,price ratio
+date_block_num,Music,12,int64,generic
+item_id,Music,12,int64,id
+shop_id,Music,12,int64,id
+item_price,Music,12,float64,price
+item_category_id,Music,12,int64,id
+count_item_week_shop,Music,12,float64,generic
+price_mean_week_category,Music,12,float64,price
+price_lag_item_1,Music,12,float64,lag price
+price_lag_item_4,Music,12,float64,lag price
+price_lag_item_12,Music,12,float64,lag price
+price_lag_item_24,Music,12,float64,lag price
+price_lag_item_shop_1,Music,12,float64,lag price
+price_lag_item_shop_4,Music,12,float64,lag price
+price_lag_item_shop_12,Music,12,float64,lag price
+price_lag_item_shop_24,Music,12,float64,lag price
+week_block_num,Music,12,int64,generic
+month,Music,12,int64,generic
+seasonal_index,Music,12,float64,seasonality
+priceratio_parent_category,Music,12,float64,price ratio
+priceratio_item_category_57,Music,12,float64,price ratio
+priceratio_item_category_58,Music,12,float64,price ratio
+priceratio_item_category_59,Music,12,float64,price ratio
+priceratio_item_category_60,Music,12,float64,price ratio
+priceratio_item_category_61,Music,12,float64,price ratio
+priceratio_item_category_62,Music,12,float64,price ratio
+date_block_num,Pc,13,int64,generic
+item_id,Pc,13,int64,id
+shop_id,Pc,13,int64,id
+item_price,Pc,13,float64,price
+item_category_id,Pc,13,int64,id
+count_item_week_shop,Pc,13,float64,generic
+price_mean_week_category,Pc,13,float64,price
+price_lag_item_1,Pc,13,float64,lag price
+price_lag_item_4,Pc,13,float64,lag price
+price_lag_item_12,Pc,13,float64,lag price
+price_lag_item_24,Pc,13,float64,lag price
+price_lag_item_shop_1,Pc,13,float64,lag price
+price_lag_item_shop_4,Pc,13,float64,lag price
+price_lag_item_shop_12,Pc,13,float64,lag price
+price_lag_item_shop_24,Pc,13,float64,lag price
+week_block_num,Pc,13,int64,generic
+month,Pc,13,int64,generic
+seasonal_index,Pc,13,float64,seasonality
+priceratio_parent_category,Pc,13,float64,price ratio
+priceratio_item_category_63,Pc,13,float64,price ratio
+date_block_num,Pc Games,14,int64,generic
+item_id,Pc Games,14,int64,id
+shop_id,Pc Games,14,int64,id
+item_price,Pc Games,14,float64,price
+item_category_id,Pc Games,14,int64,id
+count_item_week_shop,Pc Games,14,float64,generic
+price_mean_week_category,Pc Games,14,float64,price
+price_lag_item_1,Pc Games,14,float64,lag price
+price_lag_item_4,Pc Games,14,float64,lag price
+price_lag_item_12,Pc Games,14,float64,lag price
+price_lag_item_24,Pc Games,14,float64,lag price
+price_lag_item_shop_1,Pc Games,14,float64,lag price
+price_lag_item_shop_4,Pc Games,14,float64,lag price
+price_lag_item_shop_12,Pc Games,14,float64,lag price
+price_lag_item_shop_24,Pc Games,14,float64,lag price
+week_block_num,Pc Games,14,int64,generic
+month,Pc Games,14,int64,generic
+seasonal_index,Pc Games,14,float64,seasonality
+priceratio_parent_category,Pc Games,14,float64,price ratio
+priceratio_item_category_64,Pc Games,14,float64,price ratio
+priceratio_item_category_65,Pc Games,14,float64,price ratio
+priceratio_item_category_66,Pc Games,14,float64,price ratio
+priceratio_item_category_67,Pc Games,14,float64,price ratio
+date_block_num,"Payment Cards (Cinema, Music, Games)",15,int64,generic
+item_id,"Payment Cards (Cinema, Music, Games)",15,int64,id
+shop_id,"Payment Cards (Cinema, Music, Games)",15,int64,id
+item_price,"Payment Cards (Cinema, Music, Games)",15,float64,price
+item_category_id,"Payment Cards (Cinema, Music, Games)",15,int64,id
+count_item_week_shop,"Payment Cards (Cinema, Music, Games)",15,float64,generic
+price_mean_week_category,"Payment Cards (Cinema, Music, Games)",15,float64,price
+price_lag_item_1,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+price_lag_item_4,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+price_lag_item_12,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+price_lag_item_24,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+price_lag_item_shop_1,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+price_lag_item_shop_4,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+price_lag_item_shop_12,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+price_lag_item_shop_24,"Payment Cards (Cinema, Music, Games)",15,float64,lag price
+week_block_num,"Payment Cards (Cinema, Music, Games)",15,int64,generic
+month,"Payment Cards (Cinema, Music, Games)",15,int64,generic
+seasonal_index,"Payment Cards (Cinema, Music, Games)",15,float64,seasonality
+priceratio_parent_category,"Payment Cards (Cinema, Music, Games)",15,float64,price ratio
+priceratio_item_category_68,"Payment Cards (Cinema, Music, Games)",15,float64,price ratio
+date_block_num,Payment Cards,16,int64,generic
+item_id,Payment Cards,16,int64,id
+shop_id,Payment Cards,16,int64,id
+item_price,Payment Cards,16,float64,price
+item_category_id,Payment Cards,16,int64,id
+count_item_week_shop,Payment Cards,16,float64,generic
+price_mean_week_category,Payment Cards,16,float64,price
+price_lag_item_1,Payment Cards,16,float64,lag price
+price_lag_item_4,Payment Cards,16,float64,lag price
+price_lag_item_12,Payment Cards,16,float64,lag price
+price_lag_item_24,Payment Cards,16,float64,lag price
+price_lag_item_shop_1,Payment Cards,16,float64,lag price
+price_lag_item_shop_4,Payment Cards,16,float64,lag price
+price_lag_item_shop_12,Payment Cards,16,float64,lag price
+price_lag_item_shop_24,Payment Cards,16,float64,lag price
+week_block_num,Payment Cards,16,int64,generic
+month,Payment Cards,16,int64,generic
+seasonal_index,Payment Cards,16,float64,seasonality
+priceratio_parent_category,Payment Cards,16,float64,price ratio
+priceratio_item_category_69,Payment Cards,16,float64,price ratio
+priceratio_item_category_70,Payment Cards,16,float64,price ratio
+priceratio_item_category_71,Payment Cards,16,float64,price ratio
+priceratio_item_category_72,Payment Cards,16,float64,price ratio
+date_block_num,Power Elements,17,int64,generic
+item_id,Power Elements,17,int64,id
+shop_id,Power Elements,17,int64,id
+item_price,Power Elements,17,float64,price
+item_category_id,Power Elements,17,int64,id
+count_item_week_shop,Power Elements,17,float64,generic
+price_mean_week_category,Power Elements,17,float64,price
+price_lag_item_1,Power Elements,17,float64,lag price
+price_lag_item_4,Power Elements,17,float64,lag price
+price_lag_item_12,Power Elements,17,float64,lag price
+price_lag_item_24,Power Elements,17,float64,lag price
+price_lag_item_shop_1,Power Elements,17,float64,lag price
+price_lag_item_shop_4,Power Elements,17,float64,lag price
+price_lag_item_shop_12,Power Elements,17,float64,lag price
+price_lag_item_shop_24,Power Elements,17,float64,lag price
+week_block_num,Power Elements,17,int64,generic
+month,Power Elements,17,int64,generic
+seasonal_index,Power Elements,17,float64,seasonality
+priceratio_parent_category,Power Elements,17,float64,price ratio
+priceratio_item_category_73,Power Elements,17,float64,price ratio
+date_block_num,Programs,18,int64,generic
+item_id,Programs,18,int64,id
+shop_id,Programs,18,int64,id
+item_price,Programs,18,float64,price
+item_category_id,Programs,18,int64,id
+count_item_week_shop,Programs,18,float64,generic
+price_mean_week_category,Programs,18,float64,price
+price_lag_item_1,Programs,18,float64,lag price
+price_lag_item_4,Programs,18,float64,lag price
+price_lag_item_12,Programs,18,float64,lag price
+price_lag_item_24,Programs,18,float64,lag price
+price_lag_item_shop_1,Programs,18,float64,lag price
+price_lag_item_shop_4,Programs,18,float64,lag price
+price_lag_item_shop_12,Programs,18,float64,lag price
+price_lag_item_shop_24,Programs,18,float64,lag price
+week_block_num,Programs,18,int64,generic
+month,Programs,18,int64,generic
+seasonal_index,Programs,18,float64,seasonality
+priceratio_parent_category,Programs,18,float64,price ratio
+priceratio_item_category_74,Programs,18,float64,price ratio
+priceratio_item_category_75,Programs,18,float64,price ratio
+priceratio_item_category_76,Programs,18,float64,price ratio
+priceratio_item_category_77,Programs,18,float64,price ratio
+priceratio_item_category_78,Programs,18,float64,price ratio
+priceratio_item_category_79,Programs,18,float64,price ratio
+date_block_num,Service,19,int64,generic
+item_id,Service,19,int64,id
+shop_id,Service,19,int64,id
+item_price,Service,19,float64,price
+item_category_id,Service,19,int64,id
+count_item_week_shop,Service,19,float64,generic
+price_mean_week_category,Service,19,float64,price
+price_lag_item_1,Service,19,float64,lag price
+price_lag_item_4,Service,19,float64,lag price
+price_lag_item_12,Service,19,float64,lag price
+price_lag_item_24,Service,19,float64,lag price
+price_lag_item_shop_1,Service,19,float64,lag price
+price_lag_item_shop_4,Service,19,float64,lag price
+price_lag_item_shop_12,Service,19,float64,lag price
+price_lag_item_shop_24,Service,19,float64,lag price
+week_block_num,Service,19,int64,generic
+month,Service,19,int64,generic
+seasonal_index,Service,19,float64,seasonality
+priceratio_parent_category,Service,19,float64,price ratio
+priceratio_item_category_80,Service,19,float64,price ratio
+priceratio_item_category_81,Service,19,float64,price ratio
+date_block_num,Android Games,1,int64,generic
+item_id,Android Games,1,int64,id
+shop_id,Android Games,1,int64,id
+item_price,Android Games,1,float64,price
+item_category_id,Android Games,1,int64,id
+count_item_week_shop,Android Games,1,float64,generic
+price_mean_week_category,Android Games,1,float64,price
+price_lag_item_1,Android Games,1,float64,lag price
+price_lag_item_4,Android Games,1,float64,lag price
+price_lag_item_12,Android Games,1,float64,lag price
+price_lag_item_24,Android Games,1,float64,lag price
+price_lag_item_shop_1,Android Games,1,float64,lag price
+price_lag_item_shop_4,Android Games,1,float64,lag price
+price_lag_item_shop_12,Android Games,1,float64,lag price
+price_lag_item_shop_24,Android Games,1,float64,lag price
+week_block_num,Android Games,1,int64,generic
+month,Android Games,1,int64,generic
+seasonal_index,Android Games,1,float64,seasonality
+priceratio_parent_category,Android Games,1,float64,price ratio
+priceratio_item_category_7,Android Games,1,float64,price ratio
+date_block_num,Tickets (Digit),20,int64,generic
+item_id,Tickets (Digit),20,int64,id
+shop_id,Tickets (Digit),20,int64,id
+item_price,Tickets (Digit),20,float64,price
+item_category_id,Tickets (Digit),20,int64,id
+count_item_week_shop,Tickets (Digit),20,float64,generic
+price_mean_week_category,Tickets (Digit),20,float64,price
+price_lag_item_1,Tickets (Digit),20,float64,lag price
+price_lag_item_4,Tickets (Digit),20,float64,lag price
+price_lag_item_12,Tickets (Digit),20,float64,lag price
+price_lag_item_24,Tickets (Digit),20,float64,lag price
+price_lag_item_shop_1,Tickets (Digit),20,float64,lag price
+price_lag_item_shop_4,Tickets (Digit),20,float64,lag price
+price_lag_item_shop_12,Tickets (Digit),20,float64,lag price
+price_lag_item_shop_24,Tickets (Digit),20,float64,lag price
+week_block_num,Tickets (Digit),20,int64,generic
+month,Tickets (Digit),20,int64,generic
+seasonal_index,Tickets (Digit),20,float64,seasonality
+priceratio_parent_category,Tickets (Digit),20,float64,price ratio
+priceratio_item_category_82,Tickets (Digit),20,float64,price ratio
+date_block_num,Игры,21,int64,generic
+item_id,Игры,21,int64,id
+shop_id,Игры,21,int64,id
+item_price,Игры,21,float64,price
+item_category_id,Игры,21,int64,id
+count_item_week_shop,Игры,21,float64,generic
+price_mean_week_category,Игры,21,float64,price
+price_lag_item_1,Игры,21,float64,lag price
+price_lag_item_4,Игры,21,float64,lag price
+price_lag_item_12,Игры,21,float64,lag price
+price_lag_item_24,Игры,21,float64,lag price
+price_lag_item_shop_1,Игры,21,float64,lag price
+price_lag_item_shop_4,Игры,21,float64,lag price
+price_lag_item_shop_12,Игры,21,float64,lag price
+price_lag_item_shop_24,Игры,21,float64,lag price
+week_block_num,Игры,21,int64,generic
+month,Игры,21,int64,generic
+seasonal_index,Игры,21,float64,seasonality
+priceratio_parent_category,Игры,21,float64,price ratio
+priceratio_item_category_83,Игры,21,float64,price ratio
+date_block_num,Books,2,int64,generic
+item_id,Books,2,int64,id
+shop_id,Books,2,int64,id
+item_price,Books,2,float64,price
+item_category_id,Books,2,int64,id
+count_item_week_shop,Books,2,float64,generic
+price_mean_week_category,Books,2,float64,price
+price_lag_item_1,Books,2,float64,lag price
+price_lag_item_4,Books,2,float64,lag price
+price_lag_item_12,Books,2,float64,lag price
+price_lag_item_24,Books,2,float64,lag price
+price_lag_item_shop_1,Books,2,float64,lag price
+price_lag_item_shop_4,Books,2,float64,lag price
+price_lag_item_shop_12,Books,2,float64,lag price
+price_lag_item_shop_24,Books,2,float64,lag price
+week_block_num,Books,2,int64,generic
+month,Books,2,int64,generic
+seasonal_index,Books,2,float64,seasonality
+priceratio_parent_category,Books,2,float64,price ratio
+priceratio_item_category_8,Books,2,float64,price ratio
+priceratio_item_category_9,Books,2,float64,price ratio
+priceratio_item_category_11,Books,2,float64,price ratio
+priceratio_item_category_12,Books,2,float64,price ratio
+priceratio_item_category_13,Books,2,float64,price ratio
+priceratio_item_category_14,Books,2,float64,price ratio
+priceratio_item_category_15,Books,2,float64,price ratio
+priceratio_item_category_16,Books,2,float64,price ratio
+priceratio_item_category_17,Books,2,float64,price ratio
+priceratio_item_category_18,Books,2,float64,price ratio
+priceratio_item_category_19,Books,2,float64,price ratio
+priceratio_item_category_20,Books,2,float64,price ratio
+date_block_num,Cinema,3,int64,generic
+item_id,Cinema,3,int64,id
+shop_id,Cinema,3,int64,id
+item_price,Cinema,3,float64,price
+item_category_id,Cinema,3,int64,id
+count_item_week_shop,Cinema,3,float64,generic
+price_mean_week_category,Cinema,3,float64,price
+price_lag_item_1,Cinema,3,float64,lag price
+price_lag_item_4,Cinema,3,float64,lag price
+price_lag_item_12,Cinema,3,float64,lag price
+price_lag_item_24,Cinema,3,float64,lag price
+price_lag_item_shop_1,Cinema,3,float64,lag price
+price_lag_item_shop_4,Cinema,3,float64,lag price
+price_lag_item_shop_12,Cinema,3,float64,lag price
+price_lag_item_shop_24,Cinema,3,float64,lag price
+week_block_num,Cinema,3,int64,generic
+month,Cinema,3,int64,generic
+seasonal_index,Cinema,3,float64,seasonality
+priceratio_parent_category,Cinema,3,float64,price ratio
+priceratio_item_category_21,Cinema,3,float64,price ratio
+priceratio_item_category_22,Cinema,3,float64,price ratio
+priceratio_item_category_23,Cinema,3,float64,price ratio
+priceratio_item_category_24,Cinema,3,float64,price ratio
+date_block_num,Clean Media (Piece),4,int64,generic
+item_id,Clean Media (Piece),4,int64,id
+shop_id,Clean Media (Piece),4,int64,id
+item_price,Clean Media (Piece),4,float64,price
+item_category_id,Clean Media (Piece),4,int64,id
+count_item_week_shop,Clean Media (Piece),4,float64,generic
+price_mean_week_category,Clean Media (Piece),4,float64,price
+price_lag_item_1,Clean Media (Piece),4,float64,lag price
+price_lag_item_4,Clean Media (Piece),4,float64,lag price
+price_lag_item_12,Clean Media (Piece),4,float64,lag price
+price_lag_item_24,Clean Media (Piece),4,float64,lag price
+price_lag_item_shop_1,Clean Media (Piece),4,float64,lag price
+price_lag_item_shop_4,Clean Media (Piece),4,float64,lag price
+price_lag_item_shop_12,Clean Media (Piece),4,float64,lag price
+price_lag_item_shop_24,Clean Media (Piece),4,float64,lag price
+week_block_num,Clean Media (Piece),4,int64,generic
+month,Clean Media (Piece),4,int64,generic
+seasonal_index,Clean Media (Piece),4,float64,seasonality
+priceratio_parent_category,Clean Media (Piece),4,float64,price ratio
+priceratio_item_category_25,Clean Media (Piece),4,float64,price ratio
+date_block_num,Clean Media (Spire),5,int64,generic
+item_id,Clean Media (Spire),5,int64,id
+shop_id,Clean Media (Spire),5,int64,id
+item_price,Clean Media (Spire),5,float64,price
+item_category_id,Clean Media (Spire),5,int64,id
+count_item_week_shop,Clean Media (Spire),5,float64,generic
+price_mean_week_category,Clean Media (Spire),5,float64,price
+price_lag_item_1,Clean Media (Spire),5,float64,lag price
+price_lag_item_4,Clean Media (Spire),5,float64,lag price
+price_lag_item_12,Clean Media (Spire),5,float64,lag price
+price_lag_item_24,Clean Media (Spire),5,float64,lag price
+price_lag_item_shop_1,Clean Media (Spire),5,float64,lag price
+price_lag_item_shop_4,Clean Media (Spire),5,float64,lag price
+price_lag_item_shop_12,Clean Media (Spire),5,float64,lag price
+price_lag_item_shop_24,Clean Media (Spire),5,float64,lag price
+week_block_num,Clean Media (Spire),5,int64,generic
+month,Clean Media (Spire),5,int64,generic
+seasonal_index,Clean Media (Spire),5,float64,seasonality
+priceratio_parent_category,Clean Media (Spire),5,float64,price ratio
+priceratio_item_category_26,Clean Media (Spire),5,float64,price ratio
+date_block_num,Film,7,int64,generic
+item_id,Film,7,int64,id
+shop_id,Film,7,int64,id
+item_price,Film,7,float64,price
+item_category_id,Film,7,int64,id
+count_item_week_shop,Film,7,float64,generic
+price_mean_week_category,Film,7,float64,price
+price_lag_item_1,Film,7,float64,lag price
+price_lag_item_4,Film,7,float64,lag price
+price_lag_item_12,Film,7,float64,lag price
+price_lag_item_24,Film,7,float64,lag price
+price_lag_item_shop_1,Film,7,float64,lag price
+price_lag_item_shop_4,Film,7,float64,lag price
+price_lag_item_shop_12,Film,7,float64,lag price
+price_lag_item_shop_24,Film,7,float64,lag price
+week_block_num,Film,7,int64,generic
+month,Film,7,int64,generic
+seasonal_index,Film,7,float64,seasonality
+priceratio_parent_category,Film,7,float64,price ratio
+priceratio_item_category_28,Film,7,float64,price ratio
+date_block_num,Games,8,int64,generic
+item_id,Games,8,int64,id
+shop_id,Games,8,int64,id
+item_price,Games,8,float64,price
+item_category_id,Games,8,int64,id
+count_item_week_shop,Games,8,float64,generic
+price_mean_week_category,Games,8,float64,price
+price_lag_item_1,Games,8,float64,lag price
+price_lag_item_4,Games,8,float64,lag price
+price_lag_item_12,Games,8,float64,lag price
+price_lag_item_24,Games,8,float64,lag price
+price_lag_item_shop_1,Games,8,float64,lag price
+price_lag_item_shop_4,Games,8,float64,lag price
+price_lag_item_shop_12,Games,8,float64,lag price
+price_lag_item_shop_24,Games,8,float64,lag price
+week_block_num,Games,8,int64,generic
+month,Games,8,int64,generic
+seasonal_index,Games,8,float64,seasonality
+priceratio_parent_category,Games,8,float64,price ratio
+priceratio_item_category_29,Games,8,float64,price ratio
+priceratio_item_category_30,Games,8,float64,price ratio
+priceratio_item_category_31,Games,8,float64,price ratio
+priceratio_item_category_32,Games,8,float64,price ratio
+priceratio_item_category_33,Games,8,float64,price ratio
+priceratio_item_category_34,Games,8,float64,price ratio
+priceratio_item_category_35,Games,8,float64,price ratio
+date_block_num,Gaming Consoles,9,int64,generic
+item_id,Gaming Consoles,9,int64,id
+shop_id,Gaming Consoles,9,int64,id
+item_price,Gaming Consoles,9,float64,price
+item_category_id,Gaming Consoles,9,int64,id
+count_item_week_shop,Gaming Consoles,9,float64,generic
+price_mean_week_category,Gaming Consoles,9,float64,price
+price_lag_item_1,Gaming Consoles,9,float64,lag price
+price_lag_item_4,Gaming Consoles,9,float64,lag price
+price_lag_item_12,Gaming Consoles,9,float64,lag price
+price_lag_item_24,Gaming Consoles,9,float64,lag price
+price_lag_item_shop_1,Gaming Consoles,9,float64,lag price
+price_lag_item_shop_4,Gaming Consoles,9,float64,lag price
+price_lag_item_shop_12,Gaming Consoles,9,float64,lag price
+price_lag_item_shop_24,Gaming Consoles,9,float64,lag price
+week_block_num,Gaming Consoles,9,int64,generic
+month,Gaming Consoles,9,int64,generic
+seasonal_index,Gaming Consoles,9,float64,seasonality
+priceratio_parent_category,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_36,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_37,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_38,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_39,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_40,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_41,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_42,Gaming Consoles,9,float64,price ratio
+priceratio_item_category_43,Gaming Consoles,9,float64,price ratio
