@@ -1,0 +1,23 @@
+{
+    "Accessories": "model_trained_0_w_price.pkl",
+    "Android Games": "model_trained_1_w_price.pkl",
+    "Books": "model_trained_2_w_price.pkl",
+    "Cinema": "model_trained_3_w_price.pkl",
+    "Clean Media (Piece)": "model_trained_4_w_price.pkl",
+    "Clean Media (Spire)": "model_trained_5_w_price.pkl",
+    "Film": "model_trained_7_w_price.pkl",
+    "Games": "model_trained_8_w_price.pkl",
+    "Gaming Consoles": "model_trained_9_w_price.pkl",
+    "Gifts": "model_trained_10_w_price.pkl",
+    "Mac Games": "model_trained_11_w_price.pkl",
+    "Music": "model_trained_12_w_price.pkl",
+    "Pc": "model_trained_13_w_price.pkl",
+    "Pc Games": "model_trained_14_w_price.pkl",
+    "Payment Cards (Cinema, Music, Games)": "model_trained_15_w_price.pkl",
+    "Payment Cards": "model_trained_16_w_price.pkl",
+    "Power Elements": "model_trained_17_w_price.pkl",
+    "Programs": "model_trained_18_w_price.pkl",
+    "Service": "model_trained_19_w_price.pkl",
+    "Tickets (Digit)": "model_trained_20_w_price.pkl",
+    "\u0418\u0433\u0440\u044b": "model_trained_21_w_price.pkl"
+}
