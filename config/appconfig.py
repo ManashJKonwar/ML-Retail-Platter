@@ -28,7 +28,7 @@ except Exception as ex:
 
 try:
     if os.path.exists(os.path.join('config','config_modelpicklefiles.json')):
-        with open(os.path.join('config','config_modelpicklefiles.json')) as config_file:
+        with open(os.path.join('config','config_modelpicklefiles.json'), encoding='ascii') as config_file:
             config_model_picklefiles = json.load(config_file)
 except Exception as ex:
     print("Reading Model Pickle Configuration raised an exception: "+str(ex))
