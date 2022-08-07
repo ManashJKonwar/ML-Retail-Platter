@@ -11,6 +11,7 @@ import copy
 import pandas as pd
 import plotly.express as px
 from dash import html
+from dash import no_update
 from dash.dependencies import Input, Output, State
 from dash_bootstrap_templates import ThemeChangerAIO, template_from_url
 from callback_manager import CallbackManager
