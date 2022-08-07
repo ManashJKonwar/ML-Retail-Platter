@@ -14,8 +14,8 @@ from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from tasks import long_running_simulation
 from datasets.backend import df_consolidated, df_features, df_variable_type, df_xvar, \
-                            dict_product_category_id_map, dict_product_id_map, dict_shop_id_map, \
-                            lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
+                            df_seasonality, dict_parent_category_id_map, dict_product_category_id_map, dict_product_id_map, \
+                            dict_shop_id_map, lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
 from utility.utility_data_transformation import custom_datepicker
 
 logger = logging.getLogger('pricing_handler') # Retrieve Logger Handler
@@ -118,7 +118,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
         # df_benchmarking_preds = baseline_predictions_weekly if period_type.__eq__('Quarterly') or period_type.__eq__('Custom') else baseline_predicitons_monthly
         df_benchmarking_preds = pd.DataFrame()
         df_competitor_rank = pd.DataFrame()
-        df_seasonality_weather = pd.DataFrame()
+        df_seasonality_weather = df_seasonality.copy()
         df_switching = pd.DataFrame()
         df_models = pd.DataFrame()
 
@@ -136,7 +136,10 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
                                             df_model_endpoints=df_models,
                                             model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'],
                                             model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'],
-                                            mapping_dict={'category':dict_product_category_id_map, 'product':dict_product_id_map, 'shop':dict_shop_id_map},
+                                            mapping_dict={'parent':dict_parent_category_id_map, 
+                                                        'category':dict_product_category_id_map, 
+                                                        'product':dict_product_id_map, 
+                                                        'shop':dict_shop_id_map},
                                             period_type=period_type,
                                             month_to_weeks=lt_month2week_list,
                                             pickle_flag=True,

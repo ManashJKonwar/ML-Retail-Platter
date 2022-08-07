@@ -54,12 +54,7 @@ class PredictSalesModel():
             pickle_file_name (str): name of the pickle file based on combination of Province and Brand
         """
         try:
-            '''
-            COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since it has only one model however this would be really convenient if there
-            are multiple models based on data granularity
-            return self._model_picklefile_dict[self._province_brand_dict['PROVINCE']][self._province_brand_dict['BRAND']][self._province_brand_dict['KA']]
-            '''
-            return "model_trained_w_price_xgb.pkl"
+            return self._model_picklefile_dict[self._product_info_dict['PARENT']]
         except Exception:
             return None
 
@@ -77,38 +72,17 @@ class PredictSalesModel():
         feature_dict={}
 
         try:
-            '''
-            COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since it has only one model however this would be really convenient if there
-            are multiple models based on data granularity
-
             # Masking features related to only specific Province and Brand from features dataframe
-            feature_extraction_mask = (self._features_df.PROVINCE==self._province_brand_dict['PROVINCE']) &\
-                                    (self._features_df.BRAND_AGG==self._brand_mapper_dict[self._province_brand_dict['BRAND']])&\
-                                    (self._features_df.KA_AGG==self._ka_mapper_dict[self._province_brand_dict['KA']])
+            feature_extraction_mask = (self._features_df.group_name==self._product_info_dict['PARENT'])
             feature_data = self._features_df.loc[feature_extraction_mask].reset_index(drop=True)
-            # Masking features based on selected model type for specific Province and Brand
-            model_extraction_mask = (self._model_endpoints_df.MODEL_ID==('_%s_%s_%s')%(
-                                                                                    re.sub(r"\s+", "", self._province_brand_dict['PROVINCE']), \
-                                                                                    self._brand_mapper_dict[self._province_brand_dict['BRAND']],\
-                                                                                    self._ka_mapper_dict[self._province_brand_dict['KA']]
-                                                                                    )
-                                    ) 
-            model_df = self._model_endpoints_df.loc[model_extraction_mask].reset_index(drop=True)
-            
-            if len(model_df)==1:
-                model_type = model_df.MODEL[0]
-            else:
-                pass
-                    
-            feature_data = feature_data.loc[feature_data.MODEL.isin([model_type])].reset_index(drop=True) 
-            '''
 
-            xvar_extraction_mask = (self._xvar_df.item_category_id.isin([self._mapping_dict['category'][self._product_info_dict['CATEGORY']]])) & \
+            xvar_extraction_mask = (self._xvar_df.parent_category_name.isin([self._product_info_dict['PARENT']])) & \
+                            (self._xvar_df.item_category_id.isin([self._mapping_dict['category'][self._product_info_dict['CATEGORY']]])) & \
                             (self._xvar_df.shop_id.isin([self._mapping_dict['shop'][self._product_info_dict['SHOP']]])) & \
                             (self._xvar_df.item_id.isin([self._mapping_dict['product'][self._product_info_dict['PRODUCT']]]))
             consolidated_data = self._xvar_df.loc[xvar_extraction_mask].drop_duplicates(keep=False).reset_index(drop=True)
             
-            for row in self._features_df.itertuples():
+            for row in feature_data.itertuples():
                 if row.feature_name not in feature_dict.keys():
                     if math.isnan(consolidated_data[row.feature_name][0]):
                         feature_dict[row.feature_name] = {'value':0.0}
@@ -134,9 +108,9 @@ class PredictSalesModel():
         data_dict={}
         if period_type.__eq__('Quarterly') or period_type.__eq__('Custom'):
             # Plain Execution of Weekly Level Data Provided
-            counter = 4
+            counter = 5
             column_name_list, row_data = self._row_info_data[0], self._row_info_data[1]
-            for item in column_name_list[4:]:
+            for item in column_name_list[5:]:
                 try:
                     data_dict[item] = float(eval("row_data._"+str(counter)))
                     counter+=1
@@ -146,10 +120,10 @@ class PredictSalesModel():
                     continue
         elif period_type.__eq__('Annually'):
             # Plain Execution of Monthly Level Data Provided
-            counter = 4
+            counter = 5
             column_name_list, row_data = self._row_info_data[0], self._row_info_data[1]
             month_map={}
-            for item in column_name_list[4:]:
+            for item in column_name_list[5:]:
                 try:
                     item_year_month = '-'.join(item.split('-')[0:2])
                     month_map[item_year_month] = [x for x in self._month_to_weeks if '-'.join(x.split('-')[0:2]) == item_year_month]

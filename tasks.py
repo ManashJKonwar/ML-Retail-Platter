@@ -39,8 +39,8 @@ def long_running_simulation(**kwargs):
     for row in df_pricing_input.itertuples(index=False, name='Pandas'):
         dummy_df = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
         try:
-            logger.info('Generating Prediction Model for Product Category: %s and Product: %s and sold from Shop: %s' %(row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
-            print('Generating Prediction Model for Product Category: %s and Product: %s and sold from Shop: %s' %(row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
+            logger.info('Generating Prediction Model for Parent Category: %s, Product Category: %s and Product: %s and sold from Shop: %s' %(row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
+            print('Generating Prediction Model for Parent Category: %s, Product Category: %s and Product: %s and sold from Shop: %s' %(row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
             predict_model_instance = PredictSalesModel(row_info_data=[list(df_pricing_input.columns), row],
                                                     historic_df=df_historic,
                                                     consolidated_df=df_consolidated,
@@ -54,7 +54,7 @@ def long_running_simulation(**kwargs):
                                                     model_endpoints_dict=model_endpoints_dict,
                                                     model_picklefile_dict=model_picklefile_dict,
                                                     mapping_dict=mapping_dict,
-                                                    product_info_dict={'CATEGORY': row.PRODUCT_CATEGORY, 'PRODUCT': row.PRODUCT, 'SHOP':row.SHOP},
+                                                    product_info_dict={'PARENT': row.PARENT_CATEGORY, 'CATEGORY': row.PRODUCT_CATEGORY, 'PRODUCT': row.PRODUCT, 'SHOP':row.SHOP},
                                                     month_to_weeks=month_to_weeks,
                                                     pickle_flag=pickle_flag,
                                                     logger=logger)
@@ -65,7 +65,7 @@ def long_running_simulation(**kwargs):
                                             predicted_data=predicted_data, 
                                             result_df=dummy_df,
                                             row_data=row, 
-                                            column_name_list=[row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
+                                            column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
                                             month2weeks=month_to_weeks,
                                             take_log=False,
                                             error=False)
@@ -74,7 +74,7 @@ def long_running_simulation(**kwargs):
                                             predicted_data=predicted_data,
                                             result_df=dummy_df, 
                                             row_data=row, 
-                                            column_name_list=[row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
+                                            column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
                                             month2weeks=month_to_weeks,
                                             take_log=False,
                                             error=True)
@@ -84,7 +84,7 @@ def long_running_simulation(**kwargs):
                                         predicted_data=predicted_data, 
                                         result_df=dummy_df,
                                         row_data=row, 
-                                        column_name_list=[row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
+                                        column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
                                         month2weeks=month_to_weeks,
                                         take_log=False,
                                         error=True)
