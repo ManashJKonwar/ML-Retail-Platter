@@ -147,11 +147,18 @@ class PredictSalesModel():
                 key_date = datetime.datetime.strptime(key, '%Y-%b-%d').date()
                 start_date = datetime.datetime.strptime('2013-01-01', '%Y-%m-%d').date()
                 row_dict['date_block_num']['value'] = (key_date.year - start_date.year) * 12 + key_date.month - start_date.month
+
+            if 'week_block_num' in row_dict.keys():
+                key_date = datetime.datetime.strptime(key, '%Y-%b-%d').date()
+                start_date = datetime.datetime.strptime('2012-12-31', '%Y-%m-%d').date()
+                row_dict['week_block_num']['value'] = (abs(key_date - start_date).days)//7
+
+            if 'month' in row_dict.keys():
+                row_dict['month']['value'] = int(datetime.datetime.strptime(key, '%Y-%b-%d').date().month)
             
             '''
             COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since seasonality, weather, pricing ratios, lag and log features are not
             utilized currently
-
             # Modifying Seasonality and Weather Data
             row_dict = self.modify_backend_xvars(row_dict=row_dict, week_date=key)
             # Modifying Pricing Ratios
@@ -162,7 +169,6 @@ class PredictSalesModel():
             # till now
             row_dict = self.modify_log_features(row_dict=row_dict)
             '''
-
             # Adding to final data dictionary
             self._final_data_dict['data'] += [[x['value'] for x in list(row_dict.values())]]
         
@@ -181,7 +187,7 @@ class PredictSalesModel():
         """
         self._bearer_key = 'bearer key'
         if self._pickle_flag:
-            return predict_fn(pkl=os.path.join('datasets','trained_models_v01',self._model_pkl), 
+            return predict_fn(pkl=os.path.join('datasets', 'models_essentials_v02', self._model_pkl), 
                             data=self._final_data_dict)
         else:
             return predict_service(uri=self._model_uri, 
