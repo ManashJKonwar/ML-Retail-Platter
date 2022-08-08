@@ -85,9 +85,9 @@ class PredictSalesModel():
             for row in feature_data.itertuples():
                 if row.feature_name not in feature_dict.keys():
                     if math.isnan(consolidated_data[row.feature_name][0]):
-                        feature_dict[row.feature_name] = {'value':0.0}
+                        feature_dict[row.feature_name] = {'value':0.0, 'feature_type': row.feature_type}
                     else:
-                        feature_dict[row.feature_name] = {'value':consolidated_data[row.feature_name][0]}
+                        feature_dict[row.feature_name] = {'value':consolidated_data[row.feature_name][0], 'feature_type': row.feature_type}
             self._logger.info('Feature Extraction Done Successfully')
             return feature_dict
         except Exception as ex:
@@ -156,11 +156,9 @@ class PredictSalesModel():
             if 'month' in row_dict.keys():
                 row_dict['month']['value'] = int(datetime.datetime.strptime(key, '%Y-%b-%d').date().month)
             
-            '''
-            COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since seasonality, weather, pricing ratios, lag and log features are not
-            utilized currently
             # Modifying Seasonality and Weather Data
             row_dict = self.modify_backend_xvars(row_dict=row_dict, week_date=key)
+            '''
             # Modifying Pricing Ratios
             row_dict = self.modify_pricing_ratios(period_type=period_type, row_dict=row_dict, week_date=key)
             # Modifying Lag Features
@@ -173,6 +171,47 @@ class PredictSalesModel():
             self._final_data_dict['data'] += [[x['value'] for x in list(row_dict.values())]]
         
         self._logger.info('Generating Input Data Done Successfully with data length: %s' %(str(len(self._final_data_dict['data']))))
+
+    def modify_backend_xvars(self, row_dict=None, week_date=None):
+        """
+        This method helps in modifying any backend xvars which are independent of price changes made by user and 
+        are more dependent on duration for which the prediction is made for
+        Parameters: 
+            row_dict (dict, (dict, str)): dictionary of all features as key and respective value and category
+                                        extracted for each of these features
+            week_date (str): week date for which prediction is supposed to be made
+        Returns: 
+            row_dict (dict, (dict, str)): Modified features Dictionary. Overriden Xvars are:
+                                        1. Seasonality Data (SEASONALITY_INDEX)
+                                        2. Weather Data (AVG_TEMP)
+        """
+        # Extract Week No based on week_date provided for that specific year
+        month_no = datetime.datetime.strptime(week_date, '%Y-%b-%d').date().month
+        def seasonality_weather_update():
+            seasonality_weather_mask = (self._overriden_xvar_dict['seasonality_weather_df'].parent_category_name.isin([self._product_info_dict['PARENT']])) &\
+                                    (self._overriden_xvar_dict['seasonality_weather_df'].month.isin([month_no]))
+            seasonality_weather_data = self._overriden_xvar_dict['seasonality_weather_df'].loc[seasonality_weather_mask].reset_index(drop=True)
+            
+            # Check if updation is actually required or not
+            if len(seasonality_weather_data) == 0:
+                return row_dict
+            for xvar in row_dict.keys():
+                try:
+                    if row_dict[xvar]['feature_type'].__eq__('seasonality') and xvar.__eq__('seasonal_index'):
+                        row_dict[xvar]['value'] = round(float(seasonality_weather_data['seasonal_index'][0]),3)
+                    elif row_dict[xvar]['feature_type'].__eq__('weather') and xvar.__eq__('avg_temp'):
+                        row_dict[xvar]['value'] = float(seasonality_weather_data['avg_temp'][0])
+                except Exception as ex:
+                    self._logger.error('Modifying Backend XVars Caught Exception as: '+str(ex), exc_info=True)
+                    continue
+            return row_dict
+
+        for backend_data in self._overriden_xvar_dict.keys():
+            # Check if the backend data thats need updation is seasonality and weather data
+            if backend_data.__eq__('seasonality_weather_df'):
+                row_dict = seasonality_weather_update()
+        
+        return row_dict
 
     def predict(self):
         """
