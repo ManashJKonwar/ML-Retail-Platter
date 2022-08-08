@@ -8,8 +8,10 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import dash
+import urllib
 import logging
 import pandas as pd
+from dash import dcc
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from tasks import long_running_simulation
@@ -21,6 +23,7 @@ from utility.utility_data_transformation import custom_datepicker
 logger = logging.getLogger('pricing_handler') # Retrieve Logger Handler
 callback_manager = CallbackManager()
 
+#region Pricing Input
 @callback_manager.callback([Output(component_id='datatable-input', component_property='data'),
                             Output(component_id='datatable-input', component_property='columns')],
                             [Input(component_id='dd-period', component_property='value'),
@@ -87,6 +90,16 @@ def set_simulation_input_data(period_type, custom_start_date, custom_end_date, s
         else:
             column_list.append({"name": column_name, "id": column_name})
     return df_templatedata.to_dict('records'), column_list
+
+# Download template link
+@callback_manager.callback(Output(component_id='download-pricing-csv', component_property='data'),
+                        Input(component_id='btn-template-pricing', component_property='n_clicks'),
+                        State(component_id='datatable-input', component_property='data'))
+def download_template_link(on_click, tbdata):
+    if on_click is not None and len(tbdata)>0:
+        oritemplate = pd.DataFrame(data = tbdata)
+        return dcc.send_data_frame(oritemplate.to_csv, "pricing_template.csv", index=False)
+#endregion
 
 #region Running Simulations
 @callback_manager.callback([Output(component_id='storage-pricing-output', component_property='data'),

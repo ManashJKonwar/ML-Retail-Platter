@@ -276,6 +276,7 @@ layout = dbc.Container([
             ], className="h-85"),
 
             # Download Data Components
+            dcc.Download(id="download-pricing-csv"),
             dcc.Download(id="download-sales-csv"),
             
             # Storing Components

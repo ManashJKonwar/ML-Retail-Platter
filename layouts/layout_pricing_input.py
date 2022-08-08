@@ -39,15 +39,13 @@ layout = html.Div([
                                     # Allow multiple files to be uploaded is set to one
                                     multiple=False
                                 ), id='upload-region-anchor'), width=9, style={'text-align':'center'}),
-                dbc.Col(html.A(dbc.Button(
-                                    "Download Template", 
-                                    id='btn-template', 
-                                    color="info", 
-                                    className="mr-1"), 
-                                    id='template-btn-anchor',
-                                    href="", 
-                                    download="Japan Device Pricing Template.csv", 
-                                    target="_blank"), width=3, style={'text-align':'center'}),
+                dbc.Col(
+                    dbc.Button(
+                            "Download Pricing Template", 
+                            id='btn-template-pricing', 
+                            color="info", 
+                            className="mr-1"),
+                    style={'text-align':'center'})
             ],
             style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),
            
