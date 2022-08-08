@@ -12,6 +12,7 @@ import copy
 import math
 import pickle
 import datetime
+import pandas as pd
 
 class PredictSalesModel():
     def __init__(self, *args, **kwargs):
@@ -158,9 +159,9 @@ class PredictSalesModel():
             
             # Modifying Seasonality and Weather Data
             row_dict = self.modify_backend_xvars(row_dict=row_dict, week_date=key)
-            '''
             # Modifying Pricing Ratios
-            row_dict = self.modify_pricing_ratios(period_type=period_type, row_dict=row_dict, week_date=key)
+            row_dict = self.modify_pricing_interactions(period_type=period_type, row_dict=row_dict, week_date=key)
+            '''
             # Modifying Lag Features
             row_dict = self.modify_lag_features(period_type=period_type, row_dict=row_dict, week_date=key)
             # Modifying Log Features # This needs to be the ending step of modifying it since we were playing with absolute values
@@ -210,6 +211,93 @@ class PredictSalesModel():
             # Check if the backend data thats need updation is seasonality and weather data
             if backend_data.__eq__('seasonality_weather_df'):
                 row_dict = seasonality_weather_update()
+        
+        return row_dict
+
+    def modify_pricing_interactions(self, period_type='Quarterly', row_dict=None, week_date=None):
+        """
+        This method helps in modifying price ratios based on user provided values for self and also takes 
+        into consideration any competitor price to capture the effect of product cannabilism
+        Parameters: 
+            period_type (str): Quarterly, Annualy or Custom (Default Value is Weekly)
+            row_dict (dict, (dict, str)): dictionary of all features as key and respective value and category
+                                        extracted for each of these features
+            week_date (str): week date for which prediction is supposed to be made
+        Returns: 
+            row_dict (dict, (dict, str)): Modified features Dictionary. Overriden Xvars are:
+        """
+        if period_type.__eq__('Annually'):
+            week_date='-'.join(week_date.split('-')[:2]) + '-01'
+
+        for xvar in row_dict.keys():
+            try:
+                # Check if the xvar iterated is competitor own price ratio
+                if row_dict[xvar]['feature_type'].__eq__('price ratio') and xvar != 'priceratio_parent_category':
+                    competitor_category_id = xvar.split('_')[3]
+                    competitor_category_name = self._mapping_dict.get('category_inv').get(int(competitor_category_id))
+                    
+                    # Check if prices exists in current pricing df
+                    price_extraction_mask = (self._pricing_df.PRODUCT_CATEGORY==competitor_category_name)
+                    pricing_data = self._pricing_df.loc[price_extraction_mask].reset_index(drop=True)
+                    
+                    if len(pricing_data)>0:
+                        # Perform Dynamic Price Ratio Creation Based on User Input Prices
+                        # print('Dynamic Price Ratio (from Pricing Input) Variable: %s for Parent Categry: %s and Product Category: %s' %(xvar, 
+                        #                                                                                                               self._product_info_dict['PARENT'],
+                        #                                                                                                                   self._product_info_dict['CATEGORY'])
+                        # )
+                        # Extracting Value from Pricing Data
+                        comp_cat_price = float(pd.to_numeric(pricing_data[week_date]).mean())
+                        own_price = row_dict['item_price']['value']
+                        price_ratio = own_price/comp_cat_price
+                        row_dict[xvar]['value'] = price_ratio
+                    else:
+                        # Perforn Dynamic Price Ratio Creation Based on Default Prices from Consolidated Data
+                        # print('Dynamic Price Ratio (from Consolidated Data) Variable: %s for Province: %s and Brand: %s' %(xvar, 
+                        #                                                                         self._province_brand_dict['PROVINCE'],
+                        #                                                                         self._province_brand_dict['BRAND'])
+                        # )
+                        # Extracting Value from Conslidated Data
+                        competitor_consolidated_mask = (self._consolidated_df.PROVINCE==competitor_data.PROVINCE[0]) &\
+                                                        (self._consolidated_df.BRAND_AGG==competitor_data.BRAND_AGG[0])
+                        competitor_consolidated_data = self._consolidated_df.loc[competitor_consolidated_mask].reset_index(drop=True)
+
+                        # Calculating Price Ratio and replacing the value in row level dictionary
+                        if len(competitor_consolidated_data)>0:
+                            comp_price = competitor_consolidated_data.AVE_PRICE_STICK[0]
+                            own_price = row_dict['AVE_PRICE_STICK']['value']
+                            price_ratio = comp_price/own_price
+                            row_dict[xvar]['value'] = price_ratio
+                # Check if the xvar iterated is competitor own price ratio lags
+                elif row_dict[xvar]['feature_type'].__eq__('lag price'):
+                    competitor, lag_no = xvar.split('_')[-5], xvar.split('_')[-1]
+                    competitor_extraction_mask = (self._model_comp.ROW==competitor)
+                    competitor_data = self._model_comp.loc[competitor_extraction_mask].reset_index(drop=True)
+
+                    # Extract Competitor Ave Pricing data from combined competitor df
+                    comp_avg_price_extraction_mask = (self._combined_comp_df.PROVINCE==competitor_data.PROVINCE[0]) &\
+                                                (self._combined_comp_df.BRAND==competitor_data.BRAND[0])
+                    comp_data = self._combined_comp_df.loc[comp_avg_price_extraction_mask].reset_index(drop=True)
+
+                    # Extract Own Ave Pricing data from combined own df
+                    own_avg_price_extraction_mask = (self._combined_own_df.PROVINCE==self._province_brand_dict['PROVINCE']) &\
+                                                (self._combined_own_df.BRAND==self._province_brand_dict['BRAND'])
+                    own_data = self._combined_own_df.loc[own_avg_price_extraction_mask].reset_index(drop=True)
+
+                    # Check if both data exists for own and comp and also do lag mapping between own and comp data
+                    # for specific simulation date and lag index for the last seen date
+                    if len(comp_data)>0 and len(own_data)>0:
+                        own_index_no = own_data.loc[own_data.PERIOD_ENDING_DATE.isin([pd.to_datetime(week_date).date()])].index[0] 
+                        ave_price_stick_own = own_data.iloc[own_index_no-int(lag_no)].AVE_PRICE_STICK
+                        period_end_date_own = own_data.iloc[own_index_no-int(lag_no)].PERIOD_ENDING_DATE
+                        comp_data_lag = comp_data.loc[comp_data.PERIOD_ENDING_DATE.isin([period_end_date_own])].reset_index(drop=True)
+                        if len(comp_data_lag)>0:
+                            ave_price_stick_comp = comp_data_lag.AVE_PRICE_STICK[0]
+                            row_dict[xvar]['value'] = ave_price_stick_comp/ave_price_stick_own
+            
+            except Exception as ex:
+                # self._logger.error('Modifying Pricing Ratios Caught Exception as: '+str(ex), exc_info=True)
+                continue
         
         return row_dict
 
