@@ -78,7 +78,7 @@ def long_running_simulation(**kwargs):
                                             month2weeks=month_to_weeks,
                                             take_log=False,
                                             error=True)
-            df_predicted = df_predicted.append(dummy_df, ignore_index = True)
+            df_predicted = pd.concat([df_predicted, dummy_df], ignore_index = True)
         except Exception as ex:
             dummy_df = compile_prediction(period_type=period_type, 
                                         predicted_data=predicted_data, 
@@ -88,7 +88,7 @@ def long_running_simulation(**kwargs):
                                         month2weeks=month_to_weeks,
                                         take_log=False,
                                         error=True)
-            df_predicted = df_predicted.append(dummy_df, ignore_index = True)
+            df_predicted = pd.concat([df_predicted, dummy_df], ignore_index = True)
             continue
     logger.info('Raw Predictions Ended')
 
