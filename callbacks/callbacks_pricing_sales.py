@@ -10,6 +10,7 @@ __status__ = "Development"
 import dash
 import pandas as pd
 import plotly.graph_objs as go
+from dash import dcc
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 
@@ -73,6 +74,16 @@ def sales_output(stored_sales_prediction, prediction_value_type, stored_pricing_
         return df_predicted.to_dict('records'), column_list
     else:
         return dash.no_update, dash.no_update
+
+# Download Device Sales Data to CSV
+@callback_manager.callback(Output(component_id='download-sales-csv', component_property='data'),
+                        Input(component_id='btn-download-sales', component_property='n_clicks'),
+                        State(component_id='datatable-output', component_property='data'), prevent_initial_call=True)
+def sales_download_link(on_click, sales_data):
+    if on_click is not None and sales_data is not None:
+        oritemplate = pd.DataFrame(data = sales_data)
+        return dcc.send_data_frame(oritemplate.to_csv, "predicted_sales.csv", index=False)
+#endregion
 
 # Setting up options and dropdown value for Predicted Category Dropdown
 @callback_manager.callback([Output(component_id='dd-category-predicted', component_property='options'),

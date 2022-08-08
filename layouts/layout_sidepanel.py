@@ -275,6 +275,9 @@ layout = dbc.Container([
                 ]), width=9)
             ], className="h-85"),
 
+            # Download Data Components
+            dcc.Download(id="download-sales-csv"),
+            
             # Storing Components
             html.Div(
                 children=[dcc.Store(id="storage-pricing-input"),
