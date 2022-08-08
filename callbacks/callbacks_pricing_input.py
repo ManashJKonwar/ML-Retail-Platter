@@ -7,7 +7,9 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import io
 import dash
+import base64
 import urllib
 import logging
 import pandas as pd
@@ -38,6 +40,20 @@ callback_manager = CallbackManager()
                             State(component_id='storage-pricing-input', component_property='data'))
 def set_simulation_input_data(period_type, custom_start_date, custom_end_date, sel_parent_product_category, sel_product_category, \
                             sel_product, sel_shop, uploaded_content, n_reset_simulator, stored_pricing_input):
+    
+    # If upload input is selected
+    if uploaded_content is not None:
+        decoded = base64.b64decode(uploaded_content.split(",")[1])
+        df_templatedata = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
+        
+        column_list = []
+        for column_name in df_templatedata.columns:
+            if column_name in ['PARENT_CATEGORY','PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PER_ITEM']:
+                column_list.append({"name": column_name, "id": column_name, 'editable': False})
+            else:
+                column_list.append({"name": column_name, "id": column_name})
+        return df_templatedata.to_dict("records"), column_list
+    
     # Generate Consolidated DF based on Category, Product and Shop selected
     if period_type.__eq__('Quarterly'):
         RSP_structure = pd.concat([df_consolidated[['PARENT_CATEGORY','PRODUCT_CATEGORY','PRODUCT','SHOP','PRICE_PER_ITEM']],pd.DataFrame(columns=st_month_range)])
