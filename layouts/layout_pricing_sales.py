@@ -85,6 +85,16 @@ layout = html.Div([
                             )
                         ])
                     ])
+                ]),
+                dbc.Col([
+                    html.Label('Predictive Measure:', style={'font-weight': 'bold', 'color': 'black'}),
+                    dcc.RadioItems(
+                        id='rb-sales-predicted',
+                        options=[{'label': x, 'value': x} 
+                                for x in ['Product Sales','Product Share']],
+                        value='Product Sales',
+                        labelStyle={'display': 'block'}
+                    )
                 ])
             ],
             style={'marginBottom': 10, 'marginTop': 10, 'marginLeft':10, 'marginRight':10}),

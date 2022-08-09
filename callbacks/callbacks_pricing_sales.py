@@ -9,6 +9,7 @@ __status__ = "Development"
 
 import dash
 import pandas as pd
+import plotly.express as px
 import plotly.graph_objs as go
 from dash import dcc
 from dash.dependencies import Input, Output, State
@@ -128,35 +129,73 @@ def update_predicted_brand_options(stored_sales_prediction, dd_category_value):
 @callback_manager.callback(Output(component_id='g-sales', component_property='figure'),
                         [Input(component_id='storage-pricing-output', component_property='data'),
                         Input(component_id='dd-category-predicted', component_property='value'),
-                        Input(component_id='dd-shop-predicted', component_property='value')])
-def sales_predicted_charting(stored_sales_prediction, dd_category_value, dd_shop_value):
+                        Input(component_id='dd-category-predicted', component_property='options'),
+                        Input(component_id='dd-shop-predicted', component_property='value'),
+                        Input(component_id='rb-sales-predicted', component_property='value')])
+def sales_predicted_charting(stored_sales_prediction, dd_category_value, dd_category_options, dd_shop_value, rb_selector):
     tracer_list=[]
     if stored_sales_prediction is not None and len(stored_sales_prediction)>0 and\
     dd_category_value is not None and dd_shop_value is not None:
-        df_predicted = pd.DataFrame(stored_sales_prediction).copy()
-        # Filter based on Province and Brands Selected
-        selection_mask = ((df_predicted.PRODUCT_CATEGORY.isin([dd_category_value])) & (df_predicted.SHOP.isin(dd_shop_value))) if isinstance(dd_shop_value, list) else \
-                        ((df_predicted.PRODUCT_CATEGORY.isin([dd_category_value])) & (df_predicted.SHOP.isin([dd_shop_value])))
-        df_predicted = df_predicted.loc[selection_mask].reset_index(drop=True)
-
-        df_intermediate = df_predicted.copy()
-        df_intermediate = df_intermediate.T
-
-        stacked_counter=0
-        for product in df_predicted['PRODUCT']:
+        
+        if rb_selector.__eq__('Product Sales'):
             try:
-                tracer = go.Bar(x=df_intermediate[3:].index, y=df_intermediate[stacked_counter][3:], name=product)
-                tracer_list.append(tracer)
-            except Exception as ex:
-                print(ex)
-                continue
-            finally:
-                stacked_counter+=1
+                df_predicted = pd.DataFrame(stored_sales_prediction).copy()
+                # Filter based on Province and Brands Selected
+                selection_mask = ((df_predicted.PRODUCT_CATEGORY.isin([dd_category_value])) & (df_predicted.SHOP.isin(dd_shop_value))) if isinstance(dd_shop_value, list) else \
+                                ((df_predicted.PRODUCT_CATEGORY.isin([dd_category_value])) & (df_predicted.SHOP.isin([dd_shop_value])))
+                df_predicted = df_predicted.loc[selection_mask].reset_index(drop=True)
 
-        figure={
-            'data':tracer_list,
-            'layout':go.Layout(title='Predicted Volume Sales', barmode='stack')
-        }
-        return figure
+                df_intermediate = df_predicted.copy()
+                df_intermediate = df_intermediate.T
+
+                stacked_counter=0
+                for product in df_predicted['PRODUCT']:
+                    try:
+                        tracer = go.Bar(x=df_intermediate[4:].index, y=df_intermediate[stacked_counter][4:], name=product)
+                        tracer_list.append(tracer)
+                    except Exception as ex:
+                        print(ex)
+                        continue
+                    finally:
+                        stacked_counter+=1
+
+                figure={
+                    'data':tracer_list,
+                    'layout':go.Layout(title='Predicted Volume Sales', barmode='stack')
+                }
+                return figure
+            except Exception:
+                raise dash.exceptions.PreventUpdate
+
+        elif rb_selector.__eq__('Product Share'):
+            try:
+                df_predicted = pd.DataFrame(stored_sales_prediction)
+                category_mask = df_predicted.PRODUCT_CATEGORY.isin([cat_dict.get('value') for cat_dict in dd_category_options])
+                df_predicted = df_predicted.loc[category_mask].reset_index(drop=True)
+
+                df_intermediate = df_predicted.copy()
+                df_intermediate = df_intermediate.set_index('PRODUCT_CATEGORY')
+                df_intermediate = df_intermediate.T
+                df_intermediate = df_intermediate.reset_index().rename(columns={'index':'WEEK_END'})
+                df_intermediate = df_intermediate.loc[~df_intermediate.WEEK_END.isin(['PARENT_CATEGORY','PRODUCT','SHOP'])].reset_index(drop=True)
+                df_intermediate = pd.melt(df_intermediate, id_vars=['WEEK_END'], value_vars=list(df_intermediate.columns[1:]), value_name='VOLUME')
+                df_intermediate = df_intermediate.groupby(['WEEK_END', 'PRODUCT_CATEGORY']).agg({'VOLUME':'sum'}).reset_index()
+                
+                df_totalvol = df_intermediate.groupby(['WEEK_END']).VOLUME.sum().reset_index().rename(columns={'VOLUME':'TOTAL_VOLUME'})
+                df_totalvol.WEEK_END = pd.to_datetime(df_totalvol.WEEK_END)
+                df_totalvol = df_totalvol.sort_values(by='WEEK_END', ascending=True).reset_index(drop=True)
+                
+                df_intermediate.WEEK_END = pd.to_datetime(df_intermediate.WEEK_END)
+                df_intermediate = df_intermediate.sort_values(by='WEEK_END', ascending=True).reset_index(drop=True)
+                df_intermediate = pd.merge(df_intermediate, df_totalvol, how='left', on='WEEK_END')
+                df_intermediate['SOC'] = (df_intermediate['VOLUME']/df_intermediate['TOTAL_VOLUME'])*100
+                df_intermediate = df_intermediate.rename(columns={'WEEK_END':'DATE'})
+
+                figure = px.line(df_intermediate, x='DATE', y='SOC', color='PRODUCT_CATEGORY')
+                return figure
+            except Exception:
+                raise dash.exceptions.PreventUpdate
+        else:
+            return dash.no_update        
     else:
         return dash.no_update
