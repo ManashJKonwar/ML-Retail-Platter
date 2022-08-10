@@ -43,6 +43,7 @@ class PredictSalesModel():
         '''
         self._model_pkl = self._map_model_picklefile() # Extracts Name of Pickle file for respective data granularity (category+product+shop)
         self._features_dict = self._map_features() # Extracts Significant features for the respective data granularity (category+product+shop) in a dictionary with latest values
+        self._consolidated_data = self._extract_consolidated_data()
 
         self._final_data_dict = {'data':[]} 
 
@@ -93,6 +94,13 @@ class PredictSalesModel():
             return feature_dict
         except Exception as ex:
             raise ex
+
+    def _extract_consolidated_data(self):
+        consolidated_mask = (self._consolidated_df.PARENT_CATEGORY.isin([self._product_info_dict.get('PARENT')])) & \
+                            (self._consolidated_df.PRODUCT_CATEGORY.isin([self._product_info_dict.get('CATEGORY')])) & \
+                            (self._consolidated_df.PRODUCT.isin([self._product_info_dict.get('PRODUCT')])) & \
+                            (self._consolidated_df.SHOP.isin([self._product_info_dict.get('SHOP')]))
+        return self._consolidated_df.loc[consolidated_mask].reset_index(drop=True)
 
     def input_data_build(self, period_type='Quarterly'):
         """
@@ -269,32 +277,29 @@ class PredictSalesModel():
                             price_ratio = comp_price/own_price
                             row_dict[xvar]['value'] = price_ratio
                 # Check if the xvar iterated is competitor own price ratio lags
-                elif row_dict[xvar]['feature_type'].__eq__('lag price'):
-                    competitor, lag_no = xvar.split('_')[-5], xvar.split('_')[-1]
-                    competitor_extraction_mask = (self._model_comp.ROW==competitor)
-                    competitor_data = self._model_comp.loc[competitor_extraction_mask].reset_index(drop=True)
+                elif row_dict[xvar]['feature_type'].__eq__('lag price') and 'shop' not in xvar.split('_'):
+                    lag_no = int(xvar.split('_')[3])
+                    price_per_item = 0.0
 
-                    # Extract Competitor Ave Pricing data from combined competitor df
-                    comp_avg_price_extraction_mask = (self._combined_comp_df.PROVINCE==competitor_data.PROVINCE[0]) &\
-                                                (self._combined_comp_df.BRAND==competitor_data.BRAND[0])
-                    comp_data = self._combined_comp_df.loc[comp_avg_price_extraction_mask].reset_index(drop=True)
+                    if len(self._consolidated_data)>0:
+                        price_per_item = self._consolidated_data.PRICE_PER_ITEM[0]
+                        week_index = list(self._pricing_df.columns[5:]).index(week_date)
 
-                    # Extract Own Ave Pricing data from combined own df
-                    own_avg_price_extraction_mask = (self._combined_own_df.PROVINCE==self._province_brand_dict['PROVINCE']) &\
-                                                (self._combined_own_df.BRAND==self._province_brand_dict['BRAND'])
-                    own_data = self._combined_own_df.loc[own_avg_price_extraction_mask].reset_index(drop=True)
+                        if week_index >= lag_no:
+                            pricing_week = self._pricing_df.columns[5:][week_index - lag_no]
+                            
+                            pricing_mask = (self._pricing_df.PARENT_CATEGORY.isin([self._product_info_dict.get('PARENT')])) & \
+                                        (self._pricing_df.PRODUCT_CATEGORY.isin([self._product_info_dict.get('CATEGORY')])) & \
+                                        (self._pricing_df.PRODUCT.isin([self._product_info_dict.get('PRODUCT')])) & \
+                                        (self._pricing_df.SHOP.isin([self._product_info_dict.get('SHOP')]))
+                            pricing_data = self._pricing_df.loc[pricing_mask].reset_index(drop=True)
+                            
+                            if len(pricing_data)>0:
+                                lagged_price = float(pricing_data[pricing_week][0])
+                                row_dict[xvar]['value'] = lagged_price
+                        else:
+                            continue
 
-                    # Check if both data exists for own and comp and also do lag mapping between own and comp data
-                    # for specific simulation date and lag index for the last seen date
-                    if len(comp_data)>0 and len(own_data)>0:
-                        own_index_no = own_data.loc[own_data.PERIOD_ENDING_DATE.isin([pd.to_datetime(week_date).date()])].index[0] 
-                        ave_price_stick_own = own_data.iloc[own_index_no-int(lag_no)].AVE_PRICE_STICK
-                        period_end_date_own = own_data.iloc[own_index_no-int(lag_no)].PERIOD_ENDING_DATE
-                        comp_data_lag = comp_data.loc[comp_data.PERIOD_ENDING_DATE.isin([period_end_date_own])].reset_index(drop=True)
-                        if len(comp_data_lag)>0:
-                            ave_price_stick_comp = comp_data_lag.AVE_PRICE_STICK[0]
-                            row_dict[xvar]['value'] = ave_price_stick_comp/ave_price_stick_own
-            
             except Exception as ex:
                 # self._logger.error('Modifying Pricing Ratios Caught Exception as: '+str(ex), exc_info=True)
                 continue
