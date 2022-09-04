@@ -20,3 +20,8 @@ dash-pivottable==0.0.2  # https://pypi.org/project/dash-pivottable/0.0.2/ # Dash
 # ------------------------------------------------------------------------------
 xgboost==1.5.2  # https://pypi.org/project/xgboost/1.5.2/  # XGBoost Python Package
 scikit-learn==1.0.2  # https://pypi.org/project/scikit-learn/1.0.2/  # A set of python modules for machine learning and data mining
+
+# Asynchronous Task Queue, Messaging Broker
+# ------------------------------------------------------------------------------
+celery==5.2.7  # https://pypi.org/project/celery/5.2.7/  # Asynchronous Task Scheduler
+redis==4.3.4  # https://pypi.org/project/redis/4.3.4/  # Python client for Redis database and key-value store
