@@ -1,0 +1,14 @@
+{
+    "rabbitmq_debug" : {
+        "username": "admin",
+        "password": "1234",
+        "vhost": "simulatorvhost",
+        "port": "5672"
+    },
+    "rabbitmq_production" : {
+        "username": "admin",
+        "password": "1234",
+        "vhost": "simulatorvhost",
+        "port": "5672"
+    }
+}

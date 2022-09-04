@@ -1,0 +1,8 @@
+{
+    "redis_backend_debug" : {
+        "port": "6379"
+    },
+    "redis_backend_production" : {
+        "port": "6379"
+    }
+}
