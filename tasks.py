@@ -7,9 +7,48 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import os
+import json
+import celery
 import pandas as pd
+
 from utility.utility_model_service import PredictSalesModel
 from utility.utility_data_transformation import compile_prediction, custom_formatter
+
+config_message_broker, config_db_server = None, None
+try:
+    with open(os.path.join('config','config_messagebrokers.json')) as config_file:
+        config_message_broker = json.load(config_file)
+except Exception as ex:
+    print("Reading Message Broker Configuration raised an exception: "+str(ex))
+
+try:
+    with open(os.path.join('config','config_dbservers.json')) as config_file:
+        config_db_server = json.load(config_file)
+except Exception as ex:
+    print("Reading DB Server Configuration raised an exception: "+str(ex))
+os.environ['MESSAGE_BROKER'] = json.dumps(config_message_broker["rabbitmq_debug"]) if config_message_broker is not None else json.dumps({})
+os.environ['DB_SERVER'] = json.dumps(config_db_server["redis_backend_debug"]) if config_db_server is not None else json.dumps({})
+
+celery_app = celery.Celery('pricing_simulator')
+celery_app.conf.update(
+    # settings for message broker
+    broker_url='amqp://%s:%s@localhost:%s/%s' %(json.loads(os.environ['MESSAGE_BROKER'])['username'],
+                                                json.loads(os.environ['MESSAGE_BROKER'])['password'],
+                                                json.loads(os.environ['MESSAGE_BROKER'])['port'],
+                                                json.loads(os.environ['MESSAGE_BROKER'])['vhost']),
+    # broker_url='redis://:dmkTkW9Y6SuxHHxHeyGegnlEIQdQqLN5Yr6xu75C+Js=@batcanadapricingdev.redis.cache.windows.net:6379/0', # BAT cache
+    broker_pool_limit=1,
+    broker_heartbeat=None,
+    broker_connection_timeout=30,
+    event_queue_expires=60,
+    worker_prefetch_multiplier=1,
+    worker_concurrency=16,
+    worker_enable_remote_control=False,  # need this to reduce connections
+    result_backend='redis://localhost:%s' %(json.loads(os.environ['DB_SERVER'])['port']),
+    # result_backend='redis://:dmkTkW9Y6SuxHHxHeyGegnlEIQdQqLN5Yr6xu75C+Js=@batcanadapricingdev.redis.cache.windows.net:6379/0', # BAT cache
+    redis_max_connections=20
+)
 
 def long_running_simulation(**kwargs):
     df_historic = kwargs.get('df_historic')
