@@ -10,6 +10,7 @@ __status__ = "Development"
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
+from dash import dash_table as dt
 from dash_bootstrap_templates import ThemeChangerAIO
 
 from datasets.backend import parent_product_categories, product_categories, shop_names, product_names, custom_start_date, custom_end_date
@@ -48,6 +49,28 @@ layout = dbc.Container([
             dbc.Row([
                 dbc.Col(
                     html.Div([
+                        html.Details([
+                            html.Summary('Task Tracker', style={'font-weight': 'bold', 'color': '#000000'}),
+                            dt.DataTable(
+                                id='datatable-task',
+                                editable=True,
+                                style_header={
+                                        'whiteSpace': 'normal',
+                                    },
+                                style_table={
+                                    'height': 100,
+                                    'overflowX': 'scroll',
+                                    'overflowY': 'scroll'
+                                },
+                                style_cell={
+                                    'fontSize': '1.5vh',
+                                    'textAlign': 'center',
+                                }
+                            ) 
+                        ],
+                        id='simulation-detail',  
+                        style={'color': '#000000', 'margin-top': '2vh', 'border':'1px white solid'}),
+
                         html.Details([
                             html.Summary('Simulation Filter', style={'font-weight': 'bold', 'color': '#000000'}),
                             # Custom Data Selection Filter
