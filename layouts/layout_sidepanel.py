@@ -68,7 +68,7 @@ layout = dbc.Container([
                                 }
                             ) 
                         ],
-                        id='simulation-detail',  
+                        id='task-monitor-detail',  
                         style={'color': '#000000', 'margin-top': '2vh', 'border':'1px white solid'}),
 
                         html.Details([
@@ -308,24 +308,34 @@ layout = dbc.Container([
                         dcc.Store(id="storage-pricing-output")]
             ),
 
-            # Hidden Divs to Store Asynchronous Task related
+            # Hidden Divs to Store Asynchronous Task related Components
             html.Div([
-                #  hidden div to store celery background job task-id, task-status, and message-status
+                #  Hidden div to store celery background job task-id, task-status, and message-status
                 html.Div(id='task-id',
                         children=None,
                         style={'display': 'none'}
                         ),
-                #  hidden div to store celery background job task-status
+                #  Hidden div to store celery background job task-status
                 html.Div(id='task-status',
                         children=None,
                         style={'display': 'none'}
                         ),
-                #  page refresh interval
+                #  Page refresh interval
                 dcc.Interval(
                     id='task-refresh-interval',
                     interval=24*60*60*1*1000,  # in milliseconds
                     n_intervals=0
                 ),
+            ]),
+
+            # Hidden Divs to Store Asynchronous Task Monitoring related Components
+            html.Div([
+                # Task monitor refresh interval
+                dcc.Interval(
+                    id='task-monitor-interval',
+                    interval=1*60*1000, # in milliseconds
+                    n_intervals=0
+                )
             ])
         ],
         fluid=True,

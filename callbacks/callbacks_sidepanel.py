@@ -8,6 +8,8 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import copy
+
+from sqlalchemy import exc as sqlalchemy_exc
 from dash import callback_context, no_update
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
@@ -163,3 +165,31 @@ def render_side_filter(tab):
         simulation_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'None'}
         prediction_detail_style = {'color': '#ffffff', 'margin-top': '2vh', 'border':'1px white solid', 'display':'None'}
         return simulation_detail_style, prediction_detail_style
+
+@callback_manager.callback(Output(component_id='datatable-task', component_property='data'),
+                        Input(component_id='task-monitor-interval', component_property='n_intervals'),
+                        State(component_id='storage-username', component_property='data'))
+def refresh_task_table(n_int, username):
+    try:
+        from app import engine
+        def extract_task_ids(u_name=username):
+            conn = engine.connect()
+            query = 'SELECT * FROM tasks WHERE username=\'%s\'' %(str(username))
+            try:
+                cursor= conn.execute(query)
+                rows = cursor.fetchall()
+            except sqlalchemy_exc.SQLAlchemyError as ex:
+                print(ex)
+                conn.close()
+            conn.close()
+            return rows
+
+        task_list = extract_task_ids(u_name=username)
+        if len(task_list) > 0:
+            print('here')
+            return no_update
+        else:
+            return no_update
+    except Exception as ex:
+        print(ex)
+        return no_update
