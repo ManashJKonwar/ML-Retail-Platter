@@ -99,7 +99,8 @@ def successful(n_clicks):
         return no_update
 
 # Callback related to "Login User" Section
-@callback_manager.callback(Output(component_id='url_login', component_property='pathname'),
+@callback_manager.callback([Output(component_id='url_login', component_property='pathname'),
+                        Output(component_id='storage-username', component_property='data')],
                         Input(component_id='btn-login', component_property='n_clicks'),
                         [State(component_id='text-uname-box', component_property='value'), 
                         State(component_id='text-pwd-box', component_property='value')])
@@ -110,7 +111,7 @@ def successful(n_clicks, ip_uname, ip_pass):
         if user:
             if check_password_hash(user.password, ip_pass):
                 login_user(user)
-                return '/success'
+                return '/success', ip_uname
             else:
                 pass
         else:   

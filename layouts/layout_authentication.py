@@ -164,5 +164,6 @@ logout = html.Div([
 
 layout = html.Div([
             html.Div(id='auth-page-content', className='content'),
-            dcc.Location(id='auth-url', refresh=False)
+            dcc.Location(id='auth-url', refresh=False),
+            html.Div(dcc.Store(id='storage-username', storage_type='session'))
         ])
