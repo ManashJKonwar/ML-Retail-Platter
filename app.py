@@ -26,6 +26,7 @@ from callbacks.callbacks_pricing_sales import callback_manager as prediction_out
 from callbacks.callbacks_pivot_kpis import callback_manager as pivotted_kpi_callback_manager
 from callbacks.callbacks_kpis import callback_manager as kpi_callback_manager
 from utility.utility_authentication import User, create_users_table
+from utility.utility_tasks import Task, create_tasks_table
 
 # SQL Alchemy DB instance to use it under models
 db = SQLAlchemy()
@@ -33,7 +34,10 @@ db = SQLAlchemy()
 # Create Db if it does not exists
 conn = sqlite3.connect('data.sqlite')
 engine = create_engine('sqlite:///data.sqlite')
+
+# Intitate the user and task table instances
 users_tbl = Table('users', User.metadata)
+tasks_tbl = Table('tasks', Task.metadata)
 
 # Normally Dash creates its own Flask server internally however
 # by creating the server we can easily create routes for downloading files etc.
@@ -66,6 +70,9 @@ def create_app():
 
     # create the user table in db
     create_users_table(engine)
+
+    # create the task table in db
+    create_tasks_table(engine)
 
     return app
 
