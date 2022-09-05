@@ -25,3 +25,4 @@ scikit-learn==1.0.2  # https://pypi.org/project/scikit-learn/1.0.2/  # A set of 
 # ------------------------------------------------------------------------------
 celery==5.2.7  # https://pypi.org/project/celery/5.2.7/  # Asynchronous Task Scheduler
 redis==4.3.4  # https://pypi.org/project/redis/4.3.4/  # Python client for Redis database and key-value store
+gevent==21.12.0  # https://pypi.org/project/gevent/21.12.0/  # Coroutine-based network library
