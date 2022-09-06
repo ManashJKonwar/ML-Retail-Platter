@@ -12,6 +12,7 @@ import json
 import celery
 import pandas as pd
 
+from config.celerytasklogger import logger
 from utility.utility_model_service import PredictSalesModel
 from utility.utility_data_transformation import compile_prediction, custom_formatter
 
@@ -69,6 +70,130 @@ def long_running_simulation_celery(self, **kwargs):
     period_type = kwargs.get('period_type')
     month_to_weeks = kwargs.get('month_to_weeks')
     pickle_flag = kwargs.get('pickle_flag')
+
+    for arg in kwargs.keys():
+        logger.info('%s type: %s' %(str(arg), str(type(kwargs.get(arg)))))
+        if isinstance(arg, str) and arg.startswith('df'):
+            logger.info('%s length: %s' %(str(arg), str(len(pd.DataFrame(kwargs.get(arg))))))
+
+    # Initiating empty dataframe with similar no of columns as input pricing
+    df_predicted = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
+    
+    logger.info('Raw Predictions Started')
+    # Iterate via each row of Datatable 
+    for row in df_pricing_input.itertuples(index=False, name='Pandas'):
+        dummy_df = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
+        try:
+            logger.info('Generating Prediction Model for Parent Category: %s, Product Category: %s and Product: %s and sold from Shop: %s' %(row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
+            print('Generating Prediction Model for Parent Category: %s, Product Category: %s and Product: %s and sold from Shop: %s' %(row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
+            predict_model_instance = PredictSalesModel(row_info_data=[list(df_pricing_input.columns), row],
+                                                    historic_df=df_historic,
+                                                    consolidated_df=df_consolidated,
+                                                    pricing_df=df_pricing_input,
+                                                    features_df=df_features,
+                                                    xvar_df=df_xvar,
+                                                    comp_rank_df=df_competitor_rank,
+                                                    overridden_xvars_dict=overridden_xvars_dict,
+                                                    variable_type_df=df_variable_type,
+                                                    model_endpoints_df=df_model_endpoints,
+                                                    model_endpoints_dict=model_endpoints_dict,
+                                                    model_picklefile_dict=model_picklefile_dict,
+                                                    mapping_dict=mapping_dict,
+                                                    product_info_dict={'PARENT': row.PARENT_CATEGORY, 'CATEGORY': row.PRODUCT_CATEGORY, 'PRODUCT': row.PRODUCT, 'SHOP':row.SHOP},
+                                                    month_to_weeks=month_to_weeks,
+                                                    pickle_flag=pickle_flag,
+                                                    logger=logger)
+            predict_model_instance.input_data_build(period_type=period_type)
+            status_code, predicted_data = predict_model_instance.predict()
+            if status_code==200:
+                dummy_df = compile_prediction(period_type=period_type, 
+                                            predicted_data=predicted_data, 
+                                            result_df=dummy_df,
+                                            row_data=row, 
+                                            column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
+                                            month2weeks=month_to_weeks,
+                                            take_log=False,
+                                            error=False)
+            else:
+                dummy_df = compile_prediction(period_type=period_type, 
+                                            predicted_data=predicted_data,
+                                            result_df=dummy_df, 
+                                            row_data=row, 
+                                            column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
+                                            month2weeks=month_to_weeks,
+                                            take_log=False,
+                                            error=True)
+            df_predicted = pd.concat([df_predicted, dummy_df], ignore_index = True)
+        except Exception as ex:
+            dummy_df = compile_prediction(period_type=period_type, 
+                                        predicted_data=predicted_data, 
+                                        result_df=dummy_df,
+                                        row_data=row, 
+                                        column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
+                                        month2weeks=month_to_weeks,
+                                        take_log=False,
+                                        error=True)
+            df_predicted = pd.concat([df_predicted, dummy_df], ignore_index = True)
+            continue
+    logger.info('Raw Predictions Ended')
+
+    # Rounding Off the Predictions to 4 places
+    df_predicted = df_predicted.round(4)
+
+    # Replace all negative values with zero
+    num = df_predicted._get_numeric_data()
+    num[num < 0] = 0
+
+    '''
+    COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since there are not too many business logics which we are inetgrating with inferencing pipeline
+
+    # Replace zero values by moving average of last 4 weeks
+    logger.info('Replacing Zeros by moving average value Started')
+    df_predicted = compile_moving_average(period_type=period_type,
+                                        prediction_output_df=df_predicted, 
+                                        latest_sales_df=df_historic,
+                                        month2weeks=month_to_weeks
+                                    )
+    logger.info('Replacing Zeros by moving average value Ended')
+    
+    # Benchmarking Predictions and Applying Thresholds
+    logger.info('Benchmarking Predictions Started')
+    df_predicted = custom_benchmarking(
+                        prediction_output_df=df_predicted,
+                        benchmarking_pred_df=df_benchmarking_preds,
+                        latest_sales_df=df_historic,
+                        pricing_input_df=df_pricing_input,
+                        period_type=period_type,
+                        start_col_index=4,
+                        logger=logger
+                    )
+    logger.info('Benchmarking Predictions Ended')
+
+    # Switching Logic
+    logger.info('Switching Logic Implementation on Predictions Started')
+    df_predicted = custom_switching(
+                        prediction_output_df=df_predicted,
+                        pricing_input_df=df_pricing_input,
+                        latest_sales_df=df_historic,
+                        switching_df=df_switching,
+                        start_col_index=4,
+                        logger=logger
+                    )
+    logger.info('Switching Logic Implementation on Predictions Ended')
+    '''
+
+    # Applying Custom Prediction Formatter
+    logger.info('Custom Predictions Fornatter Started')
+    df_predicted = custom_formatter(
+                        prediction_output_df=df_predicted,
+                        start_col_index=3,
+                        before_decimal_approximation=4,
+                        make_exponential=False,
+                        logger=logger
+                    )
+    logger.info('Custom Predictions Fornatter Ended')
+    
+    return df_predicted
 
 def long_running_simulation(**kwargs):
     df_historic = kwargs.get('df_historic')
