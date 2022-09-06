@@ -50,6 +50,26 @@ celery_app.conf.update(
     redis_max_connections=20
 )
 
+@celery_app.task(bind=True, time_limit=7200, queue='pricing_queue')
+def long_running_simulation_celery(self, **kwargs):
+    df_historic = pd.DataFrame(kwargs.get('df_historic'))
+    df_consolidated = pd.DataFrame(kwargs.get('df_consolidated'))
+    df_benchmarking_preds = pd.DataFrame(kwargs.get('df_benchmarking_preds'))
+    df_pricing_input = pd.DataFrame(kwargs.get('df_pricing_input'))
+    df_features = pd.DataFrame(kwargs.get('df_features'))
+    df_xvar = pd.DataFrame(kwargs.get('df_xvar'))
+    df_competitor_rank = pd.DataFrame(kwargs.get('df_competitor_rank'))
+    df_model_endpoints = pd.DataFrame(kwargs.get('df_model_endpoints'))
+    overridden_xvars_dict = {k:pd.DataFrame(kwargs.get('overridden_xvars_dict')[k]) for k in kwargs.get('overridden_xvars_dict').keys()}
+    df_variable_type = (kwargs.get('df_variable_type'))
+    df_switching = pd.DataFrame(kwargs.get('df_switching'))
+    model_endpoints_dict = kwargs.get('model_endpoints_dict')
+    model_picklefile_dict = kwargs.get('model_picklefile_dict')
+    mapping_dict = kwargs.get('mapping_dict')
+    period_type = kwargs.get('period_type')
+    month_to_weeks = kwargs.get('month_to_weeks')
+    pickle_flag = kwargs.get('pickle_flag')
+
 def long_running_simulation(**kwargs):
     df_historic = kwargs.get('df_historic')
     df_consolidated = kwargs.get('df_consolidated')
