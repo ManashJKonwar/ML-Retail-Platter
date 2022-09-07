@@ -94,8 +94,8 @@ CVPR 2017; https://arxiv.org/abs/1612.00593.
 ## Contact
 Created by [@ManashJKonwar](https://github.com/ManashJKonwar) - feel free to contact me!
 
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
+Optional -->
+## License
+This project is open source and available under the [... License]().
 
 <!-- You don't have to include all sections - just the one's relevant to your project -->
