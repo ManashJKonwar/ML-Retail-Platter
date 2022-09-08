@@ -53,6 +53,10 @@ celery_app.conf.update(
 
 @celery_app.task(bind=True, time_limit=7200, queue='pricing_queue')
 def long_running_simulation_celery(self, **kwargs):
+
+    #  update state to progress and give a status message
+    self.update_state(state='PROGRESS', meta={'status': 'WORKING'})
+
     df_historic = pd.DataFrame(kwargs.get('df_historic'))
     df_consolidated = pd.DataFrame(kwargs.get('df_consolidated'))
     df_benchmarking_preds = pd.DataFrame(kwargs.get('df_benchmarking_preds'))
@@ -193,7 +197,8 @@ def long_running_simulation_celery(self, **kwargs):
                     )
     logger.info('Custom Predictions Fornatter Ended')
     
-    return df_predicted
+    return {'result': 'COMPLETE',
+            'predicted_df': df_predicted.to_json()}
 
 def long_running_simulation(**kwargs):
     df_historic = kwargs.get('df_historic')

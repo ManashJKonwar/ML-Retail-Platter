@@ -15,6 +15,7 @@ import logging
 import pandas as pd
 from dash import dcc
 from dash.dependencies import Input, Output, State
+from sqlalchemy import exc as sqlalchemy_exc
 from callback_manager import CallbackManager
 from tasks import long_running_simulation
 from datasets.backend import df_consolidated, df_features, df_variable_type, df_xvar, \
@@ -117,7 +118,88 @@ def download_template_link(on_click, tbdata):
         return dcc.send_data_frame(oritemplate.to_csv, "pricing_template.csv", index=False)
 #endregion
 
-#region Running Simulations
+#region Running Simulations via rabbitmq message broker + celery worker
+@callback_manager.callback([Output(component_id='task-label', component_property='children'),
+                        Output(component_id='task-section', component_property='style')],
+                        Input(component_id='btn-run-simulation', component_property='n_clicks'),
+                        [State(component_id='dd-period', component_property='value'),
+                        State(component_id='datatable-input', component_property='data'),
+                        State(component_id='text-scenario-name', component_property='value'),
+                        State(component_id='storage-username', component_property='data')])
+def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, user_name):
+    # Identification of Triggering Point
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        trigger_component_id = 'No clicks yet'  
+    else:
+        trigger_component_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+    # Conditional Output wrt Input Source Type
+    if trigger_component_id == 'btn-run-simulation' and n_run_simulation:
+        from app import app
+        print('Run Simulation Clicked')
+        
+        # Extracting input pricing table data
+        df_pricing_input = pd.DataFrame(data=pricing_input)
+        
+        # COMMENTED FOR NOW and replaced with empty dataframe
+        df_historic = pd.DataFrame()
+        # df_benchmarking_preds = baseline_predictions_weekly if period_type.__eq__('Quarterly') or period_type.__eq__('Custom') else baseline_predicitons_monthly
+        df_benchmarking_preds = pd.DataFrame()
+        df_competitor_rank = pd.DataFrame()
+        df_seasonality_weather = df_seasonality.copy()
+        df_switching = pd.DataFrame()
+        df_models = pd.DataFrame()
+
+        '''
+        # Scheduling long running simulation tasks via celery and rabbitmQ
+        simulation_task = long_running_simulation_celery.delay(df_historic=df_historic.to_dict(),
+                                                            df_consolidated=df_consolidated.to_dict(),
+                                                            df_benchmarking_preds=df_benchmarking_preds.to_dict(),
+                                                            df_pricing_input=df_pricing_input.to_dict(),
+                                                            df_features=df_features.to_dict(),
+                                                            df_xvar=df_xvar.to_dict(),
+                                                            df_competitor_rank=df_competitor_rank.to_dict(),
+                                                            overridden_xvars_dict={'seasonality_weather_df':df_seasonality_weather.to_dict()},
+                                                            df_variable_type=df_variable_type.to_dict(),
+                                                            df_switching=df_switching.to_dict(),
+                                                            elastic_df = df_elasticity.to_dict(),
+                                                            df_model_endpoints=df_models.to_dict(),
+                                                            model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'],
+                                                            model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'],
+                                                            brand_mapper_dict=app.server.config['BRAND_MAPPER_DICT'],
+                                                            ka_mapper_dict= app.server.config['KA_MAPPER_DICT'],
+                                                            period_type=period_type,
+                                                            month_to_weeks=lt_month2week_list,
+                                                            pickle_flag=False)
+        # Task id of current celery task
+        task_id = simulation_task.id
+        time.sleep(0.5)  # Need a short sleep for task_id to catch up
+        '''
+
+        # Add this task id to the task db table
+        from app import engine, tasks_tbl
+        task_id='2586-125'
+        # current_task_status = simulation_task.state
+        current_task_status = 'STARTED'
+        conn = engine.connect()
+        try:
+            ins = tasks_tbl.insert().values(
+                                        username=user_name, 
+                                        taskid=task_id, 
+                                        taskstatus=current_task_status, 
+                                        scenarioname=scenario_name,
+                                        submissiondate=pd.to_datetime('today')
+                                    )
+            conn.execute(ins)
+        except sqlalchemy_exc.SQLAlchemyError as ex:
+            print(str(ex))
+        conn.close()
+
+        current_task_progress = 'Pricing Scenario submitted successfully with Task ID: %s' %(str(task_id))
+        return current_task_progress, {'display': 'block'}
+
+'''
 @callback_manager.callback([Output(component_id='storage-pricing-output', component_property='data'),
                         Output(component_id='storage-pricing-input', component_property='data')],
                         Input(component_id='btn-run-simulation', component_property='n_clicks'),
@@ -184,3 +266,5 @@ def run_prediction(n_run_simulation, period_type, pricing_input, pricing_output_
             return pd.DataFrame().to_dict('records'), pd.DataFrame().to_dict('records')
         elif pricing_input_state is not None and pricing_output_state is not None:
             return pricing_output_state, pricing_input_state
+'''
+#endregion
