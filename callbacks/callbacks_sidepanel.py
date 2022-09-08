@@ -186,7 +186,7 @@ def refresh_task_table(n_int, username):
 
         task_list = extract_task_ids(u_name=username)
         if len(task_list) > 0:
-            print('here')
+            print(task_list)
             return no_update
         else:
             return no_update

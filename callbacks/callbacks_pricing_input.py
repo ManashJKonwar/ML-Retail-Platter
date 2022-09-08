@@ -8,6 +8,7 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import io
+import time
 import dash
 import base64
 import urllib
@@ -17,7 +18,7 @@ from dash import dcc
 from dash.dependencies import Input, Output, State
 from sqlalchemy import exc as sqlalchemy_exc
 from callback_manager import CallbackManager
-from tasks import long_running_simulation
+from tasks import long_running_simulation, long_running_simulation_celery
 from datasets.backend import df_consolidated, df_features, df_variable_type, df_xvar, \
                             df_seasonality, dict_parent_category_id_map, dict_product_category_id_map, dict_product_id_map, \
                             dict_shop_id_map, lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
@@ -136,7 +137,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
 
     # Conditional Output wrt Input Source Type
     if trigger_component_id == 'btn-run-simulation' and n_run_simulation:
-        from app import app
+        from app import app, engine, tasks_tbl 
         print('Run Simulation Clicked')
         
         # Extracting input pricing table data
@@ -151,43 +152,45 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
         df_switching = pd.DataFrame()
         df_models = pd.DataFrame()
 
-        '''
         # Scheduling long running simulation tasks via celery and rabbitmQ
-        simulation_task = long_running_simulation_celery.delay(df_historic=df_historic.to_dict(),
-                                                            df_consolidated=df_consolidated.to_dict(),
-                                                            df_benchmarking_preds=df_benchmarking_preds.to_dict(),
-                                                            df_pricing_input=df_pricing_input.to_dict(),
-                                                            df_features=df_features.to_dict(),
-                                                            df_xvar=df_xvar.to_dict(),
-                                                            df_competitor_rank=df_competitor_rank.to_dict(),
-                                                            overridden_xvars_dict={'seasonality_weather_df':df_seasonality_weather.to_dict()},
-                                                            df_variable_type=df_variable_type.to_dict(),
-                                                            df_switching=df_switching.to_dict(),
-                                                            elastic_df = df_elasticity.to_dict(),
-                                                            df_model_endpoints=df_models.to_dict(),
-                                                            model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'],
-                                                            model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'],
-                                                            brand_mapper_dict=app.server.config['BRAND_MAPPER_DICT'],
-                                                            ka_mapper_dict= app.server.config['KA_MAPPER_DICT'],
-                                                            period_type=period_type,
-                                                            month_to_weeks=lt_month2week_list,
-                                                            pickle_flag=False)
+        simulation_task = long_running_simulation_celery.delay(
+                                df_historic=df_historic.to_dict(),
+                                df_consolidated=df_consolidated.to_dict(),
+                                df_benchmarking_preds=df_benchmarking_preds.to_dict(),
+                                df_pricing_input=df_pricing_input.to_dict(),
+                                df_features=df_features.to_dict(),
+                                df_xvar=df_xvar.to_dict(),
+                                df_competitor_rank=df_competitor_rank.to_dict(),
+                                overridden_xvars_dict={'seasonality_weather_df':df_seasonality_weather.to_dict()},
+                                df_variable_type=df_variable_type.to_dict(),
+                                df_switching=df_switching.to_dict(),
+                                df_model_endpoints=df_models.to_dict(),
+                                model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'],
+                                model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'],
+                                mapping_dict={'parent':dict_parent_category_id_map,
+                                            'parent_inv':{v:k for k,v in dict_parent_category_id_map.items()}, 
+                                            'category':dict_product_category_id_map, 
+                                            'category_inv':{v:k for k,v, in dict_product_category_id_map.items()},
+                                            'product':dict_product_id_map, 
+                                            'product_inv':{v:k for k,v, in dict_product_id_map.items()},
+                                            'shop':dict_shop_id_map,
+                                            'shop_inv':{v:k for k,v, in dict_shop_id_map.items()}},
+                                period_type=period_type,
+                                month_to_weeks=lt_month2week_list,
+                                pickle_flag=True
+                            )
         # Task id of current celery task
         task_id = simulation_task.id
         time.sleep(0.5)  # Need a short sleep for task_id to catch up
-        '''
 
         # Add this task id to the task db table
-        from app import engine, tasks_tbl
-        task_id='2586-125'
-        # current_task_status = simulation_task.state
-        current_task_status = 'STARTED'
+        task_status = simulation_task.state
         conn = engine.connect()
         try:
             ins = tasks_tbl.insert().values(
                                         username=user_name, 
                                         taskid=task_id, 
-                                        taskstatus=current_task_status, 
+                                        taskstatus=task_status, 
                                         scenarioname=scenario_name,
                                         submissiondate=pd.to_datetime('today')
                                     )
@@ -196,7 +199,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
             print(str(ex))
         conn.close()
 
-        current_task_progress = 'Pricing Scenario submitted successfully with Task ID: %s' %(str(task_id))
+        current_task_progress = 'Pricing Scenario submitted with Task ID: %s' %(str(task_id))
         return current_task_progress, {'display': 'block'}
 
 '''
