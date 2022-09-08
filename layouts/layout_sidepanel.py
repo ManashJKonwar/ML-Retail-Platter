@@ -249,6 +249,13 @@ layout = dbc.Container([
                             ])
                         ], style={'color': '#000000', 'margin-top': '2vh', 'border':'1px white solid'}),
                         html.Br(),
+
+                        dcc.Input(
+                            id='text-scenario-name',
+                            type='text',
+                            placeholder='provide scenario name',
+                        ),
+                        html.Br(),
                         
                         # Run Simulation
                         html.Div([
@@ -268,6 +275,16 @@ layout = dbc.Container([
                             id='btn-reset-anchor')
                         ], className="d-grid gap-2"),
                         html.Br(),
+                        html.Div(
+                            id='task-section',
+                            children=
+                            [
+                                html.Label(
+                                    id='task-label',
+                                    children='Pricing Scenario submitted successfully',
+                                    style={'font-weight': 'bold', 'font-size': '16px', 'color': '#000000'}),
+                            ], style={'display': 'none'},
+                        ),
                         # Spinner To Show Simulation Status
                         html.Div(
                             id='spinner',

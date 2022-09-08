@@ -20,6 +20,7 @@ class Task(UserMixin, db.Model):
     username = db.Column(db.String(15), unique=True, nullable=False)
     taskid = db.Column(db.String(50), unique=True, nullable=False)
     taskstatus = db.Column(db.String(15), nullable=False)
+    scenarioname = db.Column(db.String(15), nullable=False)
     submissiondate = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
