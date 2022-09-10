@@ -8,12 +8,15 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import copy
+import pandas as pd
 
+from celery.result import AsyncResult
 from sqlalchemy import exc as sqlalchemy_exc
 from dash import callback_context, no_update
 from dash.dependencies import Input, Output, State
 from callback_manager import CallbackManager
 from layouts import layout_retail_summary, layout_pricing_input, layout_pricing_sales, layout_pivot_kpis, layout_kpis
+from tasks import celery_app
 from datasets.backend import df_transactions, df_products, df_shops, df_product_categories, parent_product_categories
 
 callback_manager = CallbackManager()
@@ -168,10 +171,11 @@ def render_side_filter(tab):
 
 @callback_manager.callback(Output(component_id='datatable-task', component_property='data'),
                         Input(component_id='task-monitor-interval', component_property='n_intervals'),
-                        State(component_id='storage-username', component_property='data'))
-def refresh_task_table(n_int, username):
+                        [State(component_id='storage-username', component_property='data'),
+                        State(component_id='datatable-task', component_property='data')])
+def refresh_task_table(n_int, username, task_state):
     try:
-        from app import engine
+        from app import engine, tasks_tbl
         def extract_task_ids(u_name=username):
             conn = engine.connect()
             query = 'SELECT * FROM tasks WHERE username=\'%s\'' %(str(username))
@@ -186,8 +190,41 @@ def refresh_task_table(n_int, username):
 
         task_list = extract_task_ids(u_name=username)
         if len(task_list) > 0:
-            print(task_list)
-            return no_update
+            df_task = pd.DataFrame(columns=['task_id','task_status','open_scenario']) if task_state is None else \
+                    pd.DataFrame(data=task_state)   
+            conn = engine.connect()
+            for task in task_list:
+                task_id = task.taskid
+                task = AsyncResult(id=task_id, app=celery_app)
+                current_task_status = task.state
+
+                try:
+                    # Updating Table Row entry in DB
+                    update_query = tasks_tbl.update().where(
+                                                        tasks_tbl.c.taskid==task_id and \
+                                                        tasks_tbl.c.username==username).values(
+                                                                                            taskstatus = current_task_status     
+                                                                                        )
+                    conn.execute(update_query)
+                except sqlalchemy_exc.SQLAlchemyError as ex:
+                    print(ex)
+                    continue
+                except Exception as ex:
+                    print(ex)
+                    continue
+
+                try:
+                    # Updating Table Row instance
+                    if task_id not in list(df_task['task_id'].unique()):
+                        data_dict = {'task_id': task_id, 'task_status': current_task_status, 'open_scenario': 'open'}
+                        df_task = pd.concat([df_task, pd.DataFrame.from_dict(data={'task_id': [task_id], 'task_status': [current_task_status], 'open_scenario': ['open']})], ignore_index=True)
+                    else:
+                        task_data = df_task.loc[df_task['task_id'].isin([task_id])]
+                        df_task[task_data.index[0], df_task.columns.get_loc('task_status')] = current_task_status
+                except Exception as ex:
+                    print(ex)
+            conn.close()
+            return df_task.to_dict('records')
         else:
             return no_update
     except Exception as ex:
