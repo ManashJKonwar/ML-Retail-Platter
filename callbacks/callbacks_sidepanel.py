@@ -220,13 +220,13 @@ def refresh_task_table(n_int, username, task_state):
                         df_task = pd.concat([df_task, pd.DataFrame.from_dict(data={'task_id': [task_id], 'task_status': [current_task_status], 'open_scenario': ['open']})], ignore_index=True)
                     else:
                         task_data = df_task.loc[df_task['task_id'].isin([task_id])]
-                        df_task[task_data.index[0], df_task.columns.get_loc('task_status')] = current_task_status
+                        df_task.iloc[task_data.index[0], df_task.columns.get_loc('task_status')] = current_task_status
                 except Exception as ex:
                     print(ex)
             conn.close()
             return df_task.to_dict('records')
         else:
-            return no_update
+            return task_state
     except Exception as ex:
         print(ex)
-        return no_update
+        return task_state
