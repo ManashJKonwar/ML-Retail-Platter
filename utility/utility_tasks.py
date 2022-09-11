@@ -17,7 +17,7 @@ class Task(UserMixin, db.Model):
     __tablename__ = 'tasks'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(15), unique=True, nullable=False)
+    username = db.Column(db.String(15), nullable=False)
     taskid = db.Column(db.String(50), unique=True, nullable=False)
     taskstatus = db.Column(db.String(15), nullable=False)
     scenarioname = db.Column(db.String(15), nullable=False)
