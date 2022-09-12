@@ -17,10 +17,10 @@ from utility.utility_data_transformation import long_term_structure, short_term_
 model_version_flag = 'model_v02'
 
 #region Reading Main Dataframes and Adding Parent Categories
-df_product_categories = pd.read_csv(r'datasets\translated_item_categories.csv')
-df_products = pd.read_csv(r'datasets\translated_items.csv')
-df_shops = pd.read_csv(r'datasets\translated_shops.csv')
-df_transactions = pd.read_csv(r'datasets\sales_train.csv')
+df_product_categories = pd.read_csv(os.path.join('datasets','translated_item_categories.csv'))
+df_products = pd.read_csv(os.path.join('datasets','translated_items.csv'))
+df_shops = pd.read_csv(os.path.join('datasets','translated_shops.csv'))
+df_transactions = pd.read_csv(os.path.join('datasets','sales_train.csv'))
 df_product_categories['parent_category_name'] = df_product_categories['translated_item_category_name'].apply(lambda x: x.split('-')[0].strip().title())
 #endregion
 
