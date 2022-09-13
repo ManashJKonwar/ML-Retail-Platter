@@ -1,5 +1,5 @@
 # Retail Pricing Simulator
-> The entire repository covers 2 aspects - firstly implementation of pointnet architecture to classify objects, perform part segmentation and also to perform semantic segmentation, secondly it helps us to visualize the data around these pointnet architecture and perform prediction pipeline on test datasets using DASH Framework. The modelling aspect is done by utilizing tensorflow 2 and code waork is completed by using keras.
+> Retail Pricing Simulator is developed so that business scenarios or decisions made across pricing of products could be easily rendered and visualized, thereby enabling users to simulate real time scenarios and leverage the power of ML to forecast the demand in near future.
 
 > Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
 
