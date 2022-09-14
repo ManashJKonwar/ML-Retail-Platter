@@ -39,6 +39,11 @@ engine = create_engine('sqlite:///data.sqlite')
 users_tbl = Table('users', User.metadata)
 tasks_tbl = Table('tasks', Task.metadata)
 
+# Static uploading folder
+uploaded_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'upload', 'tasks')
+if not os.path.exists(uploaded_path):
+    os.makedirs(uploaded_path)
+
 # Normally Dash creates its own Flask server internally however
 # by creating the server we can easily create routes for downloading files etc.
 def create_app():
