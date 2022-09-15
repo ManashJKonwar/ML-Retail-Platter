@@ -9,8 +9,11 @@ __status__ = "Development"
 
 import os
 import json
+import base64
 import pickle
+import zipfile
 import pandas as pd
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
@@ -87,10 +90,25 @@ class TaskUploadModel:
             print(ex)
             return False
 
-    def convert_to_blob(self):
-        print('here')
-        return True
+    def convert_to_blob(self, upload_path=None):
+        try:
+            if os.path.exists(upload_path):
+                zipped_file_path = os.path.basename(upload_path)+'.zip'
+                zip_directory(upload_path, os.path.join(os.path.dirname(upload_path), zipped_file_path))
+
+                with open(os.path.join(os.path.dirname(upload_path), zipped_file_path), 'rb') as f:
+                    return base64.b64encode(f.read())
+        except Exception as ex:
+            raise ex
     
     def generate_json(self):
-        print('here')
+        return True
+
+def zip_directory(folder_path, zip_path):
+    with zipfile.ZipFile(zip_path, mode='w') as zipf:
+        len_dir_path = len(folder_path)
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                zipf.write(file_path, file_path[len_dir_path:])
 #endregion
