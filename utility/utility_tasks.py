@@ -101,8 +101,17 @@ class TaskUploadModel:
         except Exception as ex:
             raise ex
     
-    def generate_json(self):
-        return True
+    def generate_json(self, db_task_id=None):
+        message_object = {}
+        try:
+            message_object['db_task_id'] = db_task_id if db_task_id is not None else ''
+            message_object['dataframe_objects'] = list(self._df_object.keys())
+            message_object['dictionary_objects'] = list(self._dict_object.keys())
+            message_object['list_objects'] = list(self._list_object.keys())
+            message_object['var_objects'] = list(self._var_object.keys())
+            return message_object
+        except Exception as ex:
+            raise ex
 
 def zip_directory(folder_path, zip_path):
     with ZipFile(zip_path, mode='w', compression=ZIP_DEFLATED, compresslevel=9) as zipf:
