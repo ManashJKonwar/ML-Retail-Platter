@@ -230,6 +230,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
 
         # Updating Table Row entry in DB with blob data
         logger.info('Updating database placeholder with blob data started for database task id: %s' %(db_task_id))
+        conn = engine.connect()
         try:
             update_query = tasks_tbl.update().where(
                                                 tasks_tbl.c.dbtaskid==db_task_id and \
@@ -241,6 +242,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
             print(str(ex))
             logger.info('Updating database placeholder with blob data caught exception for database task id: %s as %s' %(db_task_id, str(ex)))
             pass
+        conn.close()
         logger.info('Updating database placeholder with blob data ended for database task id: %s' %(db_task_id))
             
         # Scheduling long running simulation tasks via celery and rabbitmQ

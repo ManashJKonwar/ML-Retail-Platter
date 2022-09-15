@@ -11,9 +11,9 @@ import os
 import json
 import base64
 import pickle
-import zipfile
 import pandas as pd
 
+from zipfile import ZipFile, ZIP_DEFLATED
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
@@ -105,7 +105,7 @@ class TaskUploadModel:
         return True
 
 def zip_directory(folder_path, zip_path):
-    with zipfile.ZipFile(zip_path, mode='w') as zipf:
+    with ZipFile(zip_path, mode='w', compression=ZIP_DEFLATED, compresslevel=9) as zipf:
         len_dir_path = len(folder_path)
         for root, _, files in os.walk(folder_path):
             for file in files:
