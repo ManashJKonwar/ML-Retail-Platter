@@ -175,7 +175,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
         logger.info('Generating database placeholder with unique id ended')
 
         logger.info('Generating task upload model started')
-        simulation_json_body, blob_data = None, None
+        simulation_message_body, blob_data = None, None
         # Uploading files to local storage, zipping it and converting to blob / Generating simulation body
         try:
             task_uploader_instance = TaskUploadModel(
@@ -214,15 +214,20 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
 
             try:
                 blob_data = task_uploader_instance.convert_to_blob(upload_path=os.path.join(uploaded_path, db_task_id)) 
-                print('Files zipped and converted to blob for uplaoding to database for database task id: %s' %(db_task_id))
-                logger.info('Files zipped and converted to blob for uplaoding to database for database task id: %s' %(db_task_id))
+                print('Files zipped and converted to blob for uploading to database for database task id: %s' %(db_task_id))
+                logger.info('Files zipped and converted to blob for uploading to database for database task id: %s' %(db_task_id))
             except Exception:
-                print('Files zipped and converted to blob for uplaoding to database caught exception for database task id: %s' %(db_task_id))
-                logger.error('Files zipped and converted to blob for uplaoding to database caught exception for database task id: %s' %(db_task_id))
+                print('Files zipped and converted to blob for uploading to database caught exception for database task id: %s' %(db_task_id))
+                logger.error('Files zipped and converted to blob for uploading to database caught exception for database task id: %s' %(db_task_id))
             
-            logger.info('Generating message body started for database task id: %s' %(db_task_id))
-            simulation_json_body = task_uploader_instance.generate_json()
-            logger.info('Generating message body ended for database task id: %s' %(db_task_id))
+            try:
+                simulation_message_body = task_uploader_instance.generate_json(db_task_id=db_task_id)
+                print('Generating message body completed for database task id: %s' %(db_task_id))
+                logger.info('Generating message body completed for database task id: %s' %(db_task_id))
+            except Exception:
+                print('Generating message body caught exception for database task id: %s' %(db_task_id))
+                logger.error('Generating message body caught exception for database task id: %s' %(db_task_id))
+            
         except Exception as ex:
             print(ex)
             pass
