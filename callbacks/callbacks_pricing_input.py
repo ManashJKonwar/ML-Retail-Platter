@@ -141,7 +141,8 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
     # Conditional Output wrt Input Source Type
     if trigger_component_id == 'btn-run-simulation' and n_run_simulation:
         from app import app, engine, tasks_tbl, uploaded_path 
-        print('Run Simulation Clicked')
+        print('Run Simulation button clicked')
+        logger.info('Run Simulation button clicked')
         
         # Extracting input pricing table data
         df_pricing_input = pd.DataFrame(data=pricing_input)
@@ -156,6 +157,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
         df_models = pd.DataFrame()
 
         # Generate DB placeholder with unique UUID
+        logger.info('Generating database placeholder with unique id started')
         conn = engine.connect()
         db_task_id = str(uuid.uuid4())
         try:
@@ -168,9 +170,12 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
             conn.execute(ins)
         except sqlalchemy_exc.SQLAlchemyError as ex:
             print(str(ex))
+            logger.info('Generating database placeholder with unique id caught exception for database task id: %s as %s' %(db_task_id, str(ex)))
         conn.close()
+        logger.info('Generating database placeholder with unique id ended')
 
-        simulation_json_body = None
+        logger.info('Generating task upload model started')
+        simulation_json_body, blob_data = None, None
         # Uploading files to local storage, zipping it and converting to blob / Generating simulation body
         try:
             task_uploader_instance = TaskUploadModel(
@@ -201,16 +206,43 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
             )
             
             if task_uploader_instance.upload_files(upload_path=os.path.join(uploaded_path, db_task_id)):
-                print('Files uploaded to static folder successfully')
+                print('Files uploaded to static folder successfully for database task id: %s' %(db_task_id))
+                logger.info('Files uploaded to static folder successfully for database task id: %s' %(db_task_id))
+            else:
+                print('Files uploaded to static folder caught exception for database task id: %s' %(db_task_id))
+                logger.error('Files uploaded to static folder caught exception for database task id: %s' %(db_task_id))
 
-            if task_uploader_instance.convert_to_blob():
-                print('Files zipped and converted to blob for uplaoding to database')
+            try:
+                blob_data = task_uploader_instance.convert_to_blob(upload_path=os.path.join(uploaded_path, db_task_id)) 
+                print('Files zipped and converted to blob for uplaoding to database for database task id: %s' %(db_task_id))
+                logger.info('Files zipped and converted to blob for uplaoding to database for database task id: %s' %(db_task_id))
+            except Exception:
+                print('Files zipped and converted to blob for uplaoding to database caught exception for database task id: %s' %(db_task_id))
+                logger.error('Files zipped and converted to blob for uplaoding to database caught exception for database task id: %s' %(db_task_id))
             
-            simulation_json_body = json_model_instance.generate_json()
+            logger.info('Generating message body started for database task id: %s' %(db_task_id))
+            simulation_json_body = task_uploader_instance.generate_json()
+            logger.info('Generating message body ended for database task id: %s' %(db_task_id))
         except Exception as ex:
             print(ex)
             pass
+        logger.info('Generating task upload model ended')
 
+        # Updating Table Row entry in DB with blob data
+        logger.info('Updating database placeholder with blob data started for database task id: %s' %(db_task_id))
+        try:
+            update_query = tasks_tbl.update().where(
+                                                tasks_tbl.c.dbtaskid==db_task_id and \
+                                                tasks_tbl.c.username==username).values(
+                                                                                    taskdata = blob_data     
+                                                                                )
+            conn.execute(update_query)
+        except sqlalchemy_exc.SQLAlchemyError as ex:
+            print(str(ex))
+            logger.info('Updating database placeholder with blob data caught exception for database task id: %s as %s' %(db_task_id, str(ex)))
+            pass
+        logger.info('Updating database placeholder with blob data ended for database task id: %s' %(db_task_id))
+            
         # Scheduling long running simulation tasks via celery and rabbitmQ
         simulation_task = long_running_simulation_celery.delay(
                                 df_historic=df_historic.to_dict(),
