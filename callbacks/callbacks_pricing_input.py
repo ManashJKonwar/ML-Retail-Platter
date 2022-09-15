@@ -8,7 +8,9 @@ __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
 import io
+import os
 import time
+import uuid
 import dash
 import base64
 import urllib
@@ -23,6 +25,7 @@ from datasets.backend import df_consolidated, df_features, df_variable_type, df_
                             df_seasonality, dict_parent_category_id_map, dict_product_category_id_map, dict_product_id_map, \
                             dict_shop_id_map, lt_month_range, lt_month2week_list, st_month_range, st_month2week_list
 from utility.utility_data_transformation import custom_datepicker
+from utility.utility_tasks import TaskUploadModel
 
 logger = logging.getLogger('pricing_handler') # Retrieve Logger Handler
 callback_manager = CallbackManager()
@@ -137,7 +140,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
 
     # Conditional Output wrt Input Source Type
     if trigger_component_id == 'btn-run-simulation' and n_run_simulation:
-        from app import app, engine, tasks_tbl 
+        from app import app, engine, tasks_tbl, uploaded_path 
         print('Run Simulation Clicked')
         
         # Extracting input pricing table data
@@ -151,6 +154,62 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
         df_seasonality_weather = df_seasonality.copy()
         df_switching = pd.DataFrame()
         df_models = pd.DataFrame()
+
+        # Generate DB placeholder with unique UUID
+        conn = engine.connect()
+        db_task_id = str(uuid.uuid4())
+        try:
+            ins = tasks_tbl.insert().values(
+                                        username=user_name, 
+                                        dbtaskid=db_task_id,
+                                        scenarioname=scenario_name,
+                                        submissiondate=pd.to_datetime('today')
+                                    )
+            conn.execute(ins)
+        except sqlalchemy_exc.SQLAlchemyError as ex:
+            print(str(ex))
+        conn.close()
+
+        simulation_json_body = None
+        # Uploading files to local storage, zipping it and converting to blob / Generating simulation body
+        try:
+            task_uploader_instance = TaskUploadModel(
+                df_historic=df_historic, 
+                df_consolidated=df_consolidated, 
+                df_benchmarking_preds=df_benchmarking_preds, 
+                df_pricing_input=df_pricing_input, 
+                df_features=df_features, 
+                df_xvar=df_xvar, 
+                df_competitor_rank=df_competitor_rank, 
+                overridden_xvars_dict={'seasonality_weather_df':df_seasonality_weather}, 
+                df_variable_type=df_variable_type, 
+                df_switching=df_switching, 
+                df_model_endpoints=df_models, 
+                model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'], 
+                model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'], 
+                mapping_dict={'parent':dict_parent_category_id_map,
+                            'parent_inv':{v:k for k,v in dict_parent_category_id_map.items()}, 
+                            'category':dict_product_category_id_map, 
+                            'category_inv':{v:k for k,v, in dict_product_category_id_map.items()},
+                            'product':dict_product_id_map, 
+                            'product_inv':{v:k for k,v, in dict_product_id_map.items()},
+                            'shop':dict_shop_id_map,
+                            'shop_inv':{v:k for k,v, in dict_shop_id_map.items()}}, 
+                period_type=period_type,
+                month_to_weeks=lt_month2week_list, 
+                pickle_flag=True 
+            )
+            
+            if task_uploader_instance.upload_files(upload_path=os.path.join(uploaded_path, db_task_id)):
+                print('Files uploaded to static folder successfully')
+
+            if task_uploader_instance.convert_to_blob():
+                print('Files zipped and converted to blob for uplaoding to database')
+            
+            simulation_json_body = json_model_instance.generate_json()
+        except Exception as ex:
+            print(ex)
+            pass
 
         # Scheduling long running simulation tasks via celery and rabbitmQ
         simulation_task = long_running_simulation_celery.delay(
