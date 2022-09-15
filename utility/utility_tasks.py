@@ -7,6 +7,9 @@ __maintainer__ = "konwar.m"
 __email__ = "rickykonwar@gmail.com"
 __status__ = "Development"
 
+import os
+import json
+import pickle
 import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -55,10 +58,35 @@ class TaskUploadModel:
             elif isinstance(self._kwargs[k], list):
                 self._list_object[k] = self._kwargs[k]
 
-    def upload_files(self):
-        print('here')
-        return True
-    
+    def upload_files(self, upload_path=None):
+        try:
+            # Creating task related folder
+            if not os.path.exists(upload_path):
+                os.makedirs(upload_path)
+
+            # Storing Dataframes
+            for df_key in self._df_object.keys():
+                self._df_object[df_key].to_csv(os.path.join(upload_path, df_key+'.csv'), index=False)
+
+            # Storing Dictionaries
+            for dict_key in self._dict_object.keys():
+                with open(os.path.join(upload_path, dict_key+'.pickle'), 'wb') as f:
+                    pickle.dump(self._dict_object[dict_key], f)
+            
+            # Storing Lists
+            for list_key in self._list_object.keys():
+                with open(os.path.join(upload_path, list_key+'.pickle'), 'wb') as f:
+                    pickle.dump(self._list_object[list_key], f)
+
+            # Storing Variables (int, float and str)
+            with open(os.path.join(upload_path, 'var.json'), 'w') as outfile:
+                json.dump({var_key: self._var_object[var_key] for var_key in self._var_object.keys()}, outfile, indent=4)
+            
+            return True
+        except Exception as ex:
+            print(ex)
+            return False
+
     def convert_to_blob(self):
         print('here')
         return True
