@@ -134,3 +134,4 @@ data.sqlite
 logs/*
 datasets/models_essentials_v01/df_xvar.csv
 datasets/latest_dataset.csv
+upload/tasks/*
