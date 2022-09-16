@@ -109,9 +109,11 @@ def long_running_simulation_celery(self, **kwargs):
     logger.info('Coverting Blob Data to zipped format from database ended with database id: %s' %(str(database_task_id)))
 
     # Unzipping files
-    # logger.info('Unzipping raw data started with database id: %s' %(str(database_task_id)))
+    logger.info('Unzipping raw data started with database id: %s' %(str(database_task_id)))
+    with ZipFile(os.path.join(processing_path, '%s.zip' %(str(database_task_id))), 'r') as zip_ref:
+        zip_ref.extractall(os.path.join(processing_path, str(database_task_id)))
+    logger.info('Unzipping raw data ended with database id: %s' %(str(database_task_id)))
 
-    # logger.info('Unzipping raw data ended with database id: %s' %(str(database_task_id)))    
     return {'result': 'COMPLETE',
             'predicted_df': pd.DataFrame().to_json()}
 
