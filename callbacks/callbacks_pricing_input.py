@@ -267,7 +267,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
                                                 tasks_tbl.c.dbtaskid==db_task_id and \
                                                 tasks_tbl.c.username==user_name).values(
                                                                                     taskid=task_id,
-                                                                                    task_status=task_status
+                                                                                    taskstatus=task_status
                                                                                 )
             conn.execute(update_query)
         except sqlalchemy_exc.SQLAlchemyError as ex:
