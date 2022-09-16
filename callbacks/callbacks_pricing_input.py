@@ -221,7 +221,7 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
                 logger.error('Files zipped and converted to blob for uploading to database caught exception for database task id: %s' %(db_task_id))
             
             try:
-                simulation_message_body = task_uploader_instance.generate_json(db_task_id=db_task_id)
+                simulation_message_body = task_uploader_instance.generate_json(db_task_id=db_task_id, user_name=user_name)
                 print('Generating message body completed for database task id: %s' %(db_task_id))
                 logger.info('Generating message body completed for database task id: %s' %(db_task_id))
             except Exception:
@@ -249,34 +249,12 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
             pass
         conn.close()
         logger.info('Updating database placeholder with blob data ended for database task id: %s' %(db_task_id))
-            
+
         # Scheduling long running simulation tasks via celery and rabbitmQ
         simulation_task = long_running_simulation_celery.delay(
-                                df_historic=df_historic.to_dict(),
-                                df_consolidated=df_consolidated.to_dict(),
-                                df_benchmarking_preds=df_benchmarking_preds.to_dict(),
-                                df_pricing_input=df_pricing_input.to_dict(),
-                                df_features=df_features.to_dict(),
-                                df_xvar=df_xvar.to_dict(),
-                                df_competitor_rank=df_competitor_rank.to_dict(),
-                                overridden_xvars_dict={'seasonality_weather_df':df_seasonality_weather.to_dict()},
-                                df_variable_type=df_variable_type.to_dict(),
-                                df_switching=df_switching.to_dict(),
-                                df_model_endpoints=df_models.to_dict(),
-                                model_endpoints_dict=app.server.config['PRICING_MODEL_ENDPOINTS'],
-                                model_picklefile_dict=app.server.config['PRICING_MODEL_PKLFILES'],
-                                mapping_dict={'parent':dict_parent_category_id_map,
-                                            'parent_inv':{v:k for k,v in dict_parent_category_id_map.items()}, 
-                                            'category':dict_product_category_id_map, 
-                                            'category_inv':{v:k for k,v, in dict_product_category_id_map.items()},
-                                            'product':dict_product_id_map, 
-                                            'product_inv':{v:k for k,v, in dict_product_id_map.items()},
-                                            'shop':dict_shop_id_map,
-                                            'shop_inv':{v:k for k,v, in dict_shop_id_map.items()}},
-                                period_type=period_type,
-                                month_to_weeks=lt_month2week_list,
-                                pickle_flag=True
-                            )
+                                simulation_message = simulation_message_body,
+                        )
+            
         # Task id of current celery task
         task_id = simulation_task.id
         time.sleep(0.5)  # Need a short sleep for task_id to catch up
@@ -285,14 +263,13 @@ def run_prediction(n_run_simulation, period_type, pricing_input, scenario_name, 
         task_status = simulation_task.state
         conn = engine.connect()
         try:
-            ins = tasks_tbl.insert().values(
-                                        username=user_name, 
-                                        taskid=task_id, 
-                                        taskstatus=task_status, 
-                                        scenarioname=scenario_name,
-                                        submissiondate=pd.to_datetime('today')
-                                    )
-            conn.execute(ins)
+            update_query = tasks_tbl.update().where(
+                                                tasks_tbl.c.dbtaskid==db_task_id and \
+                                                tasks_tbl.c.username==user_name).values(
+                                                                                    taskid=task_id,
+                                                                                    task_status=task_status
+                                                                                )
+            conn.execute(update_query)
         except sqlalchemy_exc.SQLAlchemyError as ex:
             print(str(ex))
         conn.close()
