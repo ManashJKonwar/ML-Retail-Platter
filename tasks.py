@@ -10,12 +10,31 @@ __status__ = "Development"
 import os
 import json
 import celery
+import sqlite3
 import pandas as pd
 
+from zipfile import ZipFile
 from config.celerytasklogger import logger
+from sqlalchemy import exc as sqlalchemy_exc
+from sqlalchemy import Table, create_engine
+
 from utility.utility_model_service import PredictSalesModel
+from utility.utility_tasks import Task, convert_64str_2_64bytes, write_64str_2_file 
 from utility.utility_data_transformation import compile_prediction, custom_formatter
 
+# Create Db if it does not exists
+conn = sqlite3.connect('data.sqlite')
+engine = create_engine('sqlite:///data.sqlite')
+
+# Intitate the task table instance
+tasks_tbl = Table('tasks', Task.metadata)
+
+# Static uploading folder
+processing_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tasks', 'processing')
+if not os.path.exists(processing_path):
+    os.makedirs(processing_path)
+
+# Reading Message broker and backend configurations
 config_message_broker, config_db_server = None, None
 try:
     with open(os.path.join('config','config_messagebrokers.json')) as config_file:
@@ -51,6 +70,52 @@ celery_app.conf.update(
     redis_max_connections=20
 )
 
+@celery_app.task(bind=True, time_limit=7200, queue='pricing_queue')
+def long_running_simulation_celery(self, **kwargs):
+    simulation_message = kwargs.get('simulation_message')
+    user_name = simulation_message['user_name'] if 'user_name' in simulation_message.keys() else ''
+    database_task_id = simulation_message['db_task_id'] if 'db_task_id' in simulation_message.keys() else ''
+    dataframe_objects = simulation_message['dataframe_objects'] if 'dataframe_objects' in simulation_message.keys() else []
+    dictionary_objects = simulation_message['dictionary_objects'] if 'dictionary_objects' in simulation_message.keys() else []
+    list_objects = simulation_message['list_objects'] if 'list_objects' in simulation_message.keys() else []
+    var_objects = simulation_message['var_objects'] if 'var_objects' in simulation_message.keys() else []
+
+    if len(simulation_message)==0:
+        return {'result': 'COMPLETE',
+                'predicted_df': pd.DataFrame().to_json()}
+
+    # Extract blob data from database based on database id
+    logger.info('Extracting Blob Data from database started with database id: %s' %(str(database_task_id)))
+    conn = engine.connect()
+    rows = None
+    try:
+        fetch_query = tasks_tbl.select().where(
+                                                tasks_tbl.c.dbtaskid==database_task_id and \
+                                                tasks_tbl.c.username==user_name
+                                            )
+        cursor = conn.execute(fetch_query)
+        rows = cursor.fetchall()
+        logger.info('Length of Rows extracted from database with database id: %s' %(str(len(rows))))
+    except sqlalchemy_exc.SQLAlchemyError as ex:
+        logger.error('Extracting Blob Data from database caught exception: %s' %(str(ex)))
+
+
+    # Saving blob data to zip file
+    logger.info('Coverting Blob Data to zipped format from database started with database id: %s' %(str(database_task_id)))
+    write_64str_2_file(
+        convert_64str_2_64bytes(rows[0].taskdata),
+        os.path.join(processing_path, '%s.zip' %(str(database_task_id)))
+    )
+    logger.info('Coverting Blob Data to zipped format from database ended with database id: %s' %(str(database_task_id)))
+
+    # Unzipping files
+    # logger.info('Unzipping raw data started with database id: %s' %(str(database_task_id)))
+
+    # logger.info('Unzipping raw data ended with database id: %s' %(str(database_task_id)))    
+    return {'result': 'COMPLETE',
+            'predicted_df': pd.DataFrame().to_json()}
+
+'''
 @celery_app.task(bind=True, time_limit=7200, queue='pricing_queue')
 def long_running_simulation_celery(self, **kwargs):
 
@@ -148,7 +213,6 @@ def long_running_simulation_celery(self, **kwargs):
     num = df_predicted._get_numeric_data()
     num[num < 0] = 0
 
-    '''
     COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since there are not too many business logics which we are inetgrating with inferencing pipeline
 
     # Replace zero values by moving average of last 4 weeks
@@ -184,7 +248,6 @@ def long_running_simulation_celery(self, **kwargs):
                         logger=logger
                     )
     logger.info('Switching Logic Implementation on Predictions Ended')
-    '''
 
     # Applying Custom Prediction Formatter
     logger.info('Custom Predictions Fornatter Started')
@@ -199,6 +262,7 @@ def long_running_simulation_celery(self, **kwargs):
     
     return {'result': 'COMPLETE',
             'predicted_df': df_predicted.to_json()}
+'''
 
 def long_running_simulation(**kwargs):
     df_historic = kwargs.get('df_historic')
