@@ -101,9 +101,10 @@ class TaskUploadModel:
         except Exception as ex:
             raise ex
     
-    def generate_json(self, db_task_id=None):
+    def generate_json(self, db_task_id=None, user_name=None):
         message_object = {}
         try:
+            message_object['user_name'] = user_name if user_name is not None else ''
             message_object['db_task_id'] = db_task_id if db_task_id is not None else ''
             message_object['dataframe_objects'] = list(self._df_object.keys())
             message_object['dictionary_objects'] = list(self._dict_object.keys())
@@ -120,4 +121,13 @@ def zip_directory(folder_path, zip_path):
             for file in files:
                 file_path = os.path.join(root, file)
                 zipf.write(file_path, file_path[len_dir_path:])
+
+def convert_64str_2_64bytes(base64str):
+    return base64.b64decode(base64str)
+
+def write_64str_2_file(byte_data, filepath):
+    if os.path.exists(filepath):
+        os.path.remove(filepath)
+    with open(filepath, 'wb') as f:
+        f.write(byte_data)
 #endregion
