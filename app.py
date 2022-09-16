@@ -40,7 +40,7 @@ users_tbl = Table('users', User.metadata)
 tasks_tbl = Table('tasks', Task.metadata)
 
 # Static uploading folder
-uploaded_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'upload', 'tasks')
+uploaded_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tasks', 'upload')
 if not os.path.exists(uploaded_path):
     os.makedirs(uploaded_path)
 
