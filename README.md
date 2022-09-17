@@ -19,12 +19,10 @@
 <!-- * [License](#license) -->
 
 ## General Information
-- The aim of this repository is to implement Pointnet Architecture on readily available 3d datasets and also to create interactive visualizations in DASH
-- The repository helps Deep Learning enthusiasts to implement pointnet architecture by working on generating training pipeline and inference pipeline separately. It also introduces them to the power of building web interactive apps using DASH as primary framework and also will teach them to structure code around web applications.
-- Understand Pointnet Architecture and develop POC around research papers from main authors of Pointnet Architecture.
-- Implement Pointnet for developing a 3d classifier, 3d part segmenter and 3d semantic segmenter.
-<!-- You don't have to answer all the questions - just the ones relevant to your project. -->
-![Pointnet Model Architecture](./repo_assets/PointNet_Architecture.jpg)
+- The aim of this repository is to help AI/ML researchers develop historical dashboarding for retail data and also generate an inferencing simulator which would connect directly to databases and deployed models to generate demands.
+- Another selling point is the utilization of DASH which is a python framework running Flask as web server, React JS as frontend and Plotly JS as visualization modules.
+
+![Retail Simulator Architecture](./repo_assets/Retail_Simulator_Architecture.jpg)
 
 - Please do refer to the Learn More Sections in each page of the web application to deep dive into each of this case studies.
 
