@@ -10,6 +10,7 @@ __status__ = "Development"
 import os
 import json
 import celery
+import pickle
 import sqlite3
 import pandas as pd
 
@@ -80,6 +81,11 @@ def long_running_simulation_celery(self, **kwargs):
     list_objects = simulation_message['list_objects'] if 'list_objects' in simulation_message.keys() else []
     var_objects = simulation_message['var_objects'] if 'var_objects' in simulation_message.keys() else []
 
+    logger.info("Total dataframe objects: %s" %(str(len(dataframe_objects))))
+    logger.info("Total dictionary objects: %s" %(str(len(dictionary_objects))))
+    logger.info("Total list objects: %s" %(str(len(list_objects))))
+    logger.info("Total var objects: %s" %(str(len(var_objects))))
+
     if len(simulation_message)==0:
         return {'result': 'COMPLETE',
                 'predicted_df': pd.DataFrame().to_json()}
@@ -113,6 +119,31 @@ def long_running_simulation_celery(self, **kwargs):
     with ZipFile(os.path.join(processing_path, '%s.zip' %(str(database_task_id))), 'r') as zip_ref:
         zip_ref.extractall(os.path.join(processing_path, str(database_task_id)))
     logger.info('Unzipping raw data ended with database id: %s' %(str(database_task_id)))
+
+    # Extracting local variables for Demand Forecasting
+    logger.info('Extracting local raw data started with database id: %s' %(str(database_task_id)))
+    local_vars_dict={}
+    for df_name in dataframe_objects:
+        print(df_name)
+        try:
+            local_vars_dict[df_name] = pd.read_csv(os.path.join(processing_path, str(database_task_id), df_name+'.csv'))
+        except pd.errors.EmptyDataError:
+            logger.warning('Reading dataframe caught empty data error for: %s' %(df_name))
+            local_vars_dict[df_name] = pd.DataFrame()
+            continue
+    for dict_name in dictionary_objects:
+        with open(os.path.join(processing_path, str(database_task_id), dict_name+'.pickle'), 'rb') as f:
+            local_vars_dict[dict_name] = pickle.load(f)
+    for list_name in list_objects:
+        with open(os.path.join(processing_path, str(database_task_id), list_name+'.pickle'), 'rb') as f:
+            local_vars_dict[list_name] = pickle.load(f)
+    json_var_object=None
+    if os.path.exists(os.path.join(processing_path, str(database_task_id), 'var.json')):
+        with open(os.path.join(processing_path, str(database_task_id), 'var.json'), 'r') as infile:
+            json_var_object = json.load(infile)
+        for var_name in json_var_object.keys():
+            local_vars_dict[var_name] = json_var_object[var_name]
+    logger.info('Extracting local raw data ended with database id: %s' %(str(database_task_id)))
 
     return {'result': 'COMPLETE',
             'predicted_df': pd.DataFrame().to_json()}
