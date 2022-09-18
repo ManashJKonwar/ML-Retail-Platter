@@ -145,94 +145,60 @@ def long_running_simulation_celery(self, **kwargs):
             local_vars_dict[var_name] = json_var_object[var_name]
     logger.info('Extracting local raw data ended with database id: %s' %(str(database_task_id)))
 
-    return {'result': 'COMPLETE',
-            'predicted_df': pd.DataFrame().to_json()}
+    # Simulator Inferencing Pipeline
+    df_predicted = pd.DataFrame(columns=local_vars_dict['df_pricing_input'].columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
 
-'''
-@celery_app.task(bind=True, time_limit=7200, queue='pricing_queue')
-def long_running_simulation_celery(self, **kwargs):
-
-    #  update state to progress and give a status message
-    self.update_state(state='PROGRESS', meta={'status': 'WORKING'})
-
-    df_historic = pd.DataFrame(kwargs.get('df_historic'))
-    df_consolidated = pd.DataFrame(kwargs.get('df_consolidated'))
-    df_benchmarking_preds = pd.DataFrame(kwargs.get('df_benchmarking_preds'))
-    df_pricing_input = pd.DataFrame(kwargs.get('df_pricing_input'))
-    df_features = pd.DataFrame(kwargs.get('df_features'))
-    df_xvar = pd.DataFrame(kwargs.get('df_xvar'))
-    df_competitor_rank = pd.DataFrame(kwargs.get('df_competitor_rank'))
-    df_model_endpoints = pd.DataFrame(kwargs.get('df_model_endpoints'))
-    overridden_xvars_dict = {k:pd.DataFrame(kwargs.get('overridden_xvars_dict')[k]) for k in kwargs.get('overridden_xvars_dict').keys()}
-    df_variable_type = (kwargs.get('df_variable_type'))
-    df_switching = pd.DataFrame(kwargs.get('df_switching'))
-    model_endpoints_dict = kwargs.get('model_endpoints_dict')
-    model_picklefile_dict = kwargs.get('model_picklefile_dict')
-    mapping_dict = kwargs.get('mapping_dict')
-    period_type = kwargs.get('period_type')
-    month_to_weeks = kwargs.get('month_to_weeks')
-    pickle_flag = kwargs.get('pickle_flag')
-
-    for arg in kwargs.keys():
-        logger.info('%s type: %s' %(str(arg), str(type(kwargs.get(arg)))))
-        if isinstance(arg, str) and arg.startswith('df'):
-            logger.info('%s length: %s' %(str(arg), str(len(pd.DataFrame(kwargs.get(arg))))))
-
-    # Initiating empty dataframe with similar no of columns as input pricing
-    df_predicted = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
-    
     logger.info('Raw Predictions Started')
     # Iterate via each row of Datatable 
-    for row in df_pricing_input.itertuples(index=False, name='Pandas'):
-        dummy_df = pd.DataFrame(columns=df_pricing_input.columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
+    for row in local_vars_dict['df_pricing_input'].itertuples(index=False, name='Pandas'):
+        dummy_df = pd.DataFrame(columns=local_vars_dict['df_pricing_input'].columns).drop(labels=['PRICE_PER_ITEM'], axis=1)
         try:
             logger.info('Generating Prediction Model for Parent Category: %s, Product Category: %s and Product: %s and sold from Shop: %s' %(row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
-            print('Generating Prediction Model for Parent Category: %s, Product Category: %s and Product: %s and sold from Shop: %s' %(row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP))
-            predict_model_instance = PredictSalesModel(row_info_data=[list(df_pricing_input.columns), row],
-                                                    historic_df=df_historic,
-                                                    consolidated_df=df_consolidated,
-                                                    pricing_df=df_pricing_input,
-                                                    features_df=df_features,
-                                                    xvar_df=df_xvar,
-                                                    comp_rank_df=df_competitor_rank,
-                                                    overridden_xvars_dict=overridden_xvars_dict,
-                                                    variable_type_df=df_variable_type,
-                                                    model_endpoints_df=df_model_endpoints,
-                                                    model_endpoints_dict=model_endpoints_dict,
-                                                    model_picklefile_dict=model_picklefile_dict,
-                                                    mapping_dict=mapping_dict,
+            predict_model_instance = PredictSalesModel(row_info_data=[list(local_vars_dict['df_pricing_input'].columns), row],
+                                                    historic_df=local_vars_dict['df_historic'],
+                                                    consolidated_df=local_vars_dict['df_consolidated'],
+                                                    pricing_df=local_vars_dict['df_pricing_input'],
+                                                    features_df=local_vars_dict['df_features'],
+                                                    xvar_df=local_vars_dict['df_xvar'],
+                                                    comp_rank_df=local_vars_dict['df_competitor_rank'],
+                                                    overridden_xvars_dict=local_vars_dict['overridden_xvars_dict'],
+                                                    variable_type_df=local_vars_dict['df_variable_type'],
+                                                    model_endpoints_df=local_vars_dict['df_model_endpoints'],
+                                                    model_endpoints_dict=local_vars_dict['model_endpoints_dict'],
+                                                    model_picklefile_dict=local_vars_dict['model_picklefile_dict'],
+                                                    mapping_dict=local_vars_dict['mapping_dict'],
                                                     product_info_dict={'PARENT': row.PARENT_CATEGORY, 'CATEGORY': row.PRODUCT_CATEGORY, 'PRODUCT': row.PRODUCT, 'SHOP':row.SHOP},
-                                                    month_to_weeks=month_to_weeks,
-                                                    pickle_flag=pickle_flag,
+                                                    month_to_weeks=local_vars_dict['month_to_weeks'],
+                                                    pickle_flag=local_vars_dict['pickle_flag'],
                                                     logger=logger)
-            predict_model_instance.input_data_build(period_type=period_type)
+            predict_model_instance.input_data_build(period_type=local_vars_dict['period_type'])
             status_code, predicted_data = predict_model_instance.predict()
             if status_code==200:
-                dummy_df = compile_prediction(period_type=period_type, 
+                dummy_df = compile_prediction(period_type=local_vars_dict['period_type'], 
                                             predicted_data=predicted_data, 
                                             result_df=dummy_df,
                                             row_data=row, 
                                             column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
-                                            month2weeks=month_to_weeks,
+                                            month2weeks=local_vars_dict['month_to_weeks'],
                                             take_log=False,
                                             error=False)
             else:
-                dummy_df = compile_prediction(period_type=period_type, 
+                dummy_df = compile_prediction(period_type=local_vars_dict['period_type'], 
                                             predicted_data=predicted_data,
                                             result_df=dummy_df, 
                                             row_data=row, 
                                             column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
-                                            month2weeks=month_to_weeks,
+                                            month2weeks=local_vars_dict['month_to_weeks'],
                                             take_log=False,
                                             error=True)
             df_predicted = pd.concat([df_predicted, dummy_df], ignore_index = True)
         except Exception as ex:
-            dummy_df = compile_prediction(period_type=period_type, 
+            dummy_df = compile_prediction(period_type=local_vars_dict['period_type'], 
                                         predicted_data=predicted_data, 
                                         result_df=dummy_df,
                                         row_data=row, 
                                         column_name_list=[row.PARENT_CATEGORY, row.PRODUCT_CATEGORY, row.PRODUCT, row.SHOP],
-                                        month2weeks=month_to_weeks,
+                                        month2weeks=local_vars_dict['month_to_weeks'],
                                         take_log=False,
                                         error=True)
             df_predicted = pd.concat([df_predicted, dummy_df], ignore_index = True)
@@ -246,8 +212,8 @@ def long_running_simulation_celery(self, **kwargs):
     num = df_predicted._get_numeric_data()
     num[num < 0] = 0
 
-    COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since there are not too many business logics which we are inetgrating with inferencing pipeline
-
+    # COMMENTING OUT FOR CURRENT PROBLEM STATEMENT: Since there are not too many business logics which we are inetgrating with inferencing pipeline
+    '''
     # Replace zero values by moving average of last 4 weeks
     logger.info('Replacing Zeros by moving average value Started')
     df_predicted = compile_moving_average(period_type=period_type,
@@ -281,7 +247,7 @@ def long_running_simulation_celery(self, **kwargs):
                         logger=logger
                     )
     logger.info('Switching Logic Implementation on Predictions Ended')
-
+    '''
     # Applying Custom Prediction Formatter
     logger.info('Custom Predictions Fornatter Started')
     df_predicted = custom_formatter(
@@ -295,7 +261,6 @@ def long_running_simulation_celery(self, **kwargs):
     
     return {'result': 'COMPLETE',
             'predicted_df': df_predicted.to_json()}
-'''
 
 def long_running_simulation(**kwargs):
     df_historic = kwargs.get('df_historic')
