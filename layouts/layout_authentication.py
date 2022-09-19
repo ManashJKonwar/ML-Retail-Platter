@@ -11,48 +11,51 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 
-create = dbc.Row(
-            dbc.Col(
-                html.Div(
-                    dbc.Container([
-                        html.H1("Create User Account", className="display-3"),
-                        html.P(
-                            "Create user credentials to enter the world of Retail",
-                            className="lead",
+create = dbc.Container([
+            dbc.Row(
+                dbc.Col(
+                    html.Div(
+                        dbc.Container([
+                            html.H1("Create User Account", className="display-3"),
+                            html.P(
+                                "Create user credentials to enter the world of Retail",
+                                className="lead",
+                            ),
+                            html.Hr(className="my-2"),
+                            html.P(
+                                "Fill in the blanks for username, password and email id"
+                            ),
+                            dbc.Input(
+                                id="text-username",
+                                type="text",
+                                placeholder="user name",
+                                maxLength=15),
+                            dbc.Input(
+                                id="text-password",
+                                type="password",
+                                placeholder="password",
+                                style={"margin-top": "5px"}),
+                            dbc.Input(
+                                id="text-email",
+                                type="email",
+                                placeholder="email",
+                                maxLength=50,
+                                style={"margin-top": "5px"}),
+                            dbc.Button('Create User', id='btn-submit-user', n_clicks=0, style={"margin-top": "5px"}),
+                            dcc.Location(id='create_user', refresh=True),
+                            html.Div(id='container-button-basic')],
+                            fluid=True,
+                            className="py-3"
                         ),
-                        html.Hr(className="my-2"),
-                        html.P(
-                            "Fill in the blanks for username, password and email id"
-                        ),
-                        dbc.Input(
-                            id="text-username",
-                            type="text",
-                            placeholder="user name",
-                            maxLength=15),
-                        dbc.Input(
-                            id="text-password",
-                            type="password",
-                            placeholder="password",
-                            style={"margin-top": "5px"}),
-                        dbc.Input(
-                            id="text-email",
-                            type="email",
-                            placeholder="email",
-                            maxLength=50,
-                            style={"margin-top": "5px"}),
-                        dbc.Button('Create User', id='btn-submit-user', n_clicks=0, style={"margin-top": "5px"}),
-                        dcc.Location(id='create_user', refresh=True),
-                        html.Div(id='container-button-basic')],
-                        fluid=True,
-                        className="py-3"
+                        className="p-3 bg-light rounded-3",
                     ),
-                    className="p-3 bg-light rounded-3",
+                    style={'height': '100vh', 'padding': '150px'},
+                    width=6
                 ),
-                style={'height': '100vh', 'padding': '150px'},
-                width=6
-            ),
-            align='center',
-            justify='center'
+                align='center',
+                justify='center'
+            )],
+            fluid=True
         )
 
 left_login_jumbotron = dbc.Col(
