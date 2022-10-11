@@ -230,3 +230,32 @@ def refresh_task_table(n_int, username, task_state):
     except Exception as ex:
         print(ex)
         return task_state
+
+@callback_manager.callback(Output(component_id='storage-pricing-output', component_property='data'),
+                        Input(component_id='datatable-task', component_property='active_cell'),
+                        [State(component_id='storage-username', component_property='data'),
+                        State(component_id='datatable-task', component_property='data')])
+def render_results(selected_cell, username, task_state):
+    try:
+        if task_state is None:
+            return no_update
+        else:
+            from tasks import celery_app
+            df_task = pd.DataFrame(columns=['task_id','task_status','open_scenario']) if task_state is None else \
+                        pd.DataFrame(data=task_state)  
+            selected_row_id = selected_cell['row'] if selected_cell else None
+            selected_task_id = df_task.iloc[selected_row_id].task_id
+
+            # Extract results from database
+            extracted_task = AsyncResult(id=selected_task_id, app=celery_app)
+            if extracted_task.state == 'SUCCESS':
+                if 'result' in extracted_task.info:
+                    extracted_task_result = extracted_task.info
+                    df_predicted = pd.read_json(extracted_task_result.get('predicted_df')) if 'predicted_df' in extracted_task_result else {}
+                    return df_predicted.to_dict('records')
+            else:
+                return no_update
+
+    except Exception as ex:
+        print(ex)
+        return no_update
