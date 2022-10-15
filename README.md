@@ -1,5 +1,5 @@
-# Retail Pricing Simulator
-> Retail Pricing Simulator is developed so that business scenarios or decisions made across pricing of products could be easily rendered and visualized, thereby enabling users to simulate real time scenarios and leverage the power of ML to forecast the demand in near future.
+# Retail Pricing Simulator / Optimizer
+> Retail Pricing Simulator/ Optimizer is developed so that business scenarios or decisions made across pricing of products could be easily rendered and visualized, thereby enabling users to simulate real time scenarios and leverage the power of ML to forecast the demand in near future. It could also be a one stop soution for optimizing prices of products so as to maximize the profit margins thereby resulting in higher amount of product sales.
 
 > Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
 
@@ -20,9 +20,10 @@
 
 ## General Information
 - The aim of this repository is to help AI/ML researchers develop historical dashboarding for retail data and also generate an inferencing simulator which would connect directly to databases and deployed models to generate demands.
-- Another selling point is the utilization of DASH which is a python framework running Flask as web server, React JS as frontend and Plotly JS as visualization modules.
+- The second crucial point is an insight into how to optimize prices of products seen in retail industry.
+- The third selling point is the utilization of DASH which is a python framework running Flask as web server, React JS as frontend and Plotly JS as visualization modules. This eliminates the requirement of web developers in intial designing and prototyping stage and could help data scientists to build a quick MVP to address pricing related case studies.
 
-![Retail Simulator Architecture](./repo_assets/Retail_Simulator_Architecture.jpg)
+![Retail Simulator Architecture](./assets/readme_images/simulator_optimizer_architecture.jpg)
 
 - Please do refer to the Learn More Sections in each page of the web application to deep dive into each of this case studies.
 
