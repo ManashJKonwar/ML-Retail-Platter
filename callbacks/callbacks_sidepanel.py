@@ -233,7 +233,8 @@ def refresh_task_table(n_int, username, task_state):
         print(ex)
         return task_state
 
-@callback_manager.callback(Output(component_id='storage-pricing-output', component_property='data'),
+@callback_manager.callback([Output(component_id='storage-pricing-output', component_property='data'),
+                        Output(component_id='storage-pricing-input', component_property='data')],
                         Input(component_id='datatable-task', component_property='active_cell'),
                         [State(component_id='storage-username', component_property='data'),
                         State(component_id='datatable-task', component_property='data')])
@@ -254,10 +255,11 @@ def render_results(selected_cell, username, task_state):
                 if 'result' in extracted_task.info:
                     extracted_task_result = extracted_task.info
                     df_predicted = pd.read_json(extracted_task_result.get('predicted_df')) if 'predicted_df' in extracted_task_result else {}
-                    return df_predicted.to_dict('records')
+                    df_pricing = pd.read_json(extracted_task_result.get('pricing_df')) if 'pricing_df' in extracted_task_result else {}
+                    return df_predicted.to_dict('records'), df_pricing.to_dict('records')
             else:
-                return no_update
+                return no_update, no_update
 
     except Exception as ex:
         print(ex)
-        return no_update
+        return no_update, no_update

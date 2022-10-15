@@ -260,6 +260,7 @@ def long_running_simulation_celery(self, **kwargs):
     logger.info('Custom Predictions Fornatter Ended')
     
     return {'result': 'COMPLETE',
+            'pricing_df': local_vars_dict['df_pricing_input'].to_json(),
             'predicted_df': df_predicted.to_json()}
 
 def long_running_simulation(**kwargs):
