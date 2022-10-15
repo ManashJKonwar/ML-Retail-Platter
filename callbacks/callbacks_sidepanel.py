@@ -190,13 +190,15 @@ def refresh_task_table(n_int, username, task_state):
 
         task_list = extract_task_ids(u_name=username)
         if len(task_list) > 0:
-            df_task = pd.DataFrame(columns=['task_id','task_status','open_scenario']) if task_state is None else \
+            df_task = pd.DataFrame(columns=['task_id', 'pricing_scenario', 'task_status']) if task_state is None else \
                     pd.DataFrame(data=task_state)   
             conn = engine.connect()
             for task in task_list:
                 task_id = task.taskid
-                task = AsyncResult(id=task_id, app=celery_app)
-                current_task_status = task.state
+                pricing_scenario_name = task.scenarioname
+
+                celery_task = AsyncResult(id=task_id, app=celery_app)
+                current_task_status = celery_task.state
 
                 try:
                     # Updating Table Row entry in DB
@@ -216,8 +218,8 @@ def refresh_task_table(n_int, username, task_state):
                 try:
                     # Updating Table Row instance
                     if task_id not in list(df_task['task_id'].unique()):
-                        data_dict = {'task_id': task_id, 'task_status': current_task_status, 'open_scenario': 'open'}
-                        df_task = pd.concat([df_task, pd.DataFrame.from_dict(data={'task_id': [task_id], 'task_status': [current_task_status], 'open_scenario': ['open']})], ignore_index=True)
+                        # data_dict = {'task_id': task_id, 'pricing_scenario': pricing_scenario_name, 'task_status': current_task_status}
+                        df_task = pd.concat([df_task, pd.DataFrame.from_dict(data={'task_id': [task_id], 'pricing_scenario': [pricing_scenario_name], 'task_status': [current_task_status]})], ignore_index=True)
                     else:
                         task_data = df_task.loc[df_task['task_id'].isin([task_id])]
                         df_task.iloc[task_data.index[0], df_task.columns.get_loc('task_status')] = current_task_status
