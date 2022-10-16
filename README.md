@@ -86,9 +86,9 @@ List the in progress features here:
     ![Business KPI Tab](./assets/readme_images/kpi_tab.jpg)
 
 ## **Setup**
-- git clone https://github.com/ManashJKonwar/IP-Pointnet.git (Clone the repository)
-- python3 -m venv IPPointnetVenv (Create virtual environment from existing python3)
-- activate the "IPPointnetVenv" (Activating the virtual environment)
+- git clone https://github.com/ManashJKonwar/ML-Retail-Pricing-Simulator.git (Clone the repository)
+- python3 -m venv MLPricingVenv (Create virtual environment from existing python3)
+- activate the "MLPricingVenv" (Activating the virtual environment)
 - pip install -r requirements.txt (Install all required python modules)
 
 ## **Dataset Utilized**
