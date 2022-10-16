@@ -30,7 +30,7 @@ Retail Pricing Simulator/ Optimizer is developed so that business scenarios or d
 * [References](#references)
 * [Acknowledgements](#acknowledgements)
 * [Contact](#contact)
-<!-- * [License](#license) -->
+* [License](#license)
 
 ## **General Information**
 - The aim of this repository is to help AI/ML researchers develop historical dashboarding for retail data and also generate an inferencing simulator which would connect directly to databases and deployed models to generate demands.
@@ -74,8 +74,16 @@ List the in progress features here:
 - Price Optimization - <mark>**In Progress**</mark>
 
 ## **Screenshots**
-![Pointnet Classifier Frontend](./repo_assets/Pointnet_Classifier_Frontend.jpeg)
-![Pointnet Part Segmenter Frontend](./repo_assets/Pointnet_Part_Segmenter_Frontend.jpeg)
+
+- Application Related  
+    ![Login Page](./assets/readme_images/login_page.jpg)  
+- Business Scenario Related  
+    ![Retail Tab](./assets/readme_images/retail_tab.jpg)  
+    ![Price Input Tab](./assets/readme_images/price_input_tab.jpg)  
+    ![Demand Forecasted Tab](./assets/readme_images/demand_tab.jpg)  
+    ![Price Optimization Tab]()
+    ![Demand Pivotting Tab](./assets/readme_images/pivot_tab.jpg)  
+    ![Business KPI Tab](./assets/readme_images/kpi_tab.jpg)
 
 ## **Setup**
 - git clone https://github.com/ManashJKonwar/IP-Pointnet.git (Clone the repository)
@@ -84,44 +92,20 @@ List the in progress features here:
 - pip install -r requirements.txt (Install all required python modules)
 
 ## **Dataset Utilized**
-- Retail Dataset is obtained from Kaggle and competition name is Predict Future Sales.
-- Please refer to screenshot below for dataset descriptions and data fields within this dataset.
 
-## Usage
-### For Training PointNet:
-- python train_pointnet.py
-### For Running Web Application:
-- python index.py
+## **Usage**
 
-## Project Status
+## **Project Status**
 Project is: __in progress_ 
-<!-- / _complete_ / _no longer being worked on_. If you are no longer working on it, provide reasons why._ -->
 
-## Room for Improvement
-Room for improvement:
-- Build a generic classifier for custom 3d dataset
-- Build a generic part segmenter for custom 3d dataset
-- Build a generic semantic segmenter for custom 3d dataset
-- Develop frontend to encompass this generic nature
-- Porvide support for CPUs, GPUs and TPUs as well
+## **Room for Improvement**
 
-To do:
-- Finish developing inference end of part segmenter at DASH end
-- Start developing semantic segmenter
+## **References**
 
-## References
-[1] PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation; Charles R. Qi, Hao Su, Kaichun Mo, Leonidas J. Guibas;
-CVPR 2017; https://arxiv.org/abs/1612.00593.
+## **Acknowledgements**
 
-## Acknowledgements
-- This project was based on [Point cloud classification with PointNet](https://keras.io/examples/vision/pointnet/).
-- This project was based on [Point cloud segmentation with PointNet](https://keras.io/examples/vision/pointnet_segmentation/).
-
-## Contact
+## **Contact**
 Created by [@ManashJKonwar](https://github.com/ManashJKonwar) - feel free to contact me!
 
-Optional -->
-## License
-This project is open source and available under the [... License]().
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
+## **License**
+This project is copyrighted property and free surfacing of the product is not allowed.
