@@ -85,11 +85,24 @@ List the in progress features here:
     ![Demand Pivotting Tab](./assets/readme_images/pivot_tab.jpg)  
     ![Business KPI Tab](./assets/readme_images/kpi_tab.jpg)
 
-## **Setup**
+## **Setup**  
+### **Setup for Web-Interface**
 - git clone https://github.com/ManashJKonwar/ML-Retail-Pricing-Simulator.git (Clone the repository)
 - python3 -m venv MLPricingVenv (Create virtual environment from existing python3)
 - activate the "MLPricingVenv" (Activating the virtual environment)
-- pip install -r requirements.txt (Install all required python modules)
+- pip install -r requirements.txt (Install all required python modules)  
+
+### **Setup for Redis Package (Run as a Service)**  
+- Go to Windows based repository link - https://github.com/ServiceStack/redis-windows (Download the redis windows package)
+- Download the latest package  
+- Move it under Program Files directory in C:  
+- Installing the redis server as a windows service
+    > redis-server --service-install redis.conf --loglevel verbose  
+- Starting the redis service
+    > redis-server --service-start  
+
+### **Setup for Rabbit MQ (Run as a Service)**  
+- Go to Windows based installation link - https://computingforgeeks.com/how-to-install-latest-rabbitmq-server-on-ubuntu-linux/ (Follow steps as mentioned in this link)
 
 ## **Dataset Utilized**
 
