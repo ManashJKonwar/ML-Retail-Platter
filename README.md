@@ -1,4 +1,6 @@
-# **Retail Pricing Simulator / Optimizer**
+# **Retail Platter**  
+
+## **Retail Pricing Simulator/Optimizer**
 Retail Pricing Simulator/ Optimizer is developed so that business scenarios or decisions made across pricing of products could be easily rendered and visualized, thereby enabling users to simulate real time scenarios and leverage the power of ML to forecast the demand in near future. It could also be a one stop soution for optimizing prices of products so as to maximize the profit margins thereby resulting in higher amount of product sales.
 
 ## **Key Features**
